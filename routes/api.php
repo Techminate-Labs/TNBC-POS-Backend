@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\PasswordUpdateController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -29,6 +30,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
     Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+
+    Route::post('/update-password', [PasswordUpdateController::class,'passwordUpdate'])->name('update.password');
 
 
 });
