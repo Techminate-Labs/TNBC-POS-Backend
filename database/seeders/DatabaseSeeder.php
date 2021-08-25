@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
             
         ]);
+
         DB::table('users')->insert([
             'role_id' => '2',
             'name' => 'Sazid',
@@ -49,7 +50,36 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
             'created_at' => now(),
             'updated_at' => now()
-            
+        ]);
+
+        DB::table('profiles')->insert([
+            'user_id' => '1',
+            'first_name' => 'Sazid',
+            'last_name' => 'Ahmed',
+            'mobile' => '01680800810',
+            'present_address' => 'Uttara, dhaka, Bangladesh, 1230',
+            'permanent_address' => 'Uttara, dhaka, Bangladesh, 1230',
+            'identity_number' => '991551221',
+            'zip' => '1230',
+            'city' => 'Dhaka',
+            'photo' => 'default.jpg',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('profiles')->insert([
+            'user_id' => '2',
+            'first_name' => 'Admin',
+            'last_name' => 'User',
+            'mobile' => '01911908431',
+            'present_address' => 'Uttara, dhaka, Bangladesh, 1230',
+            'permanent_address' => 'Uttara, dhaka, Bangladesh, 1230',
+            'identity_number' => '981661333',
+            'zip' => '1230',
+            'city' => 'Dhaka',
+            'photo' => 'default.jpg',
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
     }
 }
