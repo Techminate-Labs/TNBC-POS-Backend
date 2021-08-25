@@ -24,7 +24,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-Route::get('/roles', [RoleController::class, 'index']);
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -34,7 +33,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/update-password', [PasswordUpdateController::class,'passwordUpdate'])->name('update.password');
 
-    
+    Route::get('/roles', [RoleController::class, 'index']);
+    Route::get('/roles/{id}', [RoleController::class, 'show']);
     Route::post('/roles', [RoleController::class, 'store']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
