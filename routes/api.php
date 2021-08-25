@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\PasswordUpdateController;
 use App\Http\Controllers\Auth\RoleController;
+use App\Http\Controllers\Auth\ProfileController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -38,4 +39,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/roles', [RoleController::class, 'store']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+    Route::get('/users', [ProfileController::class, 'index']);
+    Route::put('/users/{id}', [ProfileController::class, 'updateUser']);
+    Route::delete('/users/{id}', [ProfileController::class, 'deleteUser']);
+
+    Route::get('/userProfile/{id}', [ProfileController::class, 'show']);
 });
