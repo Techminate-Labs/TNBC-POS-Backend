@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->string('identity_number')->nullable();
             $table->string('zip')->nullable();
             $table->string('city')->nullable();
-            $table->string('photo')->nullable();
+            $table->string('image')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

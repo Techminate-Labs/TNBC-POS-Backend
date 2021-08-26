@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Storage;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -65,7 +67,7 @@ class ProfileController extends Controller
             'profile'=>$profile
         ];
 
-        return response($response, 201);
+        return response($response, 200);
 
         // $user = User::where('id',$id)->with('role')->with('profile')->first();
         // return response()->json(['user'=>$user], 200);
@@ -73,7 +75,40 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'mobile'=>'required',
+            'present_address'=>'required|min:3',
+            'permanent_address'=>'required|min:3',
+            'image'=>'required|mimes:jpeg,png,jpg',
+            'identity_number'=>'required|numeric',
+            'user_id'=>'required',
+        ]);
+         // dd($request);
+        $data = $request->all();
+
+        $imagePath = 'images/profile';
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            
+            $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
+            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
+			$newPath = $imagePath . '/' . $imgName;
+
+            $fileLocation = $imagePath . '/' . $imgName;
+            $data['image'] = $fileLocation;
+
+            $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
+        }else{
+            $imgName = 'default.jpg';
+        }
+
+        Profile ::create($data);
+
+        $response = [
+            'profile' => $data
+        ];
+
+        return response($response, 200);
     }
 
     public function update(Request $request, $id)
