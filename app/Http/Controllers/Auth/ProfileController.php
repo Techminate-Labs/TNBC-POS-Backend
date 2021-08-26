@@ -79,7 +79,7 @@ class ProfileController extends Controller
             'mobile'=>'required',
             'present_address'=>'required|min:3',
             'permanent_address'=>'required|min:3',
-            'image'=>'required|mimes:jpeg,png,jpg',
+            
             'identity_number'=>'required|numeric',
             'user_id'=>'required',
         ]);
@@ -87,6 +87,8 @@ class ProfileController extends Controller
         $data = $request->all();
 
         $imagePath = 'images/profile';
+        $url  = url('');
+
         if($request->hasFile('image')){
             $image = $request->file('image');
             
@@ -94,18 +96,18 @@ class ProfileController extends Controller
             File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
 			$newPath = $imagePath . '/' . $imgName;
 
-            $fileLocation = $imagePath . '/' . $imgName;
+            $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
             $data['image'] = $fileLocation;
 
             $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
         }else{
-            $imgName = 'default.jpg';
+            $data['image'] = $url. '/' .$imagePath . '/' . 'default.jpg';
         }
 
         Profile ::create($data);
 
         $response = [
-            'profile' => $data
+            'profile' => $data,
         ];
 
         return response($response, 200);
