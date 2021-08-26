@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
             'identity_number' => '991551221',
             'zip' => '1230',
             'city' => 'Dhaka',
-            'photo' => 'default.jpg',
+            'image' => 'default.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
             'identity_number' => '981661333',
             'zip' => '1230',
             'city' => 'Dhaka',
-            'photo' => 'default.jpg',
+            'image' => 'default.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);

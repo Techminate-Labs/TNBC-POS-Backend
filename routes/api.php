@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum','verified')->get('/user', function (Request $re
 });
 
 // Public routes
-Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
@@ -27,6 +27,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
@@ -45,4 +46,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/users/{id}', [ProfileController::class, 'deleteUser']);
 
     Route::get('/userProfile/{id}', [ProfileController::class, 'show']);
+    Route::post('/userProfile', [ProfileController::class, 'store']);
 });
