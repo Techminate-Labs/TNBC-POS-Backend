@@ -79,7 +79,7 @@ class ProfileController extends Controller
             'mobile'=>'required',
             'present_address'=>'required|min:3',
             'permanent_address'=>'required|min:3',
-            
+            'image'=>'required|mimes:jpeg,png,jpg',
             'identity_number'=>'required|numeric',
             'user_id'=>'required',
         ]);
