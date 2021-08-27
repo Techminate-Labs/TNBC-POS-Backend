@@ -78,7 +78,6 @@ class ProfileController extends Controller
         $this->validate($request,[
             'mobile'=>'required',
             'present_address'=>'required|min:3',
-            'permanent_address'=>'required|min:3',
             'image'=>'required|mimes:jpeg,png,jpg',
             'identity_number'=>'required|numeric',
             'user_id'=>'required',
@@ -89,6 +88,7 @@ class ProfileController extends Controller
         $imagePath = 'images/profile';
         $url  = url('');
 
+        //image update
         if($request->hasFile('image')){
             $image = $request->file('image');
             
@@ -115,7 +115,52 @@ class ProfileController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'mobile'=>'required',
+            'present_address'=>'required|min:3',
+            'identity_number'=>'required|numeric',
+            'user_id'=>'required',
+        ]);
+
+        $profile = Profile::find($id);
+        $data = $request->all();
+
+        $imagePath = 'images/profile';
+        $url  = url('');
+
+        //image update
+        if($request->hasFile('image')){
+            $this->validate($request,[
+                'image'=>'required|mimes:jpeg,jpg,png',
+            ]);
+            $image = $request->file('image');
+            
+            $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
+            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
+
+            $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
+            $data['image'] = $fileLocation;
+
+            $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
+
+            // $str = "http://127.0.0.1:8000/images/profile/img1630067109.jpg";
+            // print_r (explode("profile/",$str));
+            // $serverImg = explode("profile/",$profile->image);
+            // $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$profile->image;  
+            // if(File::exists($image_path)) {
+            //     File::delete($image_path);
+            // }
+        }else{
+            $data['image'] = $profile->image;
+        }
+
+        $profile->update($data);
+
+        $response = [
+            'profile' => $data,
+        ];
+
+        return response($response, 200);
     }
 
     public function destroy($id)
