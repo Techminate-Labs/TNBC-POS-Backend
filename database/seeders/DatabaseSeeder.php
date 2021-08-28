@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::table('roles')->insert([
             'name'=>'admin',
-            'permissions'=> '{"dashboard":{"can-list":"1"},"product":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"},"report":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"},"user":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"},"customer":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"},"role":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"}}',
+            'permissions'=> '[{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false}},{"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}]',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         
         DB::table('roles')->insert([
             'name'=>'cashier',
-            'permissions'=> '{"product":{"can-add":"1","can-edit":"1","can-delete":"1","can-view":"1","can-list":"1"}}',
+            'permissions'=> '[{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false}},{"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}]',
             'created_at' => now(),
             'updated_at' => now()
         ]);

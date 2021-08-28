@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+// use Storage;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -144,12 +145,16 @@ class ProfileController extends Controller
             $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
 
             // $str = "http://127.0.0.1:8000/images/profile/img1630067109.jpg";
-            // print_r (explode("profile/",$str));
-            // $serverImg = explode("profile/",$profile->image);
-            // $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$profile->image;  
-            // if(File::exists($image_path)) {
-            //     File::delete($image_path);
-            // }
+            // $serverImg=explode("profile/",$str);
+            // print_r ($serverImg[1]);
+
+            //remove existing image
+            $splitImg = explode("profile/",$profile->image);
+            $storageImg = $splitImg[1];
+            $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
+            if(File::exists($image_path)) {
+                File::delete($image_path);
+            }
         }else{
             $data['image'] = $profile->image;
         }
@@ -165,6 +170,17 @@ class ProfileController extends Controller
 
     public function destroy($id)
     {
-        //
+        $profile = Profile::find($id);
+        $splitImg = explode("profile/",$profile->image);
+        $storageImg = $splitImg[1];
+        $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;
+        $profile->delete();
+        \Storage::delete($image_path); 
+
+        $response = [
+            'profile' => "User Profile Deleted Successfully.",
+        ];
+
+        return response($response, 200);
     }
 }
