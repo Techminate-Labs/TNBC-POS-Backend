@@ -183,4 +183,8 @@ class ProfileController extends Controller
 
         return response($response, 200);
     }
+
+    public function profilePhotoupdate(Request $request, $id){
+        //
+    }
 }
