@@ -12,30 +12,37 @@ class EmailVerificationController extends Controller
     public function sendVerificationEmail(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return [
-                'message' => 'Already Verified'
+          
+            $response = [
+                'message' => 'Already Verified',
             ];
+            return response($response, 200);
         }
 
         $request->user()->sendEmailVerificationNotification();
 
-        return ['status' => 'verification-link-sent'];
+        $response = [
+            'status' => 'verification-link-sent',
+        ];
+        return response($response, 200);
     }
 
     public function verify(EmailVerificationRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return [
-                'message' => 'Email already verified'
+            $response = [
+                'message' => 'Emaiil Already Verified',
             ];
+            return response($response, 201);
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return [
-            'message'=>'Email has been verified'
+        $response = [
+            'message'=>'Email has been verified',
         ];
+        return response($response, 200);
     }
 }
