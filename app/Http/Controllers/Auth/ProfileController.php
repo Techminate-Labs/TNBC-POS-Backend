@@ -101,6 +101,7 @@ class ProfileController extends Controller
             $data['image'] = $fileLocation;
 
             $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
+            // $request->document->move(storage_path('app/document'),$filename);
         }else{
             $data['image'] = $url. '/' .$imagePath . '/' . 'default.jpg';
         }
