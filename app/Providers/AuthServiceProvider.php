@@ -28,7 +28,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
-            $spaUrl = "http://tnbpos.com?email_verify_url=".$url;
+            $frontendUrl = "http://localhost:8080/";
+            $spaUrl = $frontendUrl."?email_verify_url=".$url;
 
             return (new MailMessage)
                 ->subject('Verify Email Address')

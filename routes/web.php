@@ -20,3 +20,11 @@ Route::get('/', function () {
 Route::get('/symlink', function () {
     Artisan::call('storage:link');
 });
+
+Route::get('/clrcache', function () {
+    Artisan::call('cache:clear');
+});
+
+Route::get('/clrconf', function () {
+    Artisan::call('config:clear');
+});
