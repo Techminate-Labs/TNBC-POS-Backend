@@ -94,16 +94,25 @@ class ProfileController extends Controller
             $image = $request->file('image');
             
             $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
-            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
-			$newPath = $imagePath . '/' . $imgName;
+            // File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
 
-            $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
+            // $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
+            // $data['image'] = $fileLocation;
+
+            // $image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
+            // $image->move(public_path($imagePath),$imgName);
+            // $image->move('./images/profile/',$imgName);
+            // $image->move(public_path().'/images/profile/',$imgName);
+
+            $fileLocation = $url.  '/'. 'storage/' .$imagePath . '/' . $imgName;
             $data['image'] = $fileLocation;
 
-            $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
-            // $request->document->move(storage_path('app/document'),$filename);
+            $image->storeAs('public/'.$imagePath, $imgName);
+
+            // $image->move(storage_path('app/document'),$imgName);
         }else{
-            $data['image'] = $url. '/' .$imagePath . '/' . 'default.jpg';
+            // $data['image'] = $url. '/' .$imagePath . '/' . 'default.jpg';
+            $data['image'] = $url.  '/'. 'storage/' .$imagePath . '/' . 'default.jpg';
         }
 
         Profile ::create($data);

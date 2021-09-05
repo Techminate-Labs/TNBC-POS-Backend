@@ -35,11 +35,6 @@ return [
             'root' => storage_path('app'),
         ],
 
-        'profile_pics' => [
-            'driver' => 'local',
-            'root' => storage_path('app/profile'),
-        ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -73,6 +68,7 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        //public_path('/../../domain/storage') => storage_path('app/public'),
     ],
 
 ];
