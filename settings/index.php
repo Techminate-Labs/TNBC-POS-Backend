@@ -16,15 +16,9 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
-    require __DIR__.'/../storage/framework/maintenance.php';
+if (file_exists(__DIR__.'/../tnbpos_api/storage/framework/maintenance.php')) {
+    require __DIR__.'/../tnbpos_api/storage/framework/maintenance.php';
 }
-/*
-|Replace with this lines for shared hosting
-*/
-// if (file_exists(__DIR__.'/../public_folder_name/storage/framework/maintenance.php')) {
-//     require __DIR__.'/../public_folder_name/storage/framework/maintenance.php';
-// }
 
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +31,7 @@ if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
-/*
-|Replace with this line for shared hosting
-*/
-// require __DIR__.'/../public_folder_name/vendor/autoload.php';
+require __DIR__.'/../tnbpos_api/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -54,12 +44,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-/*
-|Replace with this line for shared hosting
-*/
-// $app = require_once __DIR__.'/../public_folder_name/bootstrap/app.php';
-
+$app = require_once __DIR__.'/../tnbpos_api/bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 
