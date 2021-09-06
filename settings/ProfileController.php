@@ -104,7 +104,9 @@ class ProfileController extends Controller
 
             // $fileLocation = $url.  '/'. 'storage/' .$imagePath . '/' . $imgName;
             // $data['image'] = $fileLocation;
+
             // $image->storeAs('public/'.$imagePath, $imgName);
+
             // $image->move(storage_path('app/document'),$imgName);
             
             $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
@@ -146,12 +148,12 @@ class ProfileController extends Controller
             $image = $request->file('image');
             
             $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
-            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 0777, true, true);
-            
-            $image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
-            
+            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 7777, true, true);
+
             $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
             $data['image'] = $fileLocation;
+
+            $request->image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
 
             // $str = "http://127.0.0.1:8000/images/profile/img1630067109.jpg";
             // $serverImg=explode("profile/",$str);
@@ -160,11 +162,9 @@ class ProfileController extends Controller
             //remove existing image
             $splitImg = explode("profile/",$profile->image);
             $storageImg = $splitImg[1];
-            if($storageImg !== "default.jpg"){
-                $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
-                if(File::exists($image_path)) {
-                    File::delete($image_path);
-                }
+            $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
+            if(File::exists($image_path)) {
+                File::delete($image_path);
             }
         }else{
             $data['image'] = $profile->image;
@@ -184,15 +184,9 @@ class ProfileController extends Controller
         $profile = Profile::find($id);
         $splitImg = explode("profile/",$profile->image);
         $storageImg = $splitImg[1];
-        if($storageImg !== "default.jpg"){
-            $imagePath = 'images/profile';
-            $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
-            if(File::exists($image_path)) {
-                File::delete($image_path);
-            }
-        }
+        $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;
         $profile->delete();
-        // \Storage::delete($image_path); 
+        \Storage::delete($image_path); 
 
         $response = [
             'profile' => "User Profile Deleted Successfully.",
