@@ -201,7 +201,51 @@ class ProfileController extends Controller
         return response($response, 200);
     }
 
-    public function profilePhotoupdate(Request $request, $id){
-        //
+    public function profilePhotoupdate(Request $request, $id)
+    {
+        $profile = Profile::find($id);
+        // $data = $request->all();
+        // print($request->image);
+
+        $imagePath = 'images/profile';
+        $url  = url('');
+
+        //image update
+        if($request->hasFile('image')){
+           
+            $this->validate($request,[
+                'image'=>'required|mimes:jpeg,jpg,png',
+            ]);
+            $image = $request->file('image');
+            
+            $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
+            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 0777, true, true);
+            
+            $image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
+            
+            $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
+            $profileImage = $fileLocation;
+
+            //remove existing image
+            $splitImg = explode("profile/",$profile->image);
+            $storageImg = $splitImg[1];
+            if($storageImg !== "default.jpg"){
+                $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
+                if(File::exists($image_path)) {
+                    File::delete($image_path);
+                }
+            }
+        }else{
+            $profileImage = $profile->image;
+        }
+
+        $profile->image = $profileImage;
+        $profile->save();
+
+        $response = [
+            'profile' => $profileImage,
+        ];
+
+        return response($response, 200);
     }
 }
