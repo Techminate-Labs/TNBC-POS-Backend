@@ -50,5 +50,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/userProfile', [ProfileController::class, 'store']);
     Route::put('/userProfile/{id}', [ProfileController::class, 'update']);
     Route::delete('/userProfile/{id}', [ProfileController::class, 'destroy']);
-    Route::put('/profilePhotoupdate/{id}', [ProfileController::class, 'profilePhotoupdate']);
+    Route::post('/profilePhotoupdate', [ProfileController::class, 'profilePhotoupdate']);
 });
