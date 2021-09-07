@@ -201,11 +201,10 @@ class ProfileController extends Controller
         return response($response, 200);
     }
 
-    public function profilePhotoupdate(Request $request, $id)
+    public function profilePhotoupdate(Request $request)
     {
-        $profile = Profile::find($id);
-        // $data = $request->all();
-        // print($request->image);
+        $user = User::find(auth()->user()->id);
+        $profile = $user->profile;
 
         $imagePath = 'images/profile';
         $url  = url('');
