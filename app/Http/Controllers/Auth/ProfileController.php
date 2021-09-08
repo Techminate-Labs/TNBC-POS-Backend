@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-// use Storage;
+use App\Http\Resources\PaginationResource;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -14,10 +14,20 @@ use App\Models\Role;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('role')->get();
-        return response()->json(['users'=>$users], 200);
+        if ($request->has('searchText')) {
+            return new PaginationResource( User::where('name', 'LIKE', '%' . $request->searchText . '%')
+                ->orWhere('email', 'LIKE', '%' . $request->searchText . '%')
+                ->select('name', 'email', 'role_id', 'created_at', 'updated_at')
+                ->with('role')
+                ->paginate(3));
+          } else {
+            return new PaginationResource(User::with('role')->paginate(3));
+          }
+
+        // $users = new PaginationResource(User::with('role')->paginate(3));
+        // return response()->json(['users'=>$users], 200);
     }
 
     public function updateUser(Request $request, $id)
