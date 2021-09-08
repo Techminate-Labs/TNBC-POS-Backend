@@ -1,0 +1,4 @@
+REL_PUB_FOLD="/../../bendsta.com/"
+
+
+$ php artisan make:resource UserResource
