@@ -1,0 +1,10 @@
+REL_PUB_FOLD="/../../bendsta.com/"
+
+
+$ php artisan make:resource UserResource
+
+$ php artisan make:provider RepositoriesServiceProvider
+register the RepositoriesServiceProvider in config->app->application service provider
+
+
+Controller -> Interface -> Repository -> Model 

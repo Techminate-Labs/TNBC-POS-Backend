@@ -6,26 +6,45 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\PaginationResource;
 
+//Imterface
+use App\Repositories\UserRepositoryInterface;
+
 //Models
 use App\Models\User;
 use App\Models\Role;
 
 class UserController extends Controller
 {
+    private $repositoryInterface;
+
+    public function __construct(UserRepositoryInterface $repositoryInterface){
+        $this->ri = $repositoryInterface;
+    }
+
     public function list(Request $request)
     {
-        if ($request->has('searchText')) {
-            return new PaginationResource( User::where('name', 'LIKE', '%' . $request->searchText . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->searchText . '%')
-                ->select('name', 'email', 'role_id', 'created_at', 'updated_at')
-                ->with('role')
-                ->paginate(3));
-          } else {
-            return new PaginationResource(User::with('role')->paginate(3));
-          }
+        $users =  $this->ri->list($request);
+        return new PaginationResource($users);
 
-        // $users = new PaginationResource(User::with('role')->paginate(3));
-        // return response()->json(['users'=>$users], 200);
+        // if ($request->has('searchText')) {
+        //     return new PaginationResource( User::where('name', 'LIKE', '%' . $request->searchText . '%')
+        //         ->orWhere('email', 'LIKE', '%' . $request->searchText . '%')
+        //         ->select('name', 'email', 'role_id', 'created_at', 'updated_at')
+        //         ->with('role')
+        //         ->paginate(3));
+        //   } else {
+        //     return new PaginationResource(User::with('role')->paginate(3));
+        //   }
+        // return new PaginationResource($users);
+    }
+
+    public function getById($id)
+    {
+        $user =  $this->ri->getById($id);
+        $response = [
+            'user' => $user,
+        ];
+        return response($response, 200);
     }
 
     public function update(Request $request, $id)
@@ -55,7 +74,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        User::find($id)->delete();
+        $this->ri->destroy($id);
         $response = [
             'message' => 'Record Deleted Successfully',
         ];
