@@ -9,48 +9,29 @@ use Illuminate\Support\Facades\Hash;
 //Rules
 use App\Rules\MatchOldPassword;
 
+//Utilities
+use App\Utilities\FileUtilities;
+
 //Models
 use App\Models\User;
 use App\Models\Profile;
 
 class ProfileSettingController extends Controller
 {
+    public function __construct(FileUtilities $fileUtilities){
+        $this->fileUtilities = $fileUtilities;
+    }
+
     public function profilePhotoupdate(Request $request)
     {
         $user = User::find(auth()->user()->id);
         $profile = $user->profile;
-
-        $imagePath = 'images/profile';
         $url  = url('');
+        $imagePath = 'images/profile';
+        $exImagePath = $profile->image;
 
         //image update
-        if($request->hasFile('image')){
-           
-            $this->validate($request,[
-                'image'=>'required|mimes:jpeg,jpg,png',
-            ]);
-            $image = $request->file('image');
-            
-            $imgName = 'img'.time(). '.' .$image->getClientOriginalExtension();
-            File::isDirectory($imagePath) or File::makeDirectory($imagePath, 0777, true, true);
-            
-            $image->move(public_path(env('REL_PUB_FOLD').$imagePath),$imgName);
-            
-            $fileLocation = $url. '/' .$imagePath . '/' . $imgName;
-            $profileImage = $fileLocation;
-
-            //remove existing image
-            $splitImg = explode("profile/",$profile->image);
-            $storageImg = $splitImg[1];
-            if($storageImg !== "default.jpg"){
-                $image_path = public_path(env('REL_PUB_FOLD').$imagePath)."/".$storageImg;  
-                if(File::exists($image_path)) {
-                    File::delete($image_path);
-                }
-            }
-        }else{
-            $profileImage = $profile->image;
-        }
+        $profileImage = $this->fileUtilities->fileUpload($request, $url, $imagePath, $exImagePath, true);
 
         $profile->image = $profileImage;
         $profile->save();
@@ -58,7 +39,6 @@ class ProfileSettingController extends Controller
         $response = [
             'profileImage' => $profileImage,
         ];
-
         return response($response, 200);
     }
 
