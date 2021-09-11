@@ -25,17 +25,6 @@ class UserController extends Controller
     {
         $users =  $this->ri->list($request);
         return new PaginationResource($users);
-
-        // if ($request->has('searchText')) {
-        //     return new PaginationResource( User::where('name', 'LIKE', '%' . $request->searchText . '%')
-        //         ->orWhere('email', 'LIKE', '%' . $request->searchText . '%')
-        //         ->select('name', 'email', 'role_id', 'created_at', 'updated_at')
-        //         ->with('role')
-        //         ->paginate(3));
-        //   } else {
-        //     return new PaginationResource(User::with('role')->paginate(3));
-        //   }
-        // return new PaginationResource($users);
     }
 
     public function getById($id)
