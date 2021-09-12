@@ -7,4 +7,9 @@ $ php artisan make:provider RepositoriesServiceProvider
 register the RepositoriesServiceProvider in config->app->application service provider
 
 
-Controller -> Interface -> Repository -> Model 
+Controller -> Service -> Interface -> Repository -> Model 
+
+php artisan config:clear
+php artisan clear-compiled
+php artisan config:cache
+php artisan optimize

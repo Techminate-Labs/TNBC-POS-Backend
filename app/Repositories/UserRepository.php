@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+//Interface
+use App\Contracts\UserRepositoryInterface;
+
 //Models
 use App\Models\User;
 use App\Models\Role;

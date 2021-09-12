@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+//Imterface
+use App\Contracts\ProfileRepositoryInterface;
+
 //Utilities
 use App\Utilities\FileUtilities;
 
@@ -17,17 +20,19 @@ use App\Models\Role;
 
 class ProfileController extends Controller
 {
+    private $repositoryInterface;
     private $fileUtilities;
     public static $imagePath = 'images/profile';
     public static $explode_at = "profile/";
 
-    public function __construct(FileUtilities $fileUtilities){
+    public function __construct(ProfileRepositoryInterface $repositoryInterface, FileUtilities $fileUtilities){
         $this->fileUtilities = $fileUtilities;
+        $this->ri = $repositoryInterface;
     }
 
     public function details($id)
     {
-        $user = User::where('id',$id)->with('role')->with('profile')->first();
+        $user =  $this->ri->details($id);
         $response = [
             'user' => $user,
         ];

@@ -29,9 +29,10 @@ class ProfileSettingController extends Controller
         $url  = url('');
         $imagePath = 'images/profile';
         $exImagePath = $profile->image;
+        $explode_at = "profile/";
 
         //image update
-        $profileImage = $this->fileUtilities->fileUpload($request, $url, $imagePath, $exImagePath, true);
+        $profileImage = $this->fileUtilities->fileUpload($request, $url, $imagePath, $explode_at, $exImagePath, true);
 
         $profile->image = $profileImage;
         $profile->save();
