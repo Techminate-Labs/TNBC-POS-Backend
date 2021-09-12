@@ -18,50 +18,50 @@ class UserController extends Controller
 
     public function list(Request $request)
     {
-        return $this->services->list($request);
-       
+        try{
+            return $this->services->list($request);
+        }catch (\Exception $e){
+            return response()->json([],500);
+        }
     }
 
     public function getById($id)
     {
-        $user =  $this->ri->getById($id);
-        $response = [
-            'user' => $user,
-        ];
-        return response($response, 200);
+        try{
+            $user = $this->services->getById($id);
+            $response = [
+                'data' => $user,
+            ];
+            return response()->json($response,200);
+        }catch (\Exception $e){
+            return response()->json([],500);
+        }
+        
     }
 
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $user = User::find($id);
-
-        if($user->email==$data['email']){
-            $this->validate($request,[
-                'name'=>'required',
-                'email'=>'required|string|email|max:255',
-                'role_id'=>'required',
-            ]);
+        try{
+            $user = $this->services->update($request, $id);
+            $response = [
+                'data' => $user
+            ];
+            return response()->json($response,200);
+        }catch (\Exception $e){
+            return response()->json([],500);
         }
-        else{
-            $this->validate($request,[
-                'name'=>'required',
-                'email'=>'required|string|email|max:255|unique:users',
-                'role_id'=>'required',
-            ]);
-        }
-
-        $user->update($data);
-
-        return response()->json(['user'=>$user], 200);
     }
 
     public function destroy($id)
     {
-        $this->ri->destroy($id);
-        $response = [
-            'message' => 'Record Deleted Successfully',
-        ];
-        return response($response, 200);
+        try{
+            $this->services->destroy($id);
+            $response = [
+                'message' => 'Record Deleted Successfully',
+            ];
+            return response()->json($response,200);
+        }catch (\Exception $e){
+            return response()->json([],500);
+        }
     }
 }

@@ -7,27 +7,27 @@ use App\Contracts\UserRepositoryInterface;
 
 //Models
 use App\Models\User;
-use App\Models\Role;
 
 class UserRepository implements UserRepositoryInterface{
-    public function list($request){
-        if ($request->has('searchText')) {
-            return User::where('name', 'LIKE', '%' . $request->searchText . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->searchText . '%')
+
+    public function searchUser($query){
+        return User::where('name', 'LIKE', '%' . $query . '%')
+                ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'email', 'role_id', 'created_at', 'updated_at')
                 ->with('role')
                 ->paginate(3)
                 ->through(function($user){
                     return $user->format();
                 });
-          } else {
-            return User::orderBy('name')
+    }
+
+    public function userList(){
+        return User::orderBy('name')
                 ->with('role')
                 ->paginate(3)
                 ->through(function($user){
                     return $user->format();
                 });
-          }
     }
 
     public function getById($id){
@@ -36,9 +36,8 @@ class UserRepository implements UserRepositoryInterface{
             ->format();
     }
 
-    public function destroy($id)
-    {
-        User::find($id)->delete();
+    public function findUserById($id){
+        return User::find($id);
     }
 
     // public function list(){

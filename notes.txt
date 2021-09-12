@@ -1,5 +1,6 @@
 REL_PUB_FOLD="/../../bendsta.com/"
 
+{{URL}}/api/users/?searchText=sazid
 
 $ php artisan make:resource UserResource
 
