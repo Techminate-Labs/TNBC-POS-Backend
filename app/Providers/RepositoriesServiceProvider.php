@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
-
-use App\Repositories\UserRepository;
-use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
+
+//Interfaces
+use App\Contracts\UserRepositoryInterface;
+use App\Contracts\ProfileRepositoryInterface;
+
+//Repositories
+use App\Repositories\UserRepository;
+use App\Repositories\ProfileRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -30,5 +35,18 @@ class RepositoriesServiceProvider extends ServiceProvider
             UserRepositoryInterface::class,
             UserRepository::class,
         );
+
+        $this->app->bind(
+            ProfileRepositoryInterface::class,
+            ProfileRepository::class,
+        );
+
+        // $models = array(
+        //     'User'
+        // );
+
+        // foreach ($models as $model) {
+        //     $this->app->bind("App\Contracts\\{$model}Interface", "App\Repositories\\{$model}Repository");
+        // }
     }
 }

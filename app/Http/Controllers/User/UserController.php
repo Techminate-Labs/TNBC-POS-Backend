@@ -4,27 +4,22 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\PaginationResource;
 
-//Imterface
-use App\Repositories\UserRepositoryInterface;
-
-//Models
-use App\Models\User;
-use App\Models\Role;
+//Service
+use App\Services\UserServices;
 
 class UserController extends Controller
 {
-    private $repositoryInterface;
+    private $userServices;
 
-    public function __construct(UserRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
+    public function __construct(UserServices $userServices){
+        $this->services = $userServices;
     }
 
     public function list(Request $request)
     {
-        $users =  $this->ri->list($request);
-        return new PaginationResource($users);
+        return $this->services->list($request);
+       
     }
 
     public function getById($id)
