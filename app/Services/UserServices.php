@@ -16,27 +16,26 @@ class UserServices{
         $this->ri = $repositoryInterface;
     }
 
-    public function list($request){
+    public function userList($request){
         if ($request->has('searchText')){
-            $users = $this->ri->searchUser($request->searchText);
+            $users = $this->ri->userSearch($request->searchText);
         }else{
             $users = $this->ri->userList();
         }
         return new PaginationResource($users);
     }
 
-    public function getById($id){
-        return $this->ri->getById($id);
+    public function userProfileView($id){
+        return $this->ri->userProfileView($id);
     }
 
-    public function destroy($id){
-        $user = $this->ri->findUserById($id);
-        $user->delete();
+    public function userGetById($id){
+        return $this->ri->userGetById($id);
     }
 
-    public function update($request, $id){
+    public function userUpdate($request, $id){
         $data = $request->all();
-        $user = $this->ri->findUserById($id);
+        $user = $this->ri->userFindById($id);
 
         if($user->email==$data['email']){
             $validated = $request->validate([
@@ -57,5 +56,14 @@ class UserServices{
 
         return $user;
     }
-    
+
+    public function userDelete($id){
+        $user = $this->ri->userFindById($id);
+        if($user){
+            $user->delete();
+            return response()->json('Record Deleted Successfully',200);
+        }else{
+            return response()->json('user doesnt exits',500);
+        }
+    }
 }
