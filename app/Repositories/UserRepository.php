@@ -5,19 +5,26 @@ namespace App\Repositories;
 //Interface
 use App\Contracts\UserRepositoryInterface;
 
+//Format
+use App\Format\UserFormat;
+
 //Models
 use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface{
 
-    public function searchUser($query){
+    public function __construct(UserFormat $userFormat){
+        $this->userFormat = $userFormat;
+    }
+
+    public function userSearch($query){
         return User::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'email', 'role_id', 'created_at', 'updated_at')
                 ->with('role')
                 ->paginate(3)
                 ->through(function($user){
-                    return $user->format();
+                    return $this->userFormat->formatList($user);
                 });
     }
 
@@ -26,37 +33,26 @@ class UserRepository implements UserRepositoryInterface{
                 ->with('role')
                 ->paginate(3)
                 ->through(function($user){
-                    return $user->format();
+                    return $this->userFormat->formatList($user);
                 });
     }
 
-    public function getById($id){
-        return User::where('id',$id)
-            ->firstOrFail()
-            ->format();
+    public function userProfileView($id){
+        $user = User::where('id',$id)
+                ->with('role')
+                ->with('profile')
+                ->firstOrFail();
+
+        // return $user;
+        return $this->userFormat->formatUserProfile($user);
     }
 
-    public function findUserById($id){
+    public function userGetById($id){
+        $user = User::where('id',$id)->firstOrFail();
+        return $this->userFormat->formatList($user);
+    }
+
+    public function userFindById($id){
         return User::find($id);
     }
-
-    // public function list(){
-    //     return User::orderBy('name')
-    //     ->with('role')
-    //     ->paginate(3)
-    //     ->through(function($user){
-    //         return $this->format($user);
-    //     });
-    // }
-
-    // protected function format($user){
-    //     return[
-    //         'user_id' => $user->id,
-    //         'name' => $user->name,
-    //         'role' => $user->role->name,
-    //         'email' => $user->email,
-    //         'created_at'=>$user->created_at->diffForHumans(),
-    //         'updated_at'=>$user->updated_at->diffForHumans()
-    //     ];
-    // }
 }

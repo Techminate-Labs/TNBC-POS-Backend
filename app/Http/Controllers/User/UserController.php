@@ -16,19 +16,28 @@ class UserController extends Controller
         $this->services = $userServices;
     }
 
-    public function list(Request $request)
+    public function userList(Request $request)
     {
         try{
-            return $this->services->list($request);
+            return $this->services->userList($request);
         }catch (\Exception $e){
             return response()->json([],500);
         }
     }
 
-    public function getById($id)
+    public function userProfileView($id)
     {
         try{
-            $user = $this->services->getById($id);
+            return $this->services->userProfileView($id);
+        }catch (\Exception $e){
+            return response()->json([],500);
+        }
+    }
+
+    public function userGetById($id)
+    {
+        try{
+            $user = $this->services->userGetById($id);
             $response = [
                 'data' => $user,
             ];
@@ -36,13 +45,12 @@ class UserController extends Controller
         }catch (\Exception $e){
             return response()->json([],500);
         }
-        
     }
 
-    public function update(Request $request, $id)
+    public function userUpdate(Request $request, $id)
     {
         try{
-            $user = $this->services->update($request, $id);
+            $user = $this->services->userUpdate($request, $id);
             $response = [
                 'data' => $user
             ];
@@ -52,12 +60,12 @@ class UserController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function userDelete($id)
     {
         try{
-            $this->services->destroy($id);
+            $user = $this->services->userDelete($id);
             $response = [
-                'message' => 'Record Deleted Successfully',
+                'message' => $user,
             ];
             return response()->json($response,200);
         }catch (\Exception $e){

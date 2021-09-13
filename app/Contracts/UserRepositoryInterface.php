@@ -4,8 +4,9 @@ namespace App\Contracts;
 
 interface UserRepositoryInterface
 {
-    public function searchUser($query);
+    public function userSearch($query);
     public function userList();
-    public function getById($id);
-    public function findUserById($id);
+    public function userProfileView($id);
+    public function userGetById($id);
+    public function userFindById($id);
 }
