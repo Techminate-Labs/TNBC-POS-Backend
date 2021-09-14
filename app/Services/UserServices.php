@@ -38,22 +38,20 @@ class UserServices{
         $user = $this->ri->userFindById($id);
 
         if($user->email==$data['email']){
-            $validated = $request->validate([
+            $request->validate([
                 'name'=>'required',
                 'email'=>'required|string|email|max:255',
                 'role_id'=>'required'
             ]);
         }
         else{
-            $validated = $request->validate([
+            $request->validate([
                 'name'=>'required',
                 'email'=>'required|string|email|max:255|unique:users',
                 'role_id'=>'required',
             ]);
         }
-
         $user->update($data);
-
         return $user;
     }
 

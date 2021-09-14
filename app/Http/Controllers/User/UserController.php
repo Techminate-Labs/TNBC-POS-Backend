@@ -49,15 +49,11 @@ class UserController extends Controller
 
     public function userUpdate(Request $request, $id)
     {
-        try{
-            $user = $this->services->userUpdate($request, $id);
-            $response = [
-                'data' => $user
-            ];
-            return response()->json($response,200);
-        }catch (\Exception $e){
-            return response()->json([],500);
-        }
+        $user = $this->services->userUpdate($request, $id);
+        $response = [
+            'data' => $user
+        ];
+        return response()->json($response,200);
     }
 
     public function userDelete($id)
