@@ -22,7 +22,7 @@ class ProfileSettingController extends Controller
         $this->fileUtilities = $fileUtilities;
     }
 
-    public function profilePhotoupdate(Request $request)
+    public function profileSettingPhotoUpdate(Request $request)
     {
         $user = User::find(auth()->user()->id);
         $profile = $user->profile;
@@ -43,7 +43,7 @@ class ProfileSettingController extends Controller
         return response($response, 200);
     }
 
-    public function passwordUpdate(Request $request)
+    public function profileSettingPasswordUpdate(Request $request)
     {
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],

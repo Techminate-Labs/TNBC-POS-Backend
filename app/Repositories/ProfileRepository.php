@@ -6,12 +6,25 @@ namespace App\Repositories;
 use App\Contracts\ProfileRepositoryInterface;
 
 //Models
-use App\Models\User;
+use App\Models\Profile;
 
 class ProfileRepository implements ProfileRepositoryInterface{
 
     public function details($id){
-        $user = User::where('id',$id)->with('role')->with('profile')->first();
-        return $user;
+       //
+    }
+
+    public function userProfileCreate($data){
+        $profile = Profile::create($data);
+        return $profile;
+    }
+
+    public function userProfileGetById($id){
+        $profile = Profile::where('id',$id)->firstOrFail();
+        return $profile;
+    }
+
+    public function userProfileFindById($id){
+        return Profile::find($id);
     }
 }

@@ -4,100 +4,56 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
-//Imterface
-use App\Contracts\ProfileRepositoryInterface;
-
-//Utilities
-use App\Utilities\FileUtilities;
-
-//Models
-use App\Models\User;
-use App\Models\Profile;
-use App\Models\Role;
+//Service
+use App\Services\ProfileServices;
 
 class ProfileController extends Controller
 {
-    private $repositoryInterface;
-    private $fileUtilities;
-    public static $imagePath = 'images/profile';
-    public static $explode_at = "profile/";
+    private $profileServices;
 
-    public function __construct(ProfileRepositoryInterface $repositoryInterface, FileUtilities $fileUtilities){
-        $this->fileUtilities = $fileUtilities;
-        $this->ri = $repositoryInterface;
+    public function __construct(ProfileServices $profileServices){
+        $this->service = $profileServices;
     }
 
-    public function details($id)
+    public function userProfileCreate(Request $request)
     {
-        $user =  $this->ri->details($id);
-        $response = [
-            'user' => $user,
-        ];
-        return response($response, 200);
-    }
-
-    public function store(Request $request)
-    {
-        $this->validate($request,[
-            'mobile'=>'required',
-            'present_address'=>'required|min:3',
-            'identity_number'=>'required|numeric',
-            'user_id'=>'required',
-        ]);
-        $data = $request->all();
-        $url  = url('');
-        
-        //image upload
-        $profileImage = $this->fileUtilities->fileUpload($request, $url, self::$imagePath, self::$explode_at, false, false);
-        $data['image'] = $profileImage;
-
-        Profile ::create($data);
+        $profile = $this->service->userProfileCreate($request);
 
         $response = [
-            'profile' => $data,
+            'profile' => $profile,
         ];
 
         return response($response, 200);
     }
 
-    public function update(Request $request, $id)
+    public function userProfileUpdate(Request $request, $id)
     {
-        $this->validate($request,[
-            'mobile'=>'required',
-            'present_address'=>'required|min:3',
-            'identity_number'=>'required|numeric',
-            'user_id'=>'required',
-        ]);
-
-        $profile = Profile::find($id);
-        $data = $request->all();
-        $url  = url('');
-        $exImagePath = $profile->image;
-
-        //image update
-        $profileImage = $this->fileUtilities->fileUpload($request, $url, self::$imagePath, self::$explode_at, $exImagePath, true);
-        $data['image'] = $profileImage;
-        $profile->update($data);
+        $profile = $this->service->userProfileUpdate($request, $id);
 
         $response = [
-            'profile' => $data,
+            'profile' => $profile,
         ];
 
         return response($response, 200);
     }
 
-    public function destroy($id)
+    public function userProfileDelete($id)
     {
-        $profile = Profile::find($id);
-        $exImagePath = $profile->image;
-        $this->fileUtilities->removeExistingFile(self::$imagePath, $exImagePath, self::$explode_at);
-        $profile->delete();
+        $profile = $this->service->userProfileDelete($id);
 
         $response = [
-            'profile' => "User Profile Deleted Successfully.",
+            'profile' => $profile,
+        ];
+
+        return response($response, 200);
+    }
+
+    public function userProfileGetById($id){
+        $profile = $this->service->userProfileGetById($id);
+
+        $response = [
+            'profile' => $profile,
         ];
 
         return response($response, 200);

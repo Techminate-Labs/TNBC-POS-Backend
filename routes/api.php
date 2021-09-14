@@ -41,19 +41,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/userUpdate/{id}', [UserController::class, 'userUpdate']);
     Route::delete('/userDelete/{id}', [UserController::class, 'userDelete']);
     Route::get('/userProfileView/{id}', [UserController::class, 'userProfileView']);
+
     // Profile
-    Route::post('/userProfile', [ProfileController::class, 'store']);
-    Route::put('/userProfile/{id}', [ProfileController::class, 'update']);
-    Route::delete('/userProfile/{id}', [ProfileController::class, 'destroy']);
+    Route::post('/userProfileCreate', [ProfileController::class, 'userProfileCreate']);
+    Route::get('/userProfileGetById/{id}', [ProfileController::class, 'userProfileGetById']);
+    Route::put('/userProfileUpdate/{id}', [ProfileController::class, 'userProfileUpdate']);
+    Route::delete('/userProfileDelete/{id}', [ProfileController::class, 'userProfileDelete']);
     //Profile Settings
-    Route::post('/profilePhotoupdate', [ProfileSettingController::class, 'profilePhotoupdate']);
-    Route::post('/update-password', [ProfileSettingController::class,'passwordUpdate'])->name('update.password');
+    Route::post('/profileSettingPhotoUpdate', [ProfileSettingController::class, 'profileSettingPhotoUpdate']);
+    Route::post('/profileSettingPasswordUpdate', [ProfileSettingController::class,'profileSettingPasswordUpdate']);
     //Roles
     Route::get('/roles', [RoleController::class, 'list']);
     Route::get('/roles/{id}', [RoleController::class, 'details']);
     Route::post('/roles', [RoleController::class, 'store']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
-
-    
 });
