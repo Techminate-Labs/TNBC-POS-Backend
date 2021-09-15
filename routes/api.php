@@ -8,13 +8,11 @@ use App\Models\User;
 
 //Controllers
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
-use App\Http\Controllers\Auth\PasswordUpdateController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\ProfileController;
-use App\Http\Controllers\User\ProfileSettingController;
 use App\Http\Controllers\User\RoleController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
@@ -48,12 +46,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/userProfileUpdate/{id}', [ProfileController::class, 'userProfileUpdate']);
     Route::delete('/userProfileDelete/{id}', [ProfileController::class, 'userProfileDelete']);
     //Profile Settings
-    Route::post('/profileSettingPhotoUpdate', [ProfileSettingController::class, 'profileSettingPhotoUpdate']);
-    Route::post('/profileSettingPasswordUpdate', [ProfileSettingController::class,'profileSettingPasswordUpdate']);
+    Route::post('/profileSettingPhotoUpdate', [ProfileController::class, 'profileSettingPhotoUpdate']);
+    Route::post('/profileSettingPasswordUpdate', [ProfileController::class,'profileSettingPasswordUpdate']);
     //Roles
-    Route::get('/roles', [RoleController::class, 'list']);
-    Route::get('/roles/{id}', [RoleController::class, 'details']);
-    Route::post('/roles', [RoleController::class, 'store']);
-    Route::put('/roles/{id}', [RoleController::class, 'update']);
-    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+    Route::get('/roleList', [RoleController::class, 'roleList']);
+    Route::get('/roleGetById/{id}', [RoleController::class, 'roleGetById']);
+    Route::post('/roleCreate', [RoleController::class, 'roleCreate']);
+    Route::put('/roleUpdate/{id}', [RoleController::class, 'roleUpdate']);
+    Route::delete('/roleDelete/{id}', [RoleController::class, 'roleDelete']);
 });

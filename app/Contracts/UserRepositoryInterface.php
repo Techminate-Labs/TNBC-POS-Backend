@@ -9,4 +9,5 @@ interface UserRepositoryInterface
     public function userProfileView($id);
     public function userGetById($id);
     public function userFindById($id);
+    public function userGetByAuth();
 }

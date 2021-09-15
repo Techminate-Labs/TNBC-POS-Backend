@@ -7,10 +7,12 @@ use Illuminate\Support\ServiceProvider;
 //Interfaces
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\ProfileRepositoryInterface;
+use App\Contracts\RoleRepositoryInterface;
 
 //Repositories
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
+use App\Repositories\RoleRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,11 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             ProfileRepositoryInterface::class,
             ProfileRepository::class,
+        );
+
+        $this->app->bind(
+            RoleRepositoryInterface::class,
+            RoleRepository::class,
         );
 
         // $models = array(
