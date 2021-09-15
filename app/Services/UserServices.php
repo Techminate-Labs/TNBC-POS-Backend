@@ -26,42 +26,55 @@ class UserServices{
     }
 
     public function userProfileView($id){
-        return $this->ri->userProfileView($id);
+        $user = $this->ri->userProfileView($id);
+        if($user){
+            return $user;
+        }else{
+            return response(["failed"=>'User not found'],404);
+        }
     }
 
     public function userGetById($id){
-        return $this->ri->userGetById($id);
+        $user = $this->ri->userGetById($id);
+        if($user){
+            return $user;
+        }else{
+            return response(["failed"=>'User not found'],404);
+        }
     }
 
     public function userUpdate($request, $id){
-        $data = $request->all();
         $user = $this->ri->userFindById($id);
-
-        if($user->email==$data['email']){
-            $request->validate([
-                'name'=>'required',
-                'email'=>'required|string|email|max:255',
-                'role_id'=>'required'
-            ]);
+        if($user){
+            $data = $request->all();
+            if($user->email==$data['email']){
+                $request->validate([
+                    'name'=>'required',
+                    'email'=>'required|string|email|max:255',
+                    'role_id'=>'required'
+                ]);
+            }
+            else{
+                $request->validate([
+                    'name'=>'required',
+                    'email'=>'required|string|email|max:255|unique:users',
+                    'role_id'=>'required',
+                ]);
+            }
+            $user->update($data);
+            return response($user,201);
+        }else{
+            return response(["failed"=>'User not found'],404);
         }
-        else{
-            $request->validate([
-                'name'=>'required',
-                'email'=>'required|string|email|max:255|unique:users',
-                'role_id'=>'required',
-            ]);
-        }
-        $user->update($data);
-        return $user;
     }
 
     public function userDelete($id){
         $user = $this->ri->userFindById($id);
         if($user){
             $user->delete();
-            return response()->json('Record Deleted Successfully',200);
+            return response()->json('User Deleted Successfully',200);
         }else{
-            return response()->json('user doesnt exits',500);
+            return response(["failed"=>'User not found'],404);
         }
     }
 }

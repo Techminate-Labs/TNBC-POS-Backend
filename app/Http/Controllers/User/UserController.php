@@ -18,54 +18,26 @@ class UserController extends Controller
 
     public function userList(Request $request)
     {
-        try{
-            return $this->services->userList($request);
-        }catch (\Exception $e){
-            return response()->json([],500);
-        }
+        return $this->services->userList($request);
     }
 
     public function userProfileView($id)
     {
-        try{
-            return $this->services->userProfileView($id);
-        }catch (\Exception $e){
-            return response()->json([],500);
-        }
+        return $this->services->userProfileView($id);
     }
 
     public function userGetById($id)
     {
-        try{
-            $user = $this->services->userGetById($id);
-            $response = [
-                'data' => $user,
-            ];
-            return response()->json($response,200);
-        }catch (\Exception $e){
-            return response()->json([],500);
-        }
+        return $this->services->userGetById($id);
     }
 
     public function userUpdate(Request $request, $id)
     {
-        $user = $this->services->userUpdate($request, $id);
-        $response = [
-            'data' => $user
-        ];
-        return response()->json($response,200);
+        return $this->services->userUpdate($request, $id);
     }
 
     public function userDelete($id)
     {
-        try{
-            $user = $this->services->userDelete($id);
-            $response = [
-                'message' => $user,
-            ];
-            return response()->json($response,200);
-        }catch (\Exception $e){
-            return response()->json([],500);
-        }
+        return $this->services->userDelete($id);
     }
 }

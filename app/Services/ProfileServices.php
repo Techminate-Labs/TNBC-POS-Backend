@@ -2,22 +2,42 @@
 
 namespace App\Services;
 
+//Hash
+use Illuminate\Support\Facades\Hash;
+
+//Rules
+use App\Rules\MatchOldPassword;
+
 //Interface
 use App\Contracts\ProfileRepositoryInterface;
-
+use App\Contracts\UserRepositoryInterface;
 //Utilities
 use App\Utilities\FileUtilities;
 
 class ProfileServices{
     
     private $repositoryInterface;
+    private $userRepositoryInterface;
     private $fileUtilities;
     public static $imagePath = 'images/profile';
     public static $explode_at = "profile/";
 
-    public function __construct(ProfileRepositoryInterface $repositoryInterface, FileUtilities $fileUtilities){
+    public function __construct(
+        ProfileRepositoryInterface $repositoryInterface, 
+        FileUtilities $fileUtilities, 
+        UserRepositoryInterface $userRepositoryInterface){
         $this->ri = $repositoryInterface;
+        $this->uri = $userRepositoryInterface;
         $this->fileUtilities = $fileUtilities;
+    }
+
+    public function userProfileGetById($id){
+        $profile = $this->ri->userProfileFindById($id);
+        if($profile){
+            return $profile;
+        }else{
+            return response(["failed"=>'Profile not found'],404);
+        }
     }
 
     public function userProfileCreate($request){
@@ -36,18 +56,18 @@ class ProfileServices{
         $data['image'] = $profileImage;
 
         $profile = $this->ri->userProfileCreate($data);
-        return $profile;
+        return response($profile,201);
     }
 
     public function userProfileUpdate($request, $id){
-        $request->validate([
-            'mobile'=>'required',
-            'present_address'=>'required|min:3',
-            'identity_number'=>'required|numeric',
-            'user_id'=>'required',
-        ]);
         $profile = $this->ri->userProfileFindById($id);
         if($profile){
+            $request->validate([
+                'mobile'=>'required',
+                'present_address'=>'required|min:3',
+                'identity_number'=>'required|numeric',
+                'user_id'=>'required',
+            ]);
             $data = $request->all();
             $exImagePath = $profile->image;
             $url  = url('');
@@ -57,9 +77,9 @@ class ProfileServices{
             $data['image'] = $profileImage;
 
             $profile->update($data);
-            return $profile;
+            return response($profile,201);
         }else{
-            return response('Profile not found');
+            return response(["failed"=>'Profile not found'],404);
         }
     }
 
@@ -69,19 +89,41 @@ class ProfileServices{
             $exImagePath = $profile->image;
             $this->fileUtilities->removeExistingFile(self::$imagePath, $exImagePath, self::$explode_at);
             $profile->delete();
-            return response('Profile Deleted Successfully');
+            return response(["done"=>'Profile Deleted Successfully'],200);
         }else{
-            return response('Profile not found');
+            return response(["failed"=>'Profile not found'],404);
         }
     }
 
-    public function userProfileGetById($id){
-        $profile = $this->ri->userProfileFindById($id);
+    public function profileSettingPhotoUpdate($request){
+        $user = $this->uri->userGetByAuth();
+        $profile = $user->profile;
         if($profile){
-            return $profile;
+            $data = $request->all();
+            $exImagePath = $profile->image;
+            $url  = url('');
+            
+            //image upload
+            $profileImage = $this->fileUtilities->fileUpload($request, $url, self::$imagePath, self::$explode_at, $exImagePath, true);
+            
+            $profile->image = $profileImage;
+            $profile->save();
+
+            return response(["image"=>$profileImage],201);
         }else{
-            return response('Profile not found');
+            return response(["failed"=>'Profile not found'],404);
         }
     }
-    
+
+    public function profileSettingPasswordUpdate($request){
+        $request->validate([
+            'current_password' => ['required', new MatchOldPassword],
+            'new_password' => ['required'],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+
+        $this->uri->userGetByAuth()->update(['password'=> Hash::make($request->new_password)]);
+        // auth()->user()->tokens()->delete();
+        return response(["done"=>'Password changed successfully'],200);
+    }
 }

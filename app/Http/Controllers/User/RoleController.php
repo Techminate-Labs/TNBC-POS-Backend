@@ -4,58 +4,40 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\PaginationResource;
 
-//Model
-use App\Models\Role;
+//Service
+use App\Services\RoleServices;
 
 class RoleController extends Controller
 {
-    public function list(Request $request)
-    {
-        return new PaginationResource(Role::paginate(1));
+    private $roleServices;
+
+    public function __construct(RoleServices $roleServices){
+        $this->services = $roleServices;
     }
 
-    //single data
-    public function details($id)
+    public function roleList(Request $request)
     {
-        return Role::find($id);
+        return $this->services->roleList($request);
+    }
+
+    public function roleGetById($id)
+    {
+        return $this->services->roleGetById($id);
     }
    
-    public function store(Request $request)
+    public function roleCreate(Request $request)
     {
-        $this->validate($request,[
-            'name'=>'required',
-            'permissions'=>'required',
-        ]);
-        // dd($request);
-        $role = Role::create($request->all());
-        $response = [
-            'role' => $role
-        ];
-        return response($response, 201);
+        return $this->services->roleCreate($request);
     }
 
-    public function update(Request $request, $id)
+    public function roleUpdate(Request $request, $id)
     {
-        $this->validate($request,[
-            'name'=>'required',
-            'permissions'=>'required',
-        ]);
-        
-        $role = Role::find($id);
-        $role->update($request->all());
-
-        return response()->json(['role'=>$role], 200);
+        return $this->services->roleUpdate($request, $id);
     }
-
    
-    public function destroy($id)
+    public function roleDelete($id)
     {
-        $role = Role::find($id)->delete();
-        $response = [
-            'message' => 'Record Deleted Successfully',
-        ];
-        return response($response, 201);
+        return $this->services->roleDelete($id);
     }
 }

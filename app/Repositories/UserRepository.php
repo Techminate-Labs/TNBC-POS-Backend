@@ -42,8 +42,6 @@ class UserRepository implements UserRepositoryInterface{
                 ->with('role')
                 ->with('profile')
                 ->firstOrFail();
-
-        // return $user;
         return $this->userFormat->formatUserProfile($user);
     }
 
@@ -54,5 +52,9 @@ class UserRepository implements UserRepositoryInterface{
 
     public function userFindById($id){
         return User::find($id);
+    }
+
+    public function userGetByAuth(){
+        return User::find(auth()->user()->id);
     }
 }

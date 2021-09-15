@@ -18,44 +18,30 @@ class ProfileController extends Controller
 
     public function userProfileCreate(Request $request)
     {
-        $profile = $this->service->userProfileCreate($request);
-
-        $response = [
-            'profile' => $profile,
-        ];
-
-        return response($response, 200);
+        return $this->service->userProfileCreate($request);
     }
 
     public function userProfileUpdate(Request $request, $id)
     {
-        $profile = $this->service->userProfileUpdate($request, $id);
-
-        $response = [
-            'profile' => $profile,
-        ];
-
-        return response($response, 200);
+        return $this->service->userProfileUpdate($request, $id);
     }
 
     public function userProfileDelete($id)
     {
-        $profile = $this->service->userProfileDelete($id);
-
-        $response = [
-            'profile' => $profile,
-        ];
-
-        return response($response, 200);
+        return $this->service->userProfileDelete($id);
     }
 
     public function userProfileGetById($id){
-        $profile = $this->service->userProfileGetById($id);
+        return $this->service->userProfileGetById($id);
+    }
 
-        $response = [
-            'profile' => $profile,
-        ];
+    public function profileSettingPhotoUpdate(Request $request)
+    {
+        return $this->service->profileSettingPhotoUpdate($request);
+    }
 
-        return response($response, 200);
+    public function profileSettingPasswordUpdate(Request $request)
+    {
+        return $this->service->profileSettingPasswordUpdate($request);
     }
 }
