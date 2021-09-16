@@ -50,6 +50,10 @@ class UserRepository implements UserRepositoryInterface{
         return $this->userFormat->formatList($user);
     }
 
+    public function userGetByEmail($email){
+        return User::where('email', $email)->with('role')->first();
+    }
+
     public function userFindById($id){
         return User::find($id);
     }
@@ -58,6 +62,10 @@ class UserRepository implements UserRepositoryInterface{
         return User::find(auth()->user()->id);
     }
 
+    public function userAuthenticated(){
+        return auth()->user();
+    }
+    
     public function userCreate($data){
         return User::create($data);
     }
