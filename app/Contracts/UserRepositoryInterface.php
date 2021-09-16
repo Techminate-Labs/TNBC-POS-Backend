@@ -10,4 +10,5 @@ interface UserRepositoryInterface
     public function userGetById($id);
     public function userFindById($id);
     public function userGetByAuth();
+    public function userCreate($data);
 }

@@ -57,4 +57,8 @@ class UserRepository implements UserRepositoryInterface{
     public function userGetByAuth(){
         return User::find(auth()->user()->id);
     }
+
+    public function userCreate($data){
+        return User::create($data);
+    }
 }
