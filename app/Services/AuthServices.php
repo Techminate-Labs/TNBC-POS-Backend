@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Hash;
+
 //Interface
 use App\Contracts\UserRepositoryInterface;
 
-//Resources
-use App\Http\Resources\PaginationResource;
 
 class AuthServices{
 
@@ -41,4 +41,37 @@ class AuthServices{
         return response($response, 201);
     }
 
+    public function login($request) {
+        $fields = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        // Check email
+        $user = $this->ri->userGetByEmail($fields['email']);
+
+        // Check password
+        if(!$user || !Hash::check($fields['password'], $user->password)) {
+            return response([
+                'message' => 'Email or Password Did Not Match!'
+            ], 401);
+        }
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token,
+        ];
+
+        return response($response, 200);
+    }
+
+    public function logout(){
+        $this->ri->userAuthenticated()->tokens()->delete();
+
+        return [
+            'message' => 'Logged out'
+        ];
+    }
 }
