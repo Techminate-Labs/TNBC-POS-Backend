@@ -8,11 +8,13 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\UserRepositoryInterface;
 use App\Contracts\ProfileRepositoryInterface;
 use App\Contracts\RoleRepositoryInterface;
+use App\Contracts\Item\CategoryRepositoryInterface;
 
 //Repositories
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\Item\CategoryRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -46,6 +48,11 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             RoleRepositoryInterface::class,
             RoleRepository::class,
+        );
+
+        $this->app->bind(
+            CategoryRepositoryInterface::class,
+            CategoryRepository::class,
         );
 
         // $models = array(
