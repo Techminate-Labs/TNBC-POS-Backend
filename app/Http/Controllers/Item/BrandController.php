@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Product;
+namespace App\Http\Controllers\Item;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class BrandController extends Controller
 {
     //
 }
