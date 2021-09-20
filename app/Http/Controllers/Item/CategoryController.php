@@ -21,4 +21,9 @@ class CategoryController extends Controller
         return $this->services->categoryCreate($request);
     }
 
+    public function categoryUpdate(Request $request, $id)
+    {
+        return $this->services->categoryUpdate($request, $id);
+    }
+
 }
