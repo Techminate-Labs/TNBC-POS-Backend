@@ -59,4 +59,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Category
     Route::post('/categoryCreate', [CategoryController::class, 'categoryCreate']);
+    Route::put('/categoryUpdate/{id}', [CategoryController::class, 'categoryUpdate']);
 });

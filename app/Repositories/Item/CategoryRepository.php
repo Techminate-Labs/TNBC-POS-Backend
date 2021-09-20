@@ -13,4 +13,12 @@ class CategoryRepository implements CategoryRepositoryInterface{
     public function categoryCreate($data){
         return Category::create($data);
     }
+
+    public function categoryUpdate($data){
+        return Category::update($data);
+    }
+
+    public function categoryGetById($id){
+        return category::find($id);
+    }
 }
