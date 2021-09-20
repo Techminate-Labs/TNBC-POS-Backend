@@ -1,4 +1,4 @@
-REL_PUB_FOLD="/../../bendsta.com/"
+REL_PUB_FOLD="/../../tnbpos.com/"
 
 {{URL}}/api/users/?searchText=sazid
 

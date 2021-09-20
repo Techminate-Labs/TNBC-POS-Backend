@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\ProfileRepositoryInterface;
+use App\Contracts\User\ProfileRepositoryInterface;
 
 //Models
 use App\Models\Profile;

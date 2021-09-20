@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\UserRepositoryInterface;
+use App\Contracts\User\UserRepositoryInterface;
 
 //Format
 use App\Format\UserFormat;
