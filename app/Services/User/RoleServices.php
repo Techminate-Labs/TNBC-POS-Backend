@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\User;
 
 //Interface
-use App\Contracts\RoleRepositoryInterface;
+use App\Contracts\User\RoleRepositoryInterface;
 
 //Resources
 use App\Http\Resources\PaginationResource;

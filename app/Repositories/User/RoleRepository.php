@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\RoleRepositoryInterface;
+use App\Contracts\User\RoleRepositoryInterface;
 
 //Models
 use App\Models\Role;

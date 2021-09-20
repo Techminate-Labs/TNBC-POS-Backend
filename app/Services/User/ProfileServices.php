@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\User;
 
 //Hash
 use Illuminate\Support\Facades\Hash;
@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
 
 //Interface
-use App\Contracts\ProfileRepositoryInterface;
-use App\Contracts\UserRepositoryInterface;
+use App\Contracts\User\ProfileRepositoryInterface;
+use App\Contracts\User\UserRepositoryInterface;
+
 //Utilities
 use App\Utilities\FileUtilities;
 

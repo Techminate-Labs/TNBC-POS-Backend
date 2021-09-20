@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 //Service
-use App\Services\AuthServices;
+use App\Services\Auth\AuthServices;
 
 class AuthController extends Controller
 {

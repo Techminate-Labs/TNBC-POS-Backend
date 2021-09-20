@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use Illuminate\Support\Facades\Hash;
 
 //Interface
-use App\Contracts\UserRepositoryInterface;
+use App\Contracts\User\UserRepositoryInterface;
 
 
 class AuthServices{

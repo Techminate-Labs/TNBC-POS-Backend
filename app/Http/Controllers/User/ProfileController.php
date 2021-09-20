@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 //Service
-use App\Services\ProfileServices;
+use App\Services\User\ProfileServices;
 
 class ProfileController extends Controller
 {
