@@ -18,6 +18,24 @@ class CategoryServices{
         $this->ri = $repositoryInterface;
     }
 
+    public function categoryList($request){
+        if ($request->has('searchText')){
+            $category = $this->ri->categorySearch($request->searchText);
+        }else{
+            $category = $this->ri->categoryList();
+        }
+        return new PaginationResource($category);
+    }
+
+    public function categoryGetById($id){
+        $category = $this->ri->categoryGetById($id);
+        if($category){
+            return $category;
+        }else{
+            return response(["failed"=>'category not found'],404);
+        }
+    }
+
     public function categoryCreate($request){
         $fields = $request->validate([
             'name'=>'required|string|unique:categories,name',
@@ -54,6 +72,16 @@ class CategoryServices{
             return response($category,201);
         }else{
             return response(["failed"=>'Category not found'],404);
+        }
+    }
+
+    public function categoryDelete($id){
+        $category = $this->ri->categoryGetById($id);
+        if($category){
+            $category->delete();
+            return response(["done"=>'category Deleted Successfully'],200);
+        }else{
+            return response(["failed"=>'category not found'],404);
         }
     }
 }

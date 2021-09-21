@@ -9,12 +9,16 @@ use App\Contracts\User\UserRepositoryInterface;
 use App\Contracts\User\ProfileRepositoryInterface;
 use App\Contracts\User\RoleRepositoryInterface;
 use App\Contracts\Item\CategoryRepositoryInterface;
+use App\Contracts\Item\BrandRepositoryInterface;
+use App\Contracts\Item\UnitRepositoryInterface;
 
 //Repositories
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\ProfileRepository;
 use App\Repositories\User\RoleRepository;
 use App\Repositories\Item\CategoryRepository;
+use App\Repositories\Item\BrandRepository;
+use App\Repositories\Item\UnitRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -53,6 +57,16 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             CategoryRepositoryInterface::class,
             CategoryRepository::class,
+        );
+
+        $this->app->bind(
+            BrandRepositoryInterface::class,
+            BrandRepository::class,
+        );
+
+        $this->app->bind(
+            UnitRepositoryInterface::class,
+            UnitRepository::class,
         );
 
         // $models = array(

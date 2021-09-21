@@ -10,6 +10,6 @@ class Unit extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title'
+        'name'
     ];
 }

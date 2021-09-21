@@ -13,11 +13,12 @@ class RoleRepository implements RoleRepositoryInterface{
     public function roleSearch($query){
         return Role::where('name', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'permissions', 'created_at', 'updated_at')
+                ->orderBy('created_at', 'desc')
                 ->paginate(4);
     }
 
     public function roleList(){
-        return Role::orderBy('name')->paginate(4);
+        return Role::orderBy('created_at', 'desc')->paginate(4);
     }
 
     public function roleGetById($id){
