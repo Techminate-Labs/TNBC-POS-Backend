@@ -16,6 +16,8 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\RoleController;
 
 use App\Http\Controllers\Item\CategoryController;
+use App\Http\Controllers\Item\BrandController;
+use App\Http\Controllers\Item\UnitController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -58,6 +60,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/roleDelete/{id}', [RoleController::class, 'roleDelete']);
 
     //Category
+    Route::get('/categoryList', [CategoryController::class, 'categoryList']);
+    Route::get('/categoryGetById/{id}', [CategoryController::class, 'categoryGetById']);
     Route::post('/categoryCreate', [CategoryController::class, 'categoryCreate']);
     Route::put('/categoryUpdate/{id}', [CategoryController::class, 'categoryUpdate']);
+    Route::delete('/categoryDelete/{id}', [CategoryController::class, 'categoryDelete']);
+
+    //Brand
+    Route::get('/brandList', [BrandController::class, 'brandList']);
+    Route::get('/brandGetById/{id}', [BrandController::class, 'brandGetById']);
+    Route::post('/brandCreate', [BrandController::class, 'brandCreate']);
+    Route::put('/brandUpdate/{id}', [BrandController::class, 'brandUpdate']);
+    Route::delete('/brandDelete/{id}', [BrandController::class, 'brandDelete']);
+
+    //unit
+    Route::get('/unitList', [UnitController::class, 'unitList']);
+    Route::get('/unitGetById/{id}', [UnitController::class, 'unitGetById']);
+    Route::post('/unitCreate', [UnitController::class, 'unitCreate']);
+    Route::put('/unitUpdate/{id}', [UnitController::class, 'unitUpdate']);
+    Route::delete('/unitDelete/{id}', [UnitController::class, 'unitDelete']);
+
+    
 });

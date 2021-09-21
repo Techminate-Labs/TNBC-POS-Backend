@@ -10,15 +10,22 @@ use App\Models\Category;
 
 class CategoryRepository implements CategoryRepositoryInterface{
 
-    public function categoryCreate($data){
-        return Category::create($data);
+    public function categorySearch($query){
+        return Category::where('name', 'LIKE', '%' . $query . '%')
+                ->select('id','name', 'slug', 'created_at', 'updated_at')
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
     }
 
-    public function categoryUpdate($data){
-        return Category::update($data);
+    public function categoryList(){
+        return Category::orderBy('created_at', 'desc')->paginate(4);
     }
 
     public function categoryGetById($id){
-        return category::find($id);
+        return Category::find($id);
+    }
+
+    public function categoryCreate($data){
+        return Category::create($data);
     }
 }
