@@ -47,10 +47,6 @@ class UnitServices{
     }
 
     public function unitUpdate($request, $id){
-        $fields = $request->validate([
-            
-        ]);
-
         $unit = $this->ri->unitGetById($id);
         if($unit){
             $data = $request->all();

@@ -50,10 +50,6 @@ class CategoryServices{
     }
 
     public function categoryUpdate($request, $id){
-        $fields = $request->validate([
-            
-        ]);
-
         $category = $this->ri->categoryGetById($id);
         if($category){
             $data = $request->all();

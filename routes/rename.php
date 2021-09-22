@@ -1,6 +1,6 @@
-//Brand
-    Route::get('/brandList', [BrandController::class, 'brandList']);
-    Route::get('/brandGetById/{id}', [BrandController::class, 'brandGetById']);
-    Route::post('/brandCreate', [BrandController::class, 'brandCreate']);
-    Route::put('/brandUpdate/{id}', [BrandController::class, 'brandUpdate']);
-    Route::delete('/brandDelete/{id}', [BrandController::class, 'brandDelete']);
+//supplier
+    Route::get('/supplierList', [SupplierController::class, 'supplierList']);
+    Route::get('/supplierGetById/{id}', [SupplierController::class, 'supplierGetById']);
+    Route::post('/supplierCreate', [SupplierController::class, 'supplierCreate']);
+    Route::put('/supplierUpdate/{id}', [SupplierController::class, 'supplierUpdate']);
+    Route::delete('/supplierDelete/{id}', [SupplierController::class, 'supplierDelete']);
