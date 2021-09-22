@@ -18,7 +18,7 @@ class BrandRepository implements BrandRepositoryInterface{
     }
 
     public function brandList(){
-        return Brand::orderBy('created_at', 'desc')->paginate(4);
+        return Brand::orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function brandGetById($id){

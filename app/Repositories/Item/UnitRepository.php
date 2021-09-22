@@ -18,7 +18,7 @@ class UnitRepository implements UnitRepositoryInterface{
     }
 
     public function unitList(){
-        return Unit::orderBy('created_at', 'desc')->paginate(4);
+        return Unit::orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function unitGetById($id){

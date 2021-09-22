@@ -18,7 +18,7 @@ class CategoryRepository implements CategoryRepositoryInterface{
     }
 
     public function categoryList(){
-        return Category::orderBy('created_at', 'desc')->paginate(4);
+        return Category::orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function categoryGetById($id){

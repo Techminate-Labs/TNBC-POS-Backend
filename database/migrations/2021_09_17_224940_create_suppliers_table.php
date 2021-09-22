@@ -18,7 +18,7 @@ class CreateSuppliersTable extends Migration
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('company_name')->nullable();
+            $table->string('company')->nullable();
             $table->timestamps();
         });
     }

@@ -50,10 +50,6 @@ class BrandServices{
     }
 
     public function brandUpdate($request, $id){
-        $fields = $request->validate([
-            
-        ]);
-
         $brand = $this->ri->brandGetById($id);
         if($brand){
             $data = $request->all();
