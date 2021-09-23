@@ -19,6 +19,7 @@ use App\Http\Controllers\Item\CategoryController;
 use App\Http\Controllers\Item\BrandController;
 use App\Http\Controllers\Item\UnitController;
 use App\Http\Controllers\Item\SupplierController;
+use App\Http\Controllers\Item\ItemController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -87,6 +88,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/supplierCreate', [SupplierController::class, 'supplierCreate']);
     Route::put('/supplierUpdate/{id}', [SupplierController::class, 'supplierUpdate']);
     Route::delete('/supplierDelete/{id}', [SupplierController::class, 'supplierDelete']);
+
+    //item
+    Route::get('/itemList', [ItemController::class, 'itemList']);
+    Route::get('/itemGetById/{id}', [ItemController::class, 'itemGetById']);
+    Route::post('/itemCreate', [ItemController::class, 'itemCreate']);
+    Route::put('/itemUpdate/{id}', [ItemController::class, 'itemUpdate']);
+    Route::delete('/itemDelete/{id}', [ItemController::class, 'itemDelete']);
 
     
 });
