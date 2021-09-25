@@ -10,6 +10,7 @@ class ItemFormat{
             'brand' => $item->brand->name,
             'unit' => $item->unit->name,
             'supplier' => $item->supplier->name,
+            'company' => $item->supplier->company,
             'name' => $item->name,
             'slug' => $item->slug,
             'sku' => $item->sku,

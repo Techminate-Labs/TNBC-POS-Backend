@@ -12,6 +12,9 @@ use App\Format\ItemFormat;
 //Models
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\Brand;
+use App\Models\Unit;
+use App\Models\Supplier;
 
 class ItemRepository implements ItemRepositoryInterface{
 
@@ -19,24 +22,119 @@ class ItemRepository implements ItemRepositoryInterface{
         $this->itemFormat = $itemFormat;
     }
 
+    //Get Id
+    public function itemCategory($query){
+        $category = Category::where('name', 'LIKE', '%' . $query . '%')
+                        ->select('id')
+                        ->first();
+        return $category;
+    }
+
+    public function itemBrand($query){
+        $brand = Brand::where('name', 'LIKE', '%' . $query . '%')
+                        ->select('id')
+                        ->first();
+        return $brand;
+    }
+
+    public function itemUnit($query){
+        $unit = Unit::where('name', 'LIKE', '%' . $query . '%')
+                        ->select('id')
+                        ->first();
+        return $unit;
+    }
+
+    public function itemSupplier($query){
+        $supplier = Supplier::where('name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('company', 'LIKE', '%' . $query . '%')
+                        ->select('id')
+                        ->first();
+        return $supplier;
+    }
+
+    //Check
+    public function checkIfCategory($query){
+        if($this->itemCategory($query)){
+            return true ;
+        }else{
+            return false ;
+        }
+    }
+
+    public function checkIfBrand($query){
+        if($this->itemBrand($query)){
+            return true ;
+        }else{
+            return false ;
+        }
+    }
+
+    public function checkIfUnit($query){
+        if($this->itemUnit($query)){
+            return true ;
+        }else{
+            return false ;
+        }
+    }
+
+    public function checkIfSupplier($query){
+        if($this->itemSupplier($query)){
+            return true ;
+        }else{
+            return false ;
+        }
+    }
+
+    //Search
+    public function itemSearchByCategory($query){
+        $category = $this->itemCategory($query);
+        return Item::where('category_id', $category->id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5)
+                    ->through(function($item){
+                        return $this->itemFormat->formatItemList($item);
+                    });
+    }
+
+    public function itemSearchByBrand($query){
+        $brand = $this->itemBrand($query);
+        return Item::where('brand_id', $brand->id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5)
+                    ->through(function($item){
+                        return $this->itemFormat->formatItemList($item);
+                    });
+    }
+
+    public function itemSearchByUnit($query){
+        $unit = $this->itemUnit($query);
+        return Item::where('unit_id', $unit->id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5)
+                    ->through(function($item){
+                        return $this->itemFormat->formatItemList($item);
+                    });
+    }
+
+    public function itemSearchBySupplier($query){
+        $supplier = $this->itemSupplier($query);
+        return Item::where('supplier_id', $supplier->id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5)
+                    ->through(function($item){
+                        return $this->itemFormat->formatItemList($item);
+                    });
+    }
+
     public function itemSearch($query){
-        return Item::where('name', 'LIKE', '%' . $query . '%')
+        return Item::where('slug', 'LIKE', '%' . $query . '%')
+                ->orWhere('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('sku', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate(5)
                 ->through(function($item){
                     return $this->itemFormat->formatItemList($item);
                 });
-    }
-
-    public function itemSearchByCategory($query){
-        $id = $this->itemCategoryId($query);
-        return Item::where('category_id', $id)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(5)
-                    ->through(function($item){
-                        return $this->itemFormat->formatItemList($item);
-                    });
     }
 
     public function itemList(){
@@ -51,24 +149,8 @@ class ItemRepository implements ItemRepositoryInterface{
         return Item::find($id);
     }
 
+    //Commands
     public function itemCreate($data){
         return Item::create($data);
     }
-
-    public function itemCategoryId($query){
-        $category = Category::where('name', 'LIKE', '%' . $query . '%')
-                        ->select('id')
-                        ->first();
-        return $category->id;
-    }
-
-    // public function itemSearchByCategory($query){
-    //     $id = $this->itemCategoryId($query);
-    //     return Category::find($id)->item()
-    //             ->orderBy('created_at', 'desc')
-    //             ->paginate(5)
-    //             ->through(function($item){
-    //                 return $this->itemFormat->formatItemList($item);
-    //             });
-    // }
 }

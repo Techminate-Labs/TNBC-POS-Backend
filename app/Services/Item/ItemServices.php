@@ -17,15 +17,51 @@ class ItemServices{
     }
 
     public function itemList($request){
-        if ($request->has('searchText')){
-            $item = $this->ri->itemSearch($request->searchText);
-        }elseif($request->has('searchText')){
-            $item = $this->ri->itemSearchByCategory($request->searchText);
+        
+        if($request->has('q')){
+            $q = $request->q;
+            switch (true) {
+                case $this->ri->checkIfCategory($q):
+                    $item = $this->ri->itemSearchByCategory($q);
+                    break;
+                case $this->ri->checkIfBrand($q):
+                    $item = $this->ri->itemSearchByBrand($q);
+                    break;
+                case $this->ri->checkIfUnit($q):
+                    $item = $this->ri->itemSearchByUnit($q);
+                    break;
+                case $this->ri->checkIfSupplier($q):
+                    $item = $this->ri->itemSearchBySupplier($q);
+                    break;
+                default:
+                    $item = $this->ri->itemSearch($q);
+            }
         }else{
             $item = $this->ri->itemList();
         }
         return new PaginationResource($item);
     }
+
+    // public function itemList($request){
+    //     if ($request->has('q')){
+    //         $q = $request->q;
+    //         if($this->ri->checkIfCategory($q)){
+    //             $item = $this->ri->itemSearchByCategory($q);
+    //         }elseif($this->ri->checkIfBrand($q)){
+    //             $item = $this->ri->itemSearchByBrand($q);
+    //         }elseif($this->ri->checkIfUnit($q)){
+    //             $item = $this->ri->itemSearchByUnit($q);
+    //         }elseif($this->ri->checkIfSupplier($q)){
+    //             $item = $this->ri->itemSearchBySupplier($q);
+    //         }else{
+    //             $item = $this->ri->itemSearch($q);
+    //         }
+    //     }
+    //     else{
+    //         $item = $this->ri->itemList();
+    //     }
+    //     return new PaginationResource($item);
+    // }
 
     public function itemGetById($id){
         $item = $this->ri->itemGetById($id);
