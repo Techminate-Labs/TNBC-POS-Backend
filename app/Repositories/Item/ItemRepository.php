@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Repositories\Item;
-
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 //Interface
 use App\Contracts\Item\ItemRepositoryInterface;
@@ -12,6 +11,7 @@ use App\Format\ItemFormat;
 
 //Models
 use App\Models\Item;
+use App\Models\Category;
 
 class ItemRepository implements ItemRepositoryInterface{
 
@@ -22,28 +22,25 @@ class ItemRepository implements ItemRepositoryInterface{
     public function itemSearch($query){
         return Item::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('sku', 'LIKE', '%' . $query . '%')
-                
-                ->select('id', 'category_id', 'brand_id', 'unit_id',
-                        'supplier_id','name', 'slug', 'sku', 'price', 
-                        'discount_price', 'inventory', 'expire_date', 
-                        'available','image', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->with('category')
-                ->with('brand')
-                ->with('unit')
-                ->with('supplier')
                 ->paginate(5)
                 ->through(function($item){
                     return $this->itemFormat->formatItemList($item);
                 });
     }
 
+    public function itemSearchByCategory($query){
+        $id = $this->itemCategoryId($query);
+        return Item::where('category_id', $id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5)
+                    ->through(function($item){
+                        return $this->itemFormat->formatItemList($item);
+                    });
+    }
+
     public function itemList(){
         return Item::orderBy('created_at', 'desc')
-                ->with('category')
-                ->with('brand')
-                ->with('unit')
-                ->with('supplier')
                 ->paginate(5)
                 ->through(function($item){
                     return $this->itemFormat->formatItemList($item);
@@ -57,4 +54,21 @@ class ItemRepository implements ItemRepositoryInterface{
     public function itemCreate($data){
         return Item::create($data);
     }
+
+    public function itemCategoryId($query){
+        $category = Category::where('name', 'LIKE', '%' . $query . '%')
+                        ->select('id')
+                        ->first();
+        return $category->id;
+    }
+
+    // public function itemSearchByCategory($query){
+    //     $id = $this->itemCategoryId($query);
+    //     return Category::find($id)->item()
+    //             ->orderBy('created_at', 'desc')
+    //             ->paginate(5)
+    //             ->through(function($item){
+    //                 return $this->itemFormat->formatItemList($item);
+    //             });
+    // }
 }

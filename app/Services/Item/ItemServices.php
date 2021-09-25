@@ -19,6 +19,8 @@ class ItemServices{
     public function itemList($request){
         if ($request->has('searchText')){
             $item = $this->ri->itemSearch($request->searchText);
+        }elseif($request->has('searchText')){
+            $item = $this->ri->itemSearchByCategory($request->searchText);
         }else{
             $item = $this->ri->itemList();
         }
