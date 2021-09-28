@@ -4,6 +4,7 @@ namespace App\Contracts\Item;
 
 interface ItemRepositoryInterface
 {
+    //Query
     public function checkIfCategory($query);
     public function checkIfSupplier($query);
     public function checkIfBrand($query);
@@ -15,6 +16,10 @@ interface ItemRepositoryInterface
     public function itemSearchBySupplier($query);
     public function itemSearch($query);
     public function itemList();
+
     public function itemGetById($id);
+    public function itemFindById($id);
+
+    //Commands
     public function itemCreate($data);
 }

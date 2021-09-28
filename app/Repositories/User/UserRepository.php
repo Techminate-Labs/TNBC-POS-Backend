@@ -22,7 +22,6 @@ class UserRepository implements UserRepositoryInterface{
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'email', 'role_id', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->with('role')
                 ->paginate(3)
                 ->through(function($user){
                     return $this->userFormat->formatList($user);
@@ -31,7 +30,6 @@ class UserRepository implements UserRepositoryInterface{
 
     public function userList(){
         return User::orderBy('created_at', 'desc')
-                ->with('role')
                 ->paginate(3)
                 ->through(function($user){
                     return $this->userFormat->formatList($user);
@@ -40,10 +38,12 @@ class UserRepository implements UserRepositoryInterface{
 
     public function userProfileView($id){
         $user = User::where('id',$id)
-                ->with('role')
-                ->with('profile')
-                ->firstOrFail();
-        return $this->userFormat->formatUserProfile($user);
+                ->first();
+        if($user){
+            return $this->userFormat->formatUserProfile($user);
+        }else{
+            return [] ;
+        }
     }
 
     public function userGetById($id){

@@ -2,18 +2,29 @@
 
 namespace App\Services\Item;
 
+use Illuminate\Support\Str;
+
 //Interface
 use App\Contracts\Item\ItemRepositoryInterface;
 
 //Resources
 use App\Http\Resources\PaginationResource;
 
+//Utilities
+use App\Utilities\FileUtilities;
+
 class ItemServices{
     
     private $repositoryInterface;
+    private $fileUtilities;
+    public static $imagePath = 'images/item';
+    public static $explode_at = "item/";
 
-    public function __construct(ItemRepositoryInterface $repositoryInterface){
+    public function __construct(
+        ItemRepositoryInterface $repositoryInterface,
+        FileUtilities $fileUtilities){
         $this->ri = $repositoryInterface;
+        $this->fileUtilities = $fileUtilities;
     }
 
     public function itemList($request){
@@ -42,27 +53,6 @@ class ItemServices{
         return new PaginationResource($item);
     }
 
-    // public function itemList($request){
-    //     if ($request->has('q')){
-    //         $q = $request->q;
-    //         if($this->ri->checkIfCategory($q)){
-    //             $item = $this->ri->itemSearchByCategory($q);
-    //         }elseif($this->ri->checkIfBrand($q)){
-    //             $item = $this->ri->itemSearchByBrand($q);
-    //         }elseif($this->ri->checkIfUnit($q)){
-    //             $item = $this->ri->itemSearchByUnit($q);
-    //         }elseif($this->ri->checkIfSupplier($q)){
-    //             $item = $this->ri->itemSearchBySupplier($q);
-    //         }else{
-    //             $item = $this->ri->itemSearch($q);
-    //         }
-    //     }
-    //     else{
-    //         $item = $this->ri->itemList();
-    //     }
-    //     return new PaginationResource($item);
-    // }
-
     public function itemGetById($id){
         $item = $this->ri->itemGetById($id);
         if($item){
@@ -74,17 +64,35 @@ class ItemServices{
 
     public function itemCreate($request){
         $fields = $request->validate([
-            'name'=>'required|string',
-            'email'=>'email',
-            'phone'=>'numeric',
-            'company'=>'string',
+            'category_id'=>'required|numeric',
+            'brand_id'=>'required|numeric',
+            'unit_id'=>'required|numeric',
+            'supplier_id'=>'required|numeric',
+            'name'=>'required|string|unique:categories,name',
+            'price'=>'required|numeric',
+            'inventory'=>'required|numeric',
         ]);
 
+        $data = $request->all();
+
+        //image upload
+        $image = $this->fileUtilities->fileUpload($request, url(''), self::$imagePath, false, false, false);
+        $data['image'] = $image;
+
         $item = $this->ri->itemCreate([
+            'category_id' => $fields['category_id'],
+            'brand_id' => $fields['brand_id'],
+            'unit_id' => $fields['unit_id'],
+            'supplier_id' => $fields['supplier_id'],
             'name' => $fields['name'],
-            'email' => $fields['email'],
-            'phone' => $fields['phone'],
-            'company' => $fields['company'],
+            'slug' => Str::slug($fields['name']),
+            'sku' => rand(1111,100000),
+            'price' => $fields['price'],
+            'discount' => $data['discount'],
+            'inventory' => $fields['inventory'],
+            'expire_date' => $data['expire_date'],
+            'available' => $data['available'],
+            'image' => $data['image']
         ]);
 
         return response($item,201);
@@ -113,7 +121,7 @@ class ItemServices{
     }
 
     public function itemDelete($id){
-        $item = $this->ri->itemGetById($id);
+        $item = $this->ri->itemFindById($id);
         if($item){
             $item->delete();
             return response(["done"=>'item Deleted Successfully'],200);

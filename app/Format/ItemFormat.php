@@ -15,7 +15,7 @@ class ItemFormat{
             'slug' => $item->slug,
             'sku' => $item->sku,
             'price' => $item->price,
-            'discount' => $item->discount_price,
+            'discount' => $item->discount,
             'inventory' => $item->inventory,
             'expire_date' => $item->expire_date,
             'available' => $item->available,
