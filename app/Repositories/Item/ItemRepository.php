@@ -130,6 +130,7 @@ class ItemRepository implements ItemRepositoryInterface{
         return Item::where('slug', 'LIKE', '%' . $query . '%')
                 ->orWhere('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('sku', 'LIKE', '%' . $query . '%')
+                ->orWhere('price', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate(5)
                 ->through(function($item){
@@ -146,11 +147,26 @@ class ItemRepository implements ItemRepositoryInterface{
     }
 
     public function itemGetById($id){
+        $item = Item::where('id',$id)
+                ->first();
+        if($item){
+            return $this->itemFormat->formatItemList($item);
+        }else{
+            return [] ;
+        }
+    }
+
+    public function itemFindById($id){
         return Item::find($id);
     }
 
     //Commands
     public function itemCreate($data){
-        return Item::create($data);
+        $item = Item::create($data);
+        if($item){
+            return $this->itemFormat->formatItemList($item);
+        }else{
+            return [] ;
+        }
     }
 }

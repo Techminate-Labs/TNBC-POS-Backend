@@ -23,10 +23,11 @@ class ItemSeeder extends Seeder
             'slug' => 'mushroompizza',
             'sku' => '0001',
             'price' => '10.20',
-            'discount_price' => '2.20',
+            'discount' => '2.20',
             'inventory' => '10',
             'expire_date' => '2021-09-22 15:06:48',
-            'image' => 'default.jpg',
+            'available' => '1',
+            'image' => 'http://127.0.0.1:8000/images/item/default.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -39,11 +40,12 @@ class ItemSeeder extends Seeder
             'name' => 'Pen Pizza',
             'slug' => 'penpizza',
             'sku' => '0001',
-            'price' => '10.20',
-            'discount_price' => '2.20',
+            'price' => '20.20',
+            'discount' => '2.20',
             'inventory' => '10',
             'expire_date' => '2021-09-22 15:06:48',
-            'image' => 'default.jpg',
+            'available' => '1',
+            'image' => 'http://127.0.0.1:8000/images/item/default.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -56,11 +58,12 @@ class ItemSeeder extends Seeder
             'name' => 'Naga Burger',
             'slug' => 'nagaburger',
             'sku' => '0001',
-            'price' => '10.20',
-            'discount_price' => '2.20',
+            'price' => '30.20',
+            'discount' => '2.20',
             'inventory' => '10',
             'expire_date' => '2021-09-22 15:06:48',
-            'image' => 'default.jpg',
+            'available' => '1',
+            'image' => 'http://127.0.0.1:8000/images/item/default.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);

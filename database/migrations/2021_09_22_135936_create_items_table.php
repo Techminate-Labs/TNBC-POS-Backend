@@ -23,7 +23,7 @@ class CreateItemsTable extends Migration
             $table->string('slug')->nullable();
             $table->string('sku')->nullable();
             $table->float('price', 8, 2);
-            $table->float('discount_price', 8, 2)->nullable();
+            $table->float('discount', 8, 2)->nullable();
             $table->BigInteger('inventory')->nullable();
             $table->date('expire_date')->nullable();
             $table->boolean('available')->nullable();
