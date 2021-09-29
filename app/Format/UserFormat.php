@@ -9,7 +9,7 @@ class UserFormat{
             'role' => $user->role->name,
             'name' => $user->name,
             'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at,
+            'email_verified_at' => $user->email_verified_at->diffForHumans(),
             'created_at'=>$user->created_at->diffForHumans(),
             'updated_at'=>$user->updated_at->diffForHumans()
         ];

@@ -73,10 +73,9 @@ class ItemServices{
             'inventory'=>'required|numeric',
         ]);
 
-        $data = $request->all();
-
         //image upload
         $image = $this->fileUtilities->fileUpload($request, url(''), self::$imagePath, false, false, false);
+        $data = $request->all();
         $data['image'] = $image;
 
         $item = $this->ri->itemCreate([
@@ -99,20 +98,38 @@ class ItemServices{
     }
 
     public function itemUpdate($request, $id){
-        $item = $this->ri->itemGetById($id);
+        $item = $this->ri->itemFindById($id);
+
         if($item){
-            $data = $request->all();
             $fields = $request->validate([
-                'name'=>'required|string',
-                'email'=>'email',
-                'phone'=>'numeric',
-                'company'=>'string',
+                'category_id'=>'required|numeric',
+                'brand_id'=>'required|numeric',
+                'unit_id'=>'required|numeric',
+                'supplier_id'=>'required|numeric',
+                'name'=>'required|string|unique:categories,name',
+                'price'=>'required|numeric',
+                'inventory'=>'required|numeric',
             ]);
+
+            $data = $request->all();
+            //image upload
+            $exImagePath = $item->image;
+            $image = $this->fileUtilities->fileUpload($request, url(''), self::$imagePath, self::$explode_at, $exImagePath, true);
+            $data['image'] = $image;
+
             $item->update([
+                'category_id' => $fields['category_id'],
+                'brand_id' => $fields['brand_id'],
+                'unit_id' => $fields['unit_id'],
+                'supplier_id' => $fields['supplier_id'],
                 'name' => $fields['name'],
-                'email' => $fields['email'],
-                'phone' => $fields['phone'],
-                'company' => $fields['company'],
+                'slug' => Str::slug($fields['name']),
+                'price' => $fields['price'],
+                'discount' => $data['discount'],
+                'inventory' => $fields['inventory'],
+                'expire_date' => $data['expire_date'],
+                'available' => $data['available'],
+                'image' => $data['image']
             ]);
             return response($item,201);
         }else{
