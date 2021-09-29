@@ -19,10 +19,10 @@ class BrandServices{
     }
 
     public function brandList($request){
-        if ($request->has('searchText')){
-            $brand = $this->ri->brandSearch($request->searchText);
+        if ($request->has('q')){
+            $brand = $this->ri->brandSearch($request->q, $request->limit);
         }else{
-            $brand = $this->ri->brandList();
+            $brand = $this->ri->brandList($request->limit);
         }
         return new PaginationResource($brand);
     }

@@ -10,15 +10,15 @@ use App\Models\Brand;
 
 class BrandRepository implements BrandRepositoryInterface{
 
-    public function brandSearch($query){
+    public function brandSearch($query, $limit){
         return Brand::where('name', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'slug', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->paginate(5);
+                ->paginate($limit);
     }
 
-    public function brandList(){
-        return Brand::orderBy('created_at', 'desc')->paginate(5);
+    public function brandList($limit){
+        return Brand::orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function brandGetById($id){

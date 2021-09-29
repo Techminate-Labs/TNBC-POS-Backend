@@ -17,10 +17,10 @@ class SupplierServices{
     }
 
     public function supplierList($request){
-        if ($request->has('searchText')){
-            $supplier = $this->ri->supplierSearch($request->searchText);
+        if ($request->has('q')){
+            $supplier = $this->ri->supplierSearch($request->q, $request->limit);
         }else{
-            $supplier = $this->ri->supplierList();
+            $supplier = $this->ri->supplierList($request->limit);
         }
         return new PaginationResource($supplier);
     }
