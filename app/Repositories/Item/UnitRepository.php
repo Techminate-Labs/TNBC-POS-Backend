@@ -10,15 +10,15 @@ use App\Models\Unit;
 
 class UnitRepository implements UnitRepositoryInterface{
 
-    public function unitSearch($query){
+    public function unitSearch($query, $limit){
         return Unit::where('name', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->paginate(5);
+                ->paginate($limit);
     }
 
-    public function unitList(){
-        return Unit::orderBy('created_at', 'desc')->paginate(5);
+    public function unitList($limit){
+        return Unit::orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function unitGetById($id){

@@ -19,13 +19,10 @@ class CategoryServices{
     }
 
     public function categoryList($request){
-
-        $limit = $request->limit;
-
         if ($request->has('q')){
-            $category = $this->ri->categorySearch($request->q, $limit);
+            $category = $this->ri->categorySearch($request->q, $request->limit);
         }else{
-            $category = $this->ri->categoryList($limit);
+            $category = $this->ri->categoryList($request->limit);
         }
         return new PaginationResource($category);
     }

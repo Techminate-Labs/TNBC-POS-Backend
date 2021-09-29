@@ -10,18 +10,18 @@ use App\Models\Supplier;
 
 class SupplierRepository implements SupplierRepositoryInterface{
 
-    public function supplierSearch($query){
+    public function supplierSearch($query, $limit){
         return Supplier::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->orWhere('phone', 'LIKE', '%' . $query . '%')
                 ->orWhere('company', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'email', 'phone', 'company', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->paginate(5);
+                ->paginate($limit);
     }
 
-    public function supplierList(){
-        return Supplier::orderBy('created_at', 'desc')->paginate(5);
+    public function supplierList($limit){
+        return Supplier::orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function supplierGetById($id){
