@@ -17,10 +17,10 @@ class UserServices{
     }
 
     public function userList($request){
-        if ($request->has('searchText')){
-            $users = $this->ri->userSearch($request->searchText);
+        if ($request->has('q')){
+            $users = $this->ri->userSearch($request->q, $request->limit);
         }else{
-            $users = $this->ri->userList();
+            $users = $this->ri->userList($request->limit);
         }
         return new PaginationResource($users);
     }

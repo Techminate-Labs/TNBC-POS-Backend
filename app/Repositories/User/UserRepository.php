@@ -17,20 +17,20 @@ class UserRepository implements UserRepositoryInterface{
         $this->userFormat = $userFormat;
     }
 
-    public function userSearch($query){
+    public function userSearch($query, $limit){
         return User::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'email', 'role_id', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->paginate(3)
+                ->paginate($limit)
                 ->through(function($user){
                     return $this->userFormat->formatList($user);
                 });
     }
 
-    public function userList(){
+    public function userList($limit){
         return User::orderBy('created_at', 'desc')
-                ->paginate(3)
+                ->paginate($limit)
                 ->through(function($user){
                     return $this->userFormat->formatList($user);
                 });

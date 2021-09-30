@@ -86,61 +86,61 @@ class ItemRepository implements ItemRepositoryInterface{
     }
 
     //Search
-    public function itemSearchByCategory($query){
+    public function itemSearchByCategory($query, $limit){
         $category = $this->itemCategory($query);
         return Item::where('category_id', $category->id)
                     ->orderBy('created_at', 'desc')
-                    ->paginate(5)
+                    ->paginate($limit)
                     ->through(function($item){
                         return $this->itemFormat->formatItemList($item);
                     });
     }
 
-    public function itemSearchByBrand($query){
+    public function itemSearchByBrand($query, $limit){
         $brand = $this->itemBrand($query);
         return Item::where('brand_id', $brand->id)
                     ->orderBy('created_at', 'desc')
-                    ->paginate(5)
+                    ->paginate($limit)
                     ->through(function($item){
                         return $this->itemFormat->formatItemList($item);
                     });
     }
 
-    public function itemSearchByUnit($query){
+    public function itemSearchByUnit($query, $limit){
         $unit = $this->itemUnit($query);
         return Item::where('unit_id', $unit->id)
                     ->orderBy('created_at', 'desc')
-                    ->paginate(5)
+                    ->paginate($limit)
                     ->through(function($item){
                         return $this->itemFormat->formatItemList($item);
                     });
     }
 
-    public function itemSearchBySupplier($query){
+    public function itemSearchBySupplier($query, $limit){
         $supplier = $this->itemSupplier($query);
         return Item::where('supplier_id', $supplier->id)
                     ->orderBy('created_at', 'desc')
-                    ->paginate(5)
+                    ->paginate($limit)
                     ->through(function($item){
                         return $this->itemFormat->formatItemList($item);
                     });
     }
 
-    public function itemSearch($query){
+    public function itemSearch($query, $limit){
         return Item::where('slug', 'LIKE', '%' . $query . '%')
                 ->orWhere('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('sku', 'LIKE', '%' . $query . '%')
                 ->orWhere('price', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
-                ->paginate(5)
+                ->paginate($limit)
                 ->through(function($item){
                     return $this->itemFormat->formatItemList($item);
                 });
     }
 
-    public function itemList(){
+    public function itemList($limit){
         return Item::orderBy('created_at', 'desc')
-                ->paginate(5)
+                ->paginate($limit)
                 ->through(function($item){
                     return $this->itemFormat->formatItemList($item);
                 });

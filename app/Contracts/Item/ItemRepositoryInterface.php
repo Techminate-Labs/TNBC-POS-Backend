@@ -10,12 +10,12 @@ interface ItemRepositoryInterface
     public function checkIfBrand($query);
     public function checkIfUnit($query);
     
-    public function itemSearchByCategory($query);
-    public function itemSearchByBrand($query);
-    public function itemSearchByUnit($query);
-    public function itemSearchBySupplier($query);
-    public function itemSearch($query);
-    public function itemList();
+    public function itemSearchByCategory($query, $limit);
+    public function itemSearchByBrand($query, $limit);
+    public function itemSearchByUnit($query, $limit);
+    public function itemSearchBySupplier($query, $limit);
+    public function itemSearch($query, $limit);
+    public function itemList($limit);
 
     public function itemGetById($id);
     public function itemFindById($id);
