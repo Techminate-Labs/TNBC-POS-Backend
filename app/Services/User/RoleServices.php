@@ -17,10 +17,10 @@ class RoleServices{
     }
 
     public function roleList($request){
-        if ($request->has('searchText')){
-            $roles = $this->ri->roleSearch($request->searchText);
+        if ($request->has('q')){
+            $roles = $this->ri->roleSearch($request->q, $request->limit);
         }else{
-            $roles = $this->ri->roleList();
+            $roles = $this->ri->roleList($request->limit);
         }
         return new PaginationResource($roles);
     }

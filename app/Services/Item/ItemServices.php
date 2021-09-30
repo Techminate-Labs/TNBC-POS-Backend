@@ -28,27 +28,27 @@ class ItemServices{
     }
 
     public function itemList($request){
-        
+        $limit = $request->limit;
         if($request->has('q')){
             $q = $request->q;
             switch (true) {
                 case $this->ri->checkIfCategory($q):
-                    $item = $this->ri->itemSearchByCategory($q);
+                    $item = $this->ri->itemSearchByCategory($q, $limit);
                     break;
                 case $this->ri->checkIfBrand($q):
-                    $item = $this->ri->itemSearchByBrand($q);
+                    $item = $this->ri->itemSearchByBrand($q, $limit);
                     break;
                 case $this->ri->checkIfUnit($q):
-                    $item = $this->ri->itemSearchByUnit($q);
+                    $item = $this->ri->itemSearchByUnit($q, $limit);
                     break;
                 case $this->ri->checkIfSupplier($q):
-                    $item = $this->ri->itemSearchBySupplier($q);
+                    $item = $this->ri->itemSearchBySupplier($q, $limit);
                     break;
                 default:
-                    $item = $this->ri->itemSearch($q);
+                    $item = $this->ri->itemSearch($q, $limit);
             }
         }else{
-            $item = $this->ri->itemList();
+            $item = $this->ri->itemList($limit);
         }
         return new PaginationResource($item);
     }

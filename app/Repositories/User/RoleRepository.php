@@ -10,15 +10,15 @@ use App\Models\Role;
 
 class RoleRepository implements RoleRepositoryInterface{
 
-    public function roleSearch($query){
+    public function roleSearch($query, $limit){
         return Role::where('name', 'LIKE', '%' . $query . '%')
                 ->select('id','name', 'permissions', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
-                ->paginate(4);
+                ->paginate($limit);
     }
 
-    public function roleList(){
-        return Role::orderBy('created_at', 'desc')->paginate(4);
+    public function roleList($limit){
+        return Role::orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function roleGetById($id){

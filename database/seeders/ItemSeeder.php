@@ -33,10 +33,10 @@ class ItemSeeder extends Seeder
         ]);
 
         DB::table('items')->insert([
-            'category_id' => '1',
-            'brand_id' => '1',
-            'unit_id' => '1',
-            'supplier_id' => '1',
+            'category_id' => '3',
+            'brand_id' => '3',
+            'unit_id' => '4',
+            'supplier_id' => '3',
             'name' => 'Pen Pizza',
             'slug' => 'penpizza',
             'sku' => '0001',
@@ -51,10 +51,10 @@ class ItemSeeder extends Seeder
         ]);
 
         DB::table('items')->insert([
-            'category_id' => '1',
-            'brand_id' => '1',
-            'unit_id' => '1',
-            'supplier_id' => '1',
+            'category_id' => '6',
+            'brand_id' => '8',
+            'unit_id' => '5',
+            'supplier_id' => '4',
             'name' => 'Naga Burger',
             'slug' => 'nagaburger',
             'sku' => '0001',

@@ -6,12 +6,12 @@ class UserFormat{
 
     public function isEmailVerified($data){
         if($data == null){
-            return 'Not Verified';
+            return 'Not Verified Yet';
         }else{
             return $data->diffForHumans();
         }
     }
-    
+
     public function formatList($user){
         return[
             'user_id' => $user->id,
