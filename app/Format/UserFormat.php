@@ -15,6 +15,7 @@ class UserFormat{
     public function formatList($user){
         return[
             'user_id' => $user->id,
+            'role_id' => $user->role_id,
             'role' => $user->role->name,
             'name' => $user->name,
             'email' => $user->email,
