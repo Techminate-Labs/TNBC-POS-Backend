@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         DB::table('roles')->insert([
             'name'=>'admin',
-            'permissions'=> '[{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false}},{"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}]',
+            'permissions'=> '{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         
         DB::table('roles')->insert([
             'name'=>'cashier',
-            'permissions'=> '[{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false}},{"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}]',
+            'permissions'=> '{"Users":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Roles":{"create":true,"view":false,"edit":true,"delete":true,"list":false}}',
             'created_at' => now(),
             'updated_at' => now()
         ]);
