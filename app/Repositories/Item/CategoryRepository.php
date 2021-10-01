@@ -12,13 +12,14 @@ class CategoryRepository implements CategoryRepositoryInterface{
 
     public function categorySearch($query, $limit){
         return Category::where('name', 'LIKE', '%' . $query . '%')
-                ->select('id','name', 'slug', 'created_at', 'updated_at')
+                ->withCount('item')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
 
     public function categoryList($limit){
-        return Category::orderBy('created_at', 'desc')->paginate($limit);
+        return Category::withCount('item')
+                ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function categoryGetById($id){

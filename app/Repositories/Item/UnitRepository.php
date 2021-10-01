@@ -12,13 +12,14 @@ class UnitRepository implements UnitRepositoryInterface{
 
     public function unitSearch($query, $limit){
         return Unit::where('name', 'LIKE', '%' . $query . '%')
-                ->select('id','name', 'created_at', 'updated_at')
+                ->withCount('item')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
 
     public function unitList($limit){
-        return Unit::orderBy('created_at', 'desc')->paginate($limit);
+        return Unit::withCount('item')
+                ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function unitGetById($id){

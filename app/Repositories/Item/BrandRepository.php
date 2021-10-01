@@ -12,13 +12,14 @@ class BrandRepository implements BrandRepositoryInterface{
 
     public function brandSearch($query, $limit){
         return Brand::where('name', 'LIKE', '%' . $query . '%')
-                ->select('id','name', 'slug', 'created_at', 'updated_at')
+                ->withCount('item')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
 
     public function brandList($limit){
-        return Brand::orderBy('created_at', 'desc')->paginate($limit);
+        return Brand::withCount('item')
+                ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function brandGetById($id){

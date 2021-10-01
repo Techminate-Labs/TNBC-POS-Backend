@@ -15,13 +15,14 @@ class SupplierRepository implements SupplierRepositoryInterface{
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->orWhere('phone', 'LIKE', '%' . $query . '%')
                 ->orWhere('company', 'LIKE', '%' . $query . '%')
-                ->select('id','name', 'email', 'phone', 'company', 'created_at', 'updated_at')
+                ->withCount('item')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
 
     public function supplierList($limit){
-        return Supplier::orderBy('created_at', 'desc')->paginate($limit);
+        return Supplier::withCount('item')
+                ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function supplierGetById($id){
