@@ -20,7 +20,7 @@ class UserRepository implements UserRepositoryInterface{
     public function userSearch($query, $limit){
         return User::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
-                ->select('id','name', 'email', 'role_id', 'created_at', 'updated_at')
+                ->select('id','name', 'email', 'role_id', 'email_verified_at', 'created_at', 'updated_at')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit)
                 ->through(function($user){
