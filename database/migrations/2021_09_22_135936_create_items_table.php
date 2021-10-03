@@ -25,7 +25,7 @@ class CreateItemsTable extends Migration
             $table->float('price', 8, 2);
             $table->float('discount', 8, 2)->nullable();
             $table->BigInteger('inventory')->nullable();
-            $table->date('expire_date')->nullable();
+            $table->string('expire_date')->nullable();
             $table->boolean('available')->nullable();
             $table->string('image')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
