@@ -33,7 +33,8 @@ class PaginationResource extends ResourceCollection
         $current_page = $data['meta']['current_page'];
         $from = $data['meta']['from'];
         $last_page = $data['meta']['last_page'];
-        $links = $data['meta']['links'];
+        $metaLinks = $data['meta']['links'];
+        $links = array_slice($metaLinks, 1, -1);
         $path = $data['meta']['path'];
         $per_page = $data['meta']['per_page'];
         $to = $data['meta']['to'];
