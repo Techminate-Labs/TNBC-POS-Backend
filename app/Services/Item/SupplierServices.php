@@ -22,7 +22,7 @@ class SupplierServices{
         }else{
             $supplier = $this->ri->supplierList($request->limit);
         }
-        return new PaginationResource($supplier);
+        return $supplier;
     }
 
     public function supplierGetById($id){

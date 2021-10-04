@@ -22,7 +22,7 @@ class RoleServices{
         }else{
             $roles = $this->ri->roleList($request->limit);
         }
-        return new PaginationResource($roles);
+        return $roles;
     }
 
     public function roleGetById($id){

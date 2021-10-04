@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 // use Illuminate\Http\Resources\Json\JsonResource;
 // class PaginationResource extends JsonResource
+
 use Illuminate\Http\Resources\Json\ResourceCollection;
 class PaginationResource extends ResourceCollection
 {
@@ -11,6 +12,11 @@ class PaginationResource extends ResourceCollection
     // public function toArray($request)
     // {
     //     return parent::toArray($request);
+    // }
+
+    // public function toResponse($request)
+    // {
+    //     return parent::toResponse($request);
     // }
 
     public function withResponse($request, $response)

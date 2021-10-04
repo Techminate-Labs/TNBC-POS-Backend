@@ -24,7 +24,8 @@ class CategoryServices{
         }else{
             $category = $this->ri->categoryList($request->limit);
         }
-        return new PaginationResource($category);
+        return $category;
+        // return new PaginationResource($category);
     }
 
     public function categoryGetById($id){

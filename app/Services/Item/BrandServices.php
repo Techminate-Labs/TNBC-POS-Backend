@@ -24,7 +24,7 @@ class BrandServices{
         }else{
             $brand = $this->ri->brandList($request->limit);
         }
-        return new PaginationResource($brand);
+        return $brand;
     }
 
     public function brandGetById($id){
