@@ -50,7 +50,7 @@ class ItemServices{
         }else{
             $item = $this->ri->itemList($limit);
         }
-        return new PaginationResource($item);
+        return $item;
     }
 
     public function itemGetById($id){

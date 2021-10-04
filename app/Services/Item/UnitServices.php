@@ -22,7 +22,7 @@ class UnitServices{
         }else{
             $unit = $this->ri->unitList($request->limit);
         }
-        return new PaginationResource($unit);
+        return $unit;
     }
 
     public function unitGetById($id){

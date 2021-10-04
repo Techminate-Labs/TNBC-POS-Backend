@@ -22,7 +22,7 @@ class UserServices{
         }else{
             $users = $this->ri->userList($request->limit);
         }
-        return new PaginationResource($users);
+        return $users;
     }
 
     public function userProfileView($id){
