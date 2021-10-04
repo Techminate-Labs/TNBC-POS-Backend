@@ -13,14 +13,6 @@ class PaginationResource extends ResourceCollection
     //     return parent::toArray($request);
     // }
 
-    
-    // public function toResponse($request)
-    // {
-    //     return parent::toResponse($request);
-    // }
-
-    
-
     public function withResponse($request, $response)
     {
         $data = $response->getData(true);
