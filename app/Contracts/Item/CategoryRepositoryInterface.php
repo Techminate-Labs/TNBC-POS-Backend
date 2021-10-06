@@ -6,6 +6,6 @@ interface CategoryRepositoryInterface
 {
     public function categorySearch($query, $limit);
     public function categoryList($limit);
-    public function categoryGetById($id);
+    public function categoryGetById($model, $id);
     public function categoryCreate($data);
 }
