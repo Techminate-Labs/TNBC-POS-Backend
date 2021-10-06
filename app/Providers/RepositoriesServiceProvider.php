@@ -8,20 +8,14 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\User\UserRepositoryInterface;
 use App\Contracts\User\ProfileRepositoryInterface;
 use App\Contracts\User\RoleRepositoryInterface;
-use App\Contracts\Item\CategoryRepositoryInterface;
-use App\Contracts\Item\BrandRepositoryInterface;
-use App\Contracts\Item\UnitRepositoryInterface;
-use App\Contracts\Item\SupplierRepositoryInterface;
+use App\Contracts\Item\GeneralRepositoryInterface;
 use App\Contracts\Item\ItemRepositoryInterface;
 
 //Repositories
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\ProfileRepository;
 use App\Repositories\User\RoleRepository;
-use App\Repositories\Item\CategoryRepository;
-use App\Repositories\Item\BrandRepository;
-use App\Repositories\Item\UnitRepository;
-use App\Repositories\Item\SupplierRepository;
+use App\Repositories\Item\GeneralRepository;
 use App\Repositories\Item\ItemRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
@@ -59,23 +53,8 @@ class RepositoriesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            CategoryRepositoryInterface::class,
-            CategoryRepository::class,
-        );
-
-        $this->app->bind(
-            BrandRepositoryInterface::class,
-            BrandRepository::class,
-        );
-
-        $this->app->bind(
-            UnitRepositoryInterface::class,
-            UnitRepository::class,
-        );
-
-        $this->app->bind(
-            SupplierRepositoryInterface::class,
-            SupplierRepository::class,
+            GeneralRepositoryInterface::class,
+            GeneralRepository::class,
         );
 
         $this->app->bind(

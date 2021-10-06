@@ -3,30 +3,31 @@
 namespace App\Services\Item;
 
 //Interface
-use App\Contracts\Item\SupplierRepositoryInterface;
+use App\Contracts\Item\GeneralRepositoryInterface;
 
-//Resources
-use App\Http\Resources\PaginationResource;
+//Models
+use App\Models\Supplier;
 
 class SupplierServices{
     
     private $repositoryInterface;
 
-    public function __construct(SupplierRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
+    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
+        $this->ri = $generalRepositoryInterface;
+        $this->model = Supplier::class;
     }
 
     public function supplierList($request){
         if ($request->has('q')){
-            $supplier = $this->ri->supplierSearch($request->q, $request->limit);
+            $supplier = $this->ri->supplierSearch($this->model, $request->q, $request->limit);
         }else{
-            $supplier = $this->ri->supplierList($request->limit);
+            $supplier = $this->ri->dataList($this->model, $request->limit);
         }
         return $supplier;
     }
 
     public function supplierGetById($id){
-        $supplier = $this->ri->supplierGetById($id);
+        $supplier = $this->ri->dataGetById($this->model, $id);
         if($supplier){
             return $supplier;
         }else{
@@ -42,18 +43,21 @@ class SupplierServices{
             'company'=>'string',
         ]);
 
-        $supplier = $this->ri->supplierCreate([
+        $supplier = $this->ri->dataCreate(
+            $this->model,
+            [
             'name' => $fields['name'],
             'email' => $fields['email'],
             'phone' => $fields['phone'],
             'company' => $fields['company'],
-        ]);
+            ]
+        );
 
         return response($supplier,201);
     }
 
     public function supplierUpdate($request, $id){
-        $supplier = $this->ri->supplierGetById($id);
+        $supplier = $this->ri->dataGetById($this->model, $id);
         if($supplier){
             $data = $request->all();
             $fields = $request->validate([
@@ -75,7 +79,7 @@ class SupplierServices{
     }
 
     public function supplierDelete($id){
-        $supplier = $this->ri->supplierGetById($id);
+        $supplier = $this->ri->dataGetById($this->model, $id);
         if($supplier){
             $supplier->delete();
             return response(["done"=>'supplier Deleted Successfully'],200);

@@ -5,30 +5,31 @@ namespace App\Services\Item;
 use Illuminate\Support\Str;
 
 //Interface
-use App\Contracts\Item\BrandRepositoryInterface;
+use App\Contracts\Item\GeneralRepositoryInterface;
 
-//Resources
-use App\Http\Resources\PaginationResource;
+//Models
+use App\Models\Brand;
 
 class BrandServices{
     
     private $repositoryInterface;
 
-    public function __construct(BrandRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
+    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
+        $this->ri = $generalRepositoryInterface;
+        $this->model = Brand::class;
     }
 
     public function brandList($request){
         if ($request->has('q')){
-            $brand = $this->ri->brandSearch($request->q, $request->limit);
+            $brand = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $brand = $this->ri->brandList($request->limit);
+            $brand = $this->ri->dataList($this->model, $request->limit);
         }
         return $brand;
     }
 
     public function brandGetById($id){
-        $brand = $this->ri->brandGetById($id);
+        $brand = $this->ri->dataGetById($this->model, $id);
         if($brand){
             return $brand;
         }else{
@@ -41,16 +42,19 @@ class BrandServices{
             'name'=>'required|string|unique:brands,name',
         ]);
 
-        $brand = $this->ri->brandCreate([
-            'name' => $fields['name'],
-            'slug' => Str::slug($fields['name'])
-        ]);
+        $brand = $this->ri->dataCreate(
+            $this->model,
+            [
+                'name' => $fields['name'],
+                'slug' => Str::slug($fields['name'])
+            ]
+        );
 
         return response($brand,201);
     }
 
     public function brandUpdate($request, $id){
-        $brand = $this->ri->brandGetById($id);
+        $brand = $this->ri->dataGetById($this->model, $id);
         if($brand){
             $data = $request->all();
             if($brand->name==$data['name']){
@@ -72,7 +76,7 @@ class BrandServices{
     }
 
     public function brandDelete($id){
-        $brand = $this->ri->brandGetById($id);
+        $brand = $this->ri->dataGetById($this->model, $id);
         if($brand){
             $brand->delete();
             return response(["done"=>'brand Deleted Successfully'],200);

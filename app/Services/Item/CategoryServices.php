@@ -5,7 +5,7 @@ namespace App\Services\Item;
 use Illuminate\Support\Str;
 
 //Interface
-use App\Contracts\Item\CategoryRepositoryInterface;
+use App\Contracts\Item\GeneralRepositoryInterface;
 
 //Resources
 use App\Http\Resources\PaginationResource;
@@ -17,8 +17,8 @@ class CategoryServices{
     
     private $repositoryInterface;
     
-    public function __construct(CategoryRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
+    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
+        $this->ri = $generalRepositoryInterface;
         $this->model = Category::class;
     }
 
@@ -45,12 +45,14 @@ class CategoryServices{
         $fields = $request->validate([
             'name'=>'required|string|unique:categories,name',
         ]);
-        $data = [
-            'name' => $fields['name'],
-            'slug' => Str::slug($fields['name'])
-        ];
 
-        $category = $this->ri->dataCreate($this->model, $data);
+        $category = $this->ri->dataCreate(
+            $this->model,
+            [
+                'name' => $fields['name'],
+                'slug' => Str::slug($fields['name'])
+            ]
+        );
 
         return response($category,201);
     }
