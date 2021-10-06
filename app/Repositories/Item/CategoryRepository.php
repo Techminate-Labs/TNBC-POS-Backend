@@ -22,8 +22,9 @@ class CategoryRepository implements CategoryRepositoryInterface{
                 ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
-    public function categoryGetById($id){
-        return Category::find($id);
+    public function categoryGetById($model, $id){
+        echo($model);
+        return $model::find($id);
     }
 
     public function categoryCreate($data){

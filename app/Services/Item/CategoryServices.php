@@ -29,7 +29,7 @@ class CategoryServices{
     }
 
     public function categoryGetById($id){
-        $category = $this->ri->categoryGetById($id);
+        $category = $this->ri->categoryGetById('Category', $id);
         if($category){
             return $category;
         }else{
