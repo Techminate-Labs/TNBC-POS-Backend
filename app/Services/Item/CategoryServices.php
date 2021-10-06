@@ -10,26 +10,30 @@ use App\Contracts\Item\CategoryRepositoryInterface;
 //Resources
 use App\Http\Resources\PaginationResource;
 
+//Models
+use App\Models\Category;
+
 class CategoryServices{
     
     private $repositoryInterface;
-
+    
     public function __construct(CategoryRepositoryInterface $repositoryInterface){
         $this->ri = $repositoryInterface;
+        $this->model = Category::class;
     }
 
     public function categoryList($request){
         if ($request->has('q')){
-            $category = $this->ri->categorySearch($request->q, $request->limit);
+            $category = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $category = $this->ri->categoryList($request->limit);
+            $category = $this->ri->dataList($this->model, $request->limit);
         }
         return $category;
         // return new PaginationResource($category);
     }
 
     public function categoryGetById($id){
-        $category = $this->ri->categoryGetById('Category', $id);
+        $category = $this->ri->dataGetById($this->model, $id);
         if($category){
             return $category;
         }else{
@@ -41,17 +45,18 @@ class CategoryServices{
         $fields = $request->validate([
             'name'=>'required|string|unique:categories,name',
         ]);
-
-        $category = $this->ri->categoryCreate([
+        $data = [
             'name' => $fields['name'],
             'slug' => Str::slug($fields['name'])
-        ]);
+        ];
+
+        $category = $this->ri->dataCreate($this->model, $data);
 
         return response($category,201);
     }
 
     public function categoryUpdate($request, $id){
-        $category = $this->ri->categoryGetById($id);
+        $category = $this->ri->dataGetById($this->model, $id);
         if($category){
             $data = $request->all();
             if($category->name==$data['name']){
@@ -73,7 +78,7 @@ class CategoryServices{
     }
 
     public function categoryDelete($id){
-        $category = $this->ri->categoryGetById($id);
+        $category = $this->ri->dataGetById($this->model, $id);
         if($category){
             $category->delete();
             return response(["done"=>'category Deleted Successfully'],200);

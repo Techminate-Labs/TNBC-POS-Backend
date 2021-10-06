@@ -5,29 +5,25 @@ namespace App\Repositories\Item;
 //Interface
 use App\Contracts\Item\CategoryRepositoryInterface;
 
-//Models
-use App\Models\Category;
-
 class CategoryRepository implements CategoryRepositoryInterface{
 
-    public function categorySearch($query, $limit){
-        return Category::where('name', 'LIKE', '%' . $query . '%')
+    public function dataSearch($model, $query, $limit){
+        return $model::where('name', 'LIKE', '%' . $query . '%')
                 ->withCount('item')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
 
-    public function categoryList($limit){
-        return Category::withCount('item')
+    public function dataList($model, $limit){
+        return $model::withCount('item')
                 ->orderBy('created_at', 'desc')->paginate($limit);
     }
 
-    public function categoryGetById($model, $id){
-        echo($model);
+    public function dataGetById($model, $id){
         return $model::find($id);
     }
 
-    public function categoryCreate($data){
-        return Category::create($data);
+    public function dataCreate($model, $data){
+        return $model::create($data);
     }
 }
