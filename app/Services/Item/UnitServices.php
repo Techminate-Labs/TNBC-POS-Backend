@@ -3,30 +3,31 @@
 namespace App\Services\Item;
 
 //Interface
-use App\Contracts\Item\UnitRepositoryInterface;
+use App\Contracts\Item\GeneralRepositoryInterface;
 
-//Resources
-use App\Http\Resources\PaginationResource;
+//Models
+use App\Models\Unit;
 
 class UnitServices{
     
     private $repositoryInterface;
 
-    public function __construct(UnitRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
+    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
+        $this->ri = $generalRepositoryInterface;
+        $this->model = Unit::class;
     }
 
     public function unitList($request){
         if ($request->has('q')){
-            $unit = $this->ri->unitSearch($request->q, $request->limit);
+            $unit = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $unit = $this->ri->unitList($request->limit);
+            $unit = $this->ri->dataList($this->model, $request->limit);
         }
         return $unit;
     }
 
     public function unitGetById($id){
-        $unit = $this->ri->unitGetById($id);
+        $unit = $this->ri->dataGetById($this->model, $id);
         if($unit){
             return $unit;
         }else{
@@ -39,15 +40,18 @@ class UnitServices{
             'name'=>'required|string|unique:units,name',
         ]);
 
-        $unit = $this->ri->unitCreate([
-            'name' => $fields['name'],
-        ]);
+        $unit = $this->ri->dataCreate(
+            $this->model,
+            [
+                'name' => $fields['name'],
+            ]
+        );
 
         return response($unit,201);
     }
 
     public function unitUpdate($request, $id){
-        $unit = $this->ri->unitGetById($id);
+        $unit = $this->ri->dataGetById($this->model, $id);
         if($unit){
             $data = $request->all();
             if($unit->name==$data['name']){
@@ -68,7 +72,7 @@ class UnitServices{
     }
 
     public function unitDelete($id){
-        $unit = $this->ri->unitGetById($id);
+        $unit = $this->ri->dataGetById($this->model, $id);
         if($unit){
             $unit->delete();
             return response(["done"=>'unit Deleted Successfully'],200);
