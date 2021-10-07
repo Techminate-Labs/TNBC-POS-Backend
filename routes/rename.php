@@ -1,9 +1,9 @@
-//supplier
-    Route::get('/supplierList', [SupplierController::class, 'supplierList']);
-    Route::get('/supplierGetById/{id}', [SupplierController::class, 'supplierGetById']);
-    Route::post('/supplierCreate', [SupplierController::class, 'supplierCreate']);
-    Route::put('/supplierUpdate/{id}', [SupplierController::class, 'supplierUpdate']);
-    Route::delete('/supplierDelete/{id}', [SupplierController::class, 'supplierDelete']);
+//customer
+    Route::get('/customerList', [CustomerController::class, 'customerList']);
+    Route::get('/customerGetById/{id}', [CustomerController::class, 'customerGetById']);
+    Route::post('/customerCreate', [CustomerController::class, 'customerCreate']);
+    Route::put('/customerUpdate/{id}', [CustomerController::class, 'customerUpdate']);
+    Route::delete('/customerDelete/{id}', [CustomerController::class, 'customerDelete']);
 
 
 $categories = $request->categories;

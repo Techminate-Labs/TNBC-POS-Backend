@@ -26,7 +26,7 @@ class CategoryServices{
         if ($request->has('q')){
             $category = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $category = $this->ri->dataList($this->model, $request->limit);
+            $category = $this->ri->listwithCount($this->model, $request->limit);
         }
         return $category;
         // return new PaginationResource($category);
