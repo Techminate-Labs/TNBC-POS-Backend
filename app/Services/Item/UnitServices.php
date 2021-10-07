@@ -21,7 +21,7 @@ class UnitServices{
         if ($request->has('q')){
             $unit = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $unit = $this->ri->dataList($this->model, $request->limit);
+            $unit = $this->ri->listwithCount($this->model, $request->limit);
         }
         return $unit;
     }

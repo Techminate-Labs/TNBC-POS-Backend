@@ -23,7 +23,7 @@ class BrandServices{
         if ($request->has('q')){
             $brand = $this->ri->dataSearch($this->model, $request->q, $request->limit);
         }else{
-            $brand = $this->ri->dataList($this->model, $request->limit);
+            $brand = $this->ri->listwithCount($this->model, $request->limit);
         }
         return $brand;
     }

@@ -7,14 +7,11 @@ use App\Contracts\Item\GeneralRepositoryInterface;
 
 class GeneralRepository implements GeneralRepositoryInterface{
 
-    public function dataSearch($model, $query, $limit){
-        return $model::where('name', 'LIKE', '%' . $query . '%')
-                ->withCount('item')
-                ->orderBy('created_at', 'desc')
-                ->paginate($limit);
+    public function list($model, $limit){
+        return $model::orderBy('created_at', 'desc')->paginate($limit);
     }
 
-    public function dataList($model, $limit){
+    public function listwithCount($model, $limit){
         return $model::withCount('item')
                 ->orderBy('created_at', 'desc')->paginate($limit);
     }
@@ -27,12 +24,28 @@ class GeneralRepository implements GeneralRepositoryInterface{
         return $model::create($data);
     }
 
+    public function dataSearch($model, $query, $limit){
+        return $model::where('name', 'LIKE', '%' . $query . '%')
+                ->withCount('item')
+                ->orderBy('created_at', 'desc')
+                ->paginate($limit);
+    }
+
     public function supplierSearch($model, $query, $limit){
         return $model::where('name', 'LIKE', '%' . $query . '%')
                 ->orWhere('email', 'LIKE', '%' . $query . '%')
                 ->orWhere('phone', 'LIKE', '%' . $query . '%')
                 ->orWhere('company', 'LIKE', '%' . $query . '%')
                 ->withCount('item')
+                ->orderBy('created_at', 'desc')
+                ->paginate($limit);
+    }
+
+    public function customerSearch($model, $query, $limit){
+        return $model::where('name', 'LIKE', '%' . $query . '%')
+                ->orWhere('email', 'LIKE', '%' . $query . '%')
+                ->orWhere('phone', 'LIKE', '%' . $query . '%')
+                ->orWhere('address', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }

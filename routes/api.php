@@ -21,6 +21,8 @@ use App\Http\Controllers\Item\UnitController;
 use App\Http\Controllers\Item\SupplierController;
 use App\Http\Controllers\Item\ItemController;
 
+use App\Http\Controllers\Pos\CustomerController;
+
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -96,6 +98,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/itemCreate', [ItemController::class, 'itemCreate']);
     Route::put('/itemUpdate/{id}', [ItemController::class, 'itemUpdate']);
     Route::delete('/itemDelete/{id}', [ItemController::class, 'itemDelete']);
+
+    //customer
+    Route::get('/customerList', [CustomerController::class, 'customerList']);
+    Route::get('/customerGetById/{id}', [CustomerController::class, 'customerGetById']);
+    Route::post('/customerCreate', [CustomerController::class, 'customerCreate']);
+    Route::put('/customerUpdate/{id}', [CustomerController::class, 'customerUpdate']);
+    Route::delete('/customerDelete/{id}', [CustomerController::class, 'customerDelete']);
+
 
     
 });

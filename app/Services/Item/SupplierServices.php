@@ -21,7 +21,7 @@ class SupplierServices{
         if ($request->has('q')){
             $supplier = $this->ri->supplierSearch($this->model, $request->q, $request->limit);
         }else{
-            $supplier = $this->ri->dataList($this->model, $request->limit);
+            $supplier = $this->ri->listwithCount($this->model, $request->limit);
         }
         return $supplier;
     }
