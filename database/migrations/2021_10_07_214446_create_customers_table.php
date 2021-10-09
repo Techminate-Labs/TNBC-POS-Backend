@@ -19,7 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->BigInteger('point')->nullable();
+            $table->integer('point')->nullable();
             $table->timestamps();
         });
     }

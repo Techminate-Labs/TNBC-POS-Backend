@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Services\Item;
-
-use Illuminate\Support\Str;
+namespace App\Services\Pos;
 
 //Interface
 use App\Contracts\Item\GeneralRepositoryInterface;
@@ -21,9 +19,9 @@ class CouponServices{
 
     public function couponList($request){
         if ($request->has('q')){
-            $coupon = $this->ri->dataSearch($this->model, $request->q, $request->limit);
+            $coupon = $this->ri->couponSearch($this->model, $request->q, $request->limit);
         }else{
-            $coupon = $this->ri->dataList($this->model, $request->limit);
+            $coupon = $this->ri->list($this->model, $request->limit);
         }
         return $coupon;
     }
@@ -39,14 +37,20 @@ class CouponServices{
 
     public function couponCreate($request){
         $fields = $request->validate([
-            'name'=>'required|string|unique:categories,name',
+            'discount'=>'required|numeric',
+            'start_date'=>'required|string',
+            'end_date'=>'required|string',
+            'active'=>'required',
         ]);
 
         $coupon = $this->ri->dataCreate(
             $this->model,
             [
-                'name' => $fields['name'],
-                'slug' => Str::slug($fields['name'])
+                'code' => rand(1111,100000),
+                'discount' => $fields['discount'],
+                'start_date' => $fields['discount'],
+                'end_date' => $fields['discount'],
+                'active' => $fields['discount'],
             ]
         );
 

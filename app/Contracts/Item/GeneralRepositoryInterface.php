@@ -11,4 +11,5 @@ interface GeneralRepositoryInterface
     public function dataSearch($model, $query, $limit);
     public function supplierSearch($model, $query, $limit);
     public function customerSearch($model, $query, $limit);
+    public function couponSearch($model, $query, $limit);
 }

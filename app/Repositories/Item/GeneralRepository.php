@@ -5,6 +5,9 @@ namespace App\Repositories\Item;
 //Interface
 use App\Contracts\Item\GeneralRepositoryInterface;
 
+//Format
+use App\Format\CouponFormat;
+
 class GeneralRepository implements GeneralRepositoryInterface{
 
     public function list($model, $limit){
@@ -18,10 +21,6 @@ class GeneralRepository implements GeneralRepositoryInterface{
 
     public function dataGetById($model, $id){
         return $model::find($id);
-    }
-
-    public function dataCreate($model, $data){
-        return $model::create($data);
     }
 
     public function dataSearch($model, $query, $limit){
@@ -48,5 +47,16 @@ class GeneralRepository implements GeneralRepositoryInterface{
                 ->orWhere('address', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
+    }
+
+    public function couponSearch($model, $query, $limit){
+        return $model::where('code', 'LIKE', '%' . $query . '%')
+                ->orderBy('created_at', 'desc')
+                ->paginate($limit);
+    }
+
+
+    public function dataCreate($model, $data){
+        return $model::create($data);
     }
 }
