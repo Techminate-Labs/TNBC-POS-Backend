@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 //Service
-use App\Services\Item\CouponServices;
+use App\Services\Pos\CouponServices;
 
 class CouponController extends Controller
 {

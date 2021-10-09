@@ -22,6 +22,7 @@ use App\Http\Controllers\Item\SupplierController;
 use App\Http\Controllers\Item\ItemController;
 
 use App\Http\Controllers\Pos\CustomerController;
+use App\Http\Controllers\Pos\CouponController;
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -105,6 +106,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/customerCreate', [CustomerController::class, 'customerCreate']);
     Route::put('/customerUpdate/{id}', [CustomerController::class, 'customerUpdate']);
     Route::delete('/customerDelete/{id}', [CustomerController::class, 'customerDelete']);
+
+    //coupon
+    Route::get('/couponList', [CouponController::class, 'couponList']);
+    Route::get('/couponGetById/{id}', [CouponController::class, 'couponGetById']);
+    Route::post('/couponCreate', [CouponController::class, 'couponCreate']);
+    Route::put('/couponUpdate/{id}', [CouponController::class, 'couponUpdate']);
+    Route::delete('/couponDelete/{id}', [CouponController::class, 'couponDelete']);
 
 
     
