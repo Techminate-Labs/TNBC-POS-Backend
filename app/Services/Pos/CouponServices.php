@@ -48,9 +48,9 @@ class CouponServices{
             [
                 'code' => rand(1111,100000),
                 'discount' => $fields['discount'],
-                'start_date' => $fields['discount'],
-                'end_date' => $fields['discount'],
-                'active' => $fields['discount'],
+                'start_date' => $fields['start_date'],
+                'end_date' => $fields['end_date'],
+                'active' => $fields['active'],
             ]
         );
 
@@ -61,17 +61,16 @@ class CouponServices{
         $coupon = $this->ri->dataGetById($this->model, $id);
         if($coupon){
             $data = $request->all();
-            if($coupon->name==$data['name']){
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255',
-                ]);
-            }
-            else{
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255|unique:categories,name',
-                ]);
-            }
-            $data['slug'] = Str::slug($fields['name']);
+            $fields = $request->validate([
+                'discount'=>'required|numeric',
+                'start_date'=>'required|string',
+                'end_date'=>'required|string',
+                'active'=>'required',
+            ]);
+            $data['discount'] = $fields['discount'];
+            $data['start_date'] = $fields['start_date'];
+            $data['end_date'] = $fields['end_date'];
+            $data['active'] = $fields['active'];
             $coupon->update($data);
             return response($coupon,201);
         }else{

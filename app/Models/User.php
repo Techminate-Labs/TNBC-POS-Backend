@@ -52,21 +52,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Profile::class);
     }
 
+    public function invoice(){
+    	return $this->hasOne(Invoice::class);
+    }
+
+
+    // Password reset
     public function sendPasswordResetNotification($token)
     {
         $url = 'https://tnbpos.com/reset-password?token=' . $token;
 
         $this->notify(new ResetPasswordNotification($url));
-    }
-
-    public function format(){
-        return[
-            'user_id' => $this->id,
-            'name' => $this->name,
-            'role' => $this->role->name,
-            'email' => $this->email,
-            'created_at'=>$this->created_at->diffForHumans(),
-            'updated_at'=>$this->updated_at->diffForHumans()
-        ];
     }
 }
