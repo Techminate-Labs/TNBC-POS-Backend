@@ -14,13 +14,17 @@ class GeneralRepository implements GeneralRepositoryInterface{
         return $model::orderBy('created_at', 'desc')->paginate($limit);
     }
 
+    public function dataGetById($model, $id){
+        return $model::find($id);
+    }
+
+    public function dataCreate($model, $data){
+        return $model::create($data);
+    }
+
     public function listwithCount($model, $limit){
         return $model::withCount('item')
                 ->orderBy('created_at', 'desc')->paginate($limit);
-    }
-
-    public function dataGetById($model, $id){
-        return $model::find($id);
     }
 
     public function dataSearch($model, $query, $limit){
@@ -53,10 +57,5 @@ class GeneralRepository implements GeneralRepositoryInterface{
         return $model::where('code', 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
-    }
-
-
-    public function dataCreate($model, $data){
-        return $model::create($data);
     }
 }

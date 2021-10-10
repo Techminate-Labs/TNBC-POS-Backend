@@ -27,5 +27,11 @@ class Item extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+    public function cartItem(){
+    	return $this->hasOne(CartItem::class);
+    }
 
+    public function invoiceItem(){
+    	return $this->hasOne(InvoiceItem::class);
+    }
 }
