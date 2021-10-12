@@ -28,3 +28,11 @@ Route::get('/clrcache', function () {
 Route::get('/clrconf', function () {
     Artisan::call('config:clear');
 });
+
+Route::get('/optimizeClr', function () {
+    Artisan::call('optimize:clear');
+});
+
+Route::get('/optimize', function () {
+    Artisan::call('optimize');
+});
