@@ -25,6 +25,8 @@ use App\Http\Controllers\Pos\CustomerController;
 use App\Http\Controllers\Pos\CouponController;
 
 use App\Http\Controllers\Pos\CartController;
+use App\Http\Controllers\Pos\CartItemController;
+
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -119,5 +121,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //cart
     Route::post('/cartAddCustomer', [CartController::class, 'cartAddCustomer']);
 
-    
+    //cartItem
+    Route::get('/cartItemList', [CartItemController::class, 'cartItemList']);
+    Route::post('/cartItemCreate', [CartItemController::class, 'cartItemCreate']);
+    Route::put('/cartItemUpdate/{id}', [CartItemController::class, 'cartItemUpdate']);
+    Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
+
+
 });
