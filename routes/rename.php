@@ -1,9 +1,9 @@
-//coupon
-    Route::get('/couponList', [CouponController::class, 'couponList']);
-    Route::get('/couponGetById/{id}', [CouponController::class, 'couponGetById']);
-    Route::post('/couponCreate', [CouponController::class, 'couponCreate']);
-    Route::put('/couponUpdate/{id}', [CouponController::class, 'couponUpdate']);
-    Route::delete('/couponDelete/{id}', [CouponController::class, 'couponDelete']);
+//cartItem
+    Route::get('/cartItemList', [CartItemController::class, 'cartItemList']);
+    Route::get('/cartItemGetById/{id}', [CartItemController::class, 'cartItemGetById']);
+    Route::post('/cartItemCreate', [CartItemController::class, 'cartItemCreate']);
+    Route::put('/cartItemUpdate/{id}', [CartItemController::class, 'cartItemUpdate']);
+    Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
 
 
 $categories = $request->categories;
