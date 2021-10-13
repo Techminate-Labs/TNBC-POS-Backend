@@ -86,9 +86,19 @@ class CartItemController extends Controller
 
     public function cartItemDelete($id)
     {
-        $cartItem =  CartItem::find($id);
+        $cartItem = CartItem::find($id);
+        $qty = $cartItem->qty;
+        $itemId = $cartItem->item_id;
         $cartItem->delete();
         //check item qty and add it in stock after delete
-        return response()->json($this->index());
+        $item = Item::where('id', $itemId)->first();
+        $stock = $item->inventory;
+        $item->inventory = $stock + $qty;
+        $item->save();
+        if($item->inventory == 1){
+            $item->available = 1;
+            $item->save();
+        }
+        return response(["done"=>'Item Deleted Successfully'],201);
     }
 }
