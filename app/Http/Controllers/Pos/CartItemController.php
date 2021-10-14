@@ -80,7 +80,7 @@ class CartItemController extends Controller
         $cartItem->qty = $request->qty;
         $success=$cartItem->save();
         if($success){
-            return response()->json($this->index());
+            return response(["done"=>'Quantity Updated Successfully'],201);
         }
     }
 
