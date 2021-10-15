@@ -38,6 +38,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
+Route::get('/testApi', [CartController::class, 'testApi']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
