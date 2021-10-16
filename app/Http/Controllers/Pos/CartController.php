@@ -38,7 +38,7 @@ class CartController extends Controller
             array_push($date, $block);
             
         }
-        // return $date;
+        // return $data;
         $response = [
             'transactions' => $transactions,
             'date' => $date

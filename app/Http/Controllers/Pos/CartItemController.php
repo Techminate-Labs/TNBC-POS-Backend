@@ -29,14 +29,28 @@ class CartItemController extends Controller
                     ->through(function($cartItem){
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
+
+        $subtotal = $this->payment($cartItems);
+
         $response = [
             'cartItems' => $cartItems,
-            'subtotal' => 0,
+            'subtotal' => $subtotal,
             'discount' => 0,
             'tax' => 0,
             'total' => 0,
         ];
         return response($response, 200);
+    }
+
+    public function payment($cartItems)
+    {
+        $payment = 0;
+        foreach($cartItems as $cartItem){
+            $totalAmount = $cartItem->price * $cartItem->qty;
+            $payment = $payment + $totalAmount;
+        }
+
+        return $payment;
     }
 
     //adding Item to cart
