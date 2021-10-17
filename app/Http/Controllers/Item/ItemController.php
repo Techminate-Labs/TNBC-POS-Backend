@@ -16,6 +16,10 @@ class ItemController extends Controller
         $this->services = $itemServices;
     }
 
+    public function randomItems(){
+       return $this->services->randomItems();
+    }
+
     public function itemList(Request $request)
     {
         return $this->services->itemList($request);

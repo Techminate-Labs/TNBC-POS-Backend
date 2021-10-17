@@ -160,6 +160,10 @@ class ItemRepository implements ItemRepositoryInterface{
         return Item::find($id);
     }
 
+    public function randomItems(){
+        return Item::inRandomOrder()->limit(12)->get();
+    }
+
     //Commands
     public function itemCreate($data){
         $item = Item::create($data);
