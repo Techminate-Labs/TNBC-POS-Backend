@@ -99,6 +99,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/supplierDelete/{id}', [SupplierController::class, 'supplierDelete']);
 
     //item
+    Route::get('/randomItems', [ItemController::class, 'randomItems']);
     Route::get('/itemList', [ItemController::class, 'itemList']);
     Route::get('/itemGetById/{id}', [ItemController::class, 'itemGetById']);
     Route::post('/itemCreate', [ItemController::class, 'itemCreate']);

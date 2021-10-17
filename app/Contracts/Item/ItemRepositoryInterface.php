@@ -20,6 +20,8 @@ interface ItemRepositoryInterface
     public function itemGetById($id);
     public function itemFindById($id);
 
+    public function randomItems();
+
     //Commands
     public function itemCreate($data);
 }

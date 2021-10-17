@@ -27,6 +27,10 @@ class ItemServices{
         $this->fileUtilities = $fileUtilities;
     }
 
+    public function randomItems(){
+        return $this->ri->randomItems();
+    }
+
     public function itemList($request){
         $limit = $request->limit;
         if($request->has('q')){

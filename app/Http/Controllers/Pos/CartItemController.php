@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 //Service
 use App\Services\Pos\CartServices;
@@ -12,6 +13,7 @@ use App\Services\Pos\CartServices;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Item;
+use App\Models\Coupon;
 
 //Format
 use App\Format\CartItemFormat;
@@ -22,35 +24,89 @@ class CartItemController extends Controller
         $this->itemFormat = $cartItemFormat;
     }
 
-    public function cartItemList()
+    public function subTotal($cartItems)
     {
-        $cartItems = CartItem::latest()
-                    ->paginate(10)
-                    ->through(function($cartItem){
+        $subTotal = 0;
+        foreach($cartItems as $cartItem){
+            $subTotal = $subTotal + $cartItem['total'];
+        }
+        return $subTotal;
+    }
+
+    public function percToAmount($percentage, $subTotal)
+    {
+        return ($percentage/100) * $subTotal;
+    }
+
+    public function calPayment($cartItems,  $discountRate, $taxRate){
+        $subTotal = $this->subTotal($cartItems);
+        $discount = $this->percToAmount($discountRate, $subTotal);
+        $total = $subTotal - $discount;
+        $tax = $this->percToAmount($taxRate, $subTotal);
+        $total = $total + $tax;
+        
+        return [
+            'subTotal' => $subTotal,
+            'discount' => $discount,
+            'tax' => $tax,
+            'total' => $total,
+        ];
+    }
+
+    public function applyCoupon($code){
+        $coupon = Coupon::where('code', 'LIKE', '%' . $code . '%')->first();
+
+        $today = Carbon::today();
+        $startDate = $coupon->start_date; // start: 14 oct, 
+        $endDate = $coupon->end_date;     //end: 20 oct
+
+        //valid dates: 14, 15, 16, 17, 18, 19, 20;    
+        //active coupon based on start and end date
+        //Active : 14 <= today; 20 >= today
+        if($startDate <= $today && $endDate >= $today){
+            $coupon->active = 1;
+            $coupon->save();
+        }
+        //if date is expired, inactive coupon
+        //Invalid: 20 < today ; 20<17=false, 20<21=true
+        if($endDate < $today){
+            $coupon->active = 0;
+            $coupon->save();
+        }
+
+        if($coupon->active){
+            $discountRate = $coupon->discount;
+        }else{
+            $discountRate = 0;
+        }
+        return $discountRate;
+    }
+
+    public function cartItemList(Request $request)
+    {
+        $cartItems = CartItem::all()
+                       ->map(function($cartItem){
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
 
-        $subtotal = $this->payment($cartItems);
+        if($request->has('coupon')){
+            $discountRate = $this->applyCoupon($request->coupon);
+        }else{
+            $discountRate = 0;
+        }
+
+        $taxRate = 25;
+
+        $payment = $this->calPayment($cartItems, $discountRate, $taxRate);
 
         $response = [
             'cartItems' => $cartItems,
-            'subtotal' => $subtotal,
-            'discount' => 0,
-            'tax' => 0,
-            'total' => 0,
+            'subTotal' => $payment['subTotal'],
+            'discount' => $payment['discount'],
+            'tax' => $payment['tax'],
+            'total' => $payment['total'],
         ];
         return response($response, 200);
-    }
-
-    public function payment($cartItems)
-    {
-        $payment = 0;
-        foreach($cartItems as $cartItem){
-            $totalAmount = $cartItem->price * $cartItem->qty;
-            $payment = $payment + $totalAmount;
-        }
-
-        return $payment;
     }
 
     //adding Item to cart
