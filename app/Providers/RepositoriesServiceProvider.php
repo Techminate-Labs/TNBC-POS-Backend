@@ -10,6 +10,7 @@ use App\Contracts\User\ProfileRepositoryInterface;
 use App\Contracts\User\RoleRepositoryInterface;
 use App\Contracts\Item\GeneralRepositoryInterface;
 use App\Contracts\Item\ItemRepositoryInterface;
+use App\Contracts\Pos\CartRepositoryInterface;
 
 //Repositories
 use App\Repositories\User\UserRepository;
@@ -17,6 +18,7 @@ use App\Repositories\User\ProfileRepository;
 use App\Repositories\User\RoleRepository;
 use App\Repositories\Item\GeneralRepository;
 use App\Repositories\Item\ItemRepository;
+use App\Repositories\Pos\CartRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -60,6 +62,12 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             ItemRepositoryInterface::class,
             ItemRepository::class,
+        );
+
+        
+        $this->app->bind(
+            CartRepositoryInterface::class,
+            CartRepository::class,
         );
 
         // $models = array(

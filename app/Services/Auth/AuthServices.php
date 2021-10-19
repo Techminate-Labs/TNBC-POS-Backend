@@ -6,14 +6,22 @@ use Illuminate\Support\Facades\Hash;
 
 //Interface
 use App\Contracts\User\UserRepositoryInterface;
+use App\Contracts\Pos\CartRepositoryInterface;
 
+//Models
+use App\Models\Cart;
 
 class AuthServices{
 
     private $repositoryInterface;
 
-    public function __construct(UserRepositoryInterface $repositoryInterface){
+    public function __construct(
+        UserRepositoryInterface $repositoryInterface,
+        CartRepositoryInterface $cartRepositoryInterface
+        ){
         $this->ri = $repositoryInterface;
+        $this->cartRI = $cartRepositoryInterface;
+        $this->cart = Cart::class;
     }
 
     public function userCreate($request){
@@ -59,6 +67,12 @@ class AuthServices{
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
+        //create cart for a user
+        $cart = $this->cartRI->getCart($this->cart, $user->id);
+        if(!$cart){
+            $cart = $this->cartRI->createCart($this->cart, $user->id);
+        }
+        
         $response = [
             'user' => $user,
             'token' => $token,
