@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+//Interface
+use App\Contracts\Pos\CartRepositoryInterface;
+
 //Service
 use App\Services\Pos\CartServices;
 
@@ -20,7 +23,13 @@ use App\Format\CartItemFormat;
 
 class CartItemController extends Controller
 {
-    public function __construct(CartItemFormat $cartItemFormat){
+    public function __construct(
+        CartRepositoryInterface $cartRepositoryInterface,
+        CartItemFormat $cartItemFormat
+
+    ){
+        $this->cartRI = $cartRepositoryInterface;
+        $this->cartModel = Cart::class;
         $this->itemFormat = $cartItemFormat;
     }
 
@@ -84,7 +93,10 @@ class CartItemController extends Controller
 
     public function cartItemList(Request $request)
     {
-        $cartItems = CartItem::all()
+        $user_id = auth()->user()->id;
+        $cart = $this->cartRI->getCart($this->cartModel, $user_id);
+
+        $cartItems = CartItem::where('cart_id', $cart->id)->get()
                        ->map(function($cartItem){
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
