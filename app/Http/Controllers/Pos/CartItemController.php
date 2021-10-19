@@ -157,9 +157,32 @@ class CartItemController extends Controller
     //Updating CartItem Quantity
     public function cartItemUpdate(Request $request, $id)
     {
-        $cartItem =  CartItem::find($id);
+        $cartItem = CartItem::find($id);
+        $itemId = $cartItem->item_id;
+        $item = Item::where('id', $itemId)->first();
+        $stock = $item->inventory;
 
-        $cartItem->qty = $request->qty;
+        $newQty = $request->qty; // 3
+        $prevQty = $cartItem->qty; // 1
+        if($newQty>$prevQty){ // 3 > 1
+            $qty = $newQty - $prevQty;
+            if($qty <= $stock){
+                $item->inventory = $stock - $qty;
+            }else{
+                $response = [
+                    'max_qty' => $stock + $prevQty,
+                    'message'=>'Can not add more than max quantity'
+                ];
+                return response($response, 200);
+            }
+        }else{
+            $qty = $prevQty - $newQty;
+            $item->inventory = $stock + $qty;
+        }
+        $item->save();
+        
+        $cartItem->qty = $newQty;
+        $cartItem->total_amount = $cartItem->unit_price * $newQty;
         $success=$cartItem->save();
         if($success){
             return response(["done"=>'Quantity Updated Successfully'],201);
