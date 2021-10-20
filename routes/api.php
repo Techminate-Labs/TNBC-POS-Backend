@@ -27,6 +27,8 @@ use App\Http\Controllers\Pos\CouponController;
 use App\Http\Controllers\Pos\CartController;
 use App\Http\Controllers\Pos\CartItemController;
 
+use App\Http\Controllers\Pos\TransactionController;
+
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -38,7 +40,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-Route::get('/testApi', [CartController::class, 'testApi']);
+Route::get('/testApi', [TransactionController::class, 'testApi']);
+Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {

@@ -158,6 +158,7 @@ class CartItemController extends Controller
     public function cartItemUpdate(Request $request, $id)
     {
         $cartItem = CartItem::find($id);
+        // return $cartItem;
         $itemId = $cartItem->item_id;
         $item = Item::where('id', $itemId)->first();
         $stock = $item->inventory;
@@ -179,8 +180,14 @@ class CartItemController extends Controller
             $qty = $prevQty - $newQty;
             $item->inventory = $stock + $qty;
         }
+
+        if($item->inventory == 0){
+            $item->available = 0;
+        }else{
+            $item->available = 1;
+        }
         $item->save();
-        
+
         $cartItem->qty = $newQty;
         $cartItem->total_amount = $cartItem->unit_price * $newQty;
         $success=$cartItem->save();
@@ -199,8 +206,8 @@ class CartItemController extends Controller
         $item = Item::where('id', $itemId)->first();
         $stock = $item->inventory;
         $item->inventory = $stock + $qty;
-        $item->save();
-        if($item->inventory == 1){
+        
+        if($item->inventory >= 1){
             $item->available = 1;
             $item->save();
         }
