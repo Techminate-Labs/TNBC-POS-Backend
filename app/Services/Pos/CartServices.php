@@ -10,7 +10,7 @@ use App\Models\Cart;
 
 class CartServices{
     
-    private $repositoryInterface;
+    private $cartRepositoryInterface;
     
     public function __construct(CartRepositoryInterface $cartRepositoryInterface){
         $this->cartRI = $cartRepositoryInterface;

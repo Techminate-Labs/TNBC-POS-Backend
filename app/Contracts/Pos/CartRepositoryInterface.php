@@ -6,4 +6,6 @@ interface CartRepositoryInterface
 {
     public function createCart($model, $id);
     public function getCart($model, $id);
+
+    public function findById($model, $id);
 }
