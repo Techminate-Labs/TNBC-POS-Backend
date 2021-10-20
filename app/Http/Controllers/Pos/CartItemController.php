@@ -11,6 +11,7 @@ use App\Contracts\Pos\CartRepositoryInterface;
 
 //Service
 use App\Services\Pos\CartServices;
+use App\Services\Pos\CartItemServices;
 
 //Models
 use App\Models\Cart;
@@ -25,12 +26,15 @@ class CartItemController extends Controller
 {
     public function __construct(
         CartRepositoryInterface $cartRepositoryInterface,
-        CartItemFormat $cartItemFormat
+        CartItemFormat $cartItemFormat,
+        CartItemServices $cartItemServices
 
     ){
         $this->cartRI = $cartRepositoryInterface;
         $this->cartModel = Cart::class;
         $this->itemFormat = $cartItemFormat;
+
+        $this->services = $cartItemServices;
     }
 
     public function subTotal($cartItems)
@@ -121,7 +125,7 @@ class CartItemController extends Controller
         return response($response, 200);
     }
 
-    //adding Item to cart
+    //add Item to cart
     public function cartItemCreate(Request $request)
     {
         $item_id = $request->item_id;
@@ -154,63 +158,14 @@ class CartItemController extends Controller
         }
     }
 
-    //Updating CartItem Quantity
+    //Update Quantity of CartItem
     public function cartItemUpdate(Request $request, $id)
     {
-        $cartItem = CartItem::find($id);
-        // return $cartItem;
-        $itemId = $cartItem->item_id;
-        $item = Item::where('id', $itemId)->first();
-        $stock = $item->inventory;
-
-        $newQty = $request->qty; // 3
-        $prevQty = $cartItem->qty; // 1
-        if($newQty>$prevQty){ // 3 > 1
-            $qty = $newQty - $prevQty;
-            if($qty <= $stock){
-                $item->inventory = $stock - $qty;
-            }else{
-                $response = [
-                    'max_qty' => $stock + $prevQty,
-                    'message'=>'Can not add more than max quantity'
-                ];
-                return response($response, 200);
-            }
-        }else{
-            $qty = $prevQty - $newQty;
-            $item->inventory = $stock + $qty;
-        }
-
-        if($item->inventory == 0){
-            $item->available = 0;
-        }else{
-            $item->available = 1;
-        }
-        $item->save();
-
-        $cartItem->qty = $newQty;
-        $cartItem->total_amount = $cartItem->unit_price * $newQty;
-        $success=$cartItem->save();
-        if($success){
-            return response(["done"=>'Quantity Updated Successfully'],201);
-        }
+        return $this->services->cartItemUpdate($request, $id);
     }
 
     public function cartItemDelete($id)
     {
-        $cartItem = CartItem::find($id);
-        $qty = $cartItem->qty;
-        $itemId = $cartItem->item_id;
-        $cartItem->delete();
-        //check item qty and add it in stock after delete
-        $item = Item::where('id', $itemId)->first();
-        $stock = $item->inventory;
-        $item->inventory = $stock + $qty;
-        
-        if($item->inventory >= 1){
-            $item->available = 1;
-            $item->save();
-        }
-        return response(["done"=>'Item Deleted Successfully'],201);
+        return $this->services->cartItemDelete($id);
     }
 }

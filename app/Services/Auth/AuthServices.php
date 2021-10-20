@@ -13,13 +13,14 @@ use App\Models\Cart;
 
 class AuthServices{
 
-    private $repositoryInterface;
+    private $userRepositoryInterface;
+    private $cartRepositoryInterface;
 
     public function __construct(
-        UserRepositoryInterface $repositoryInterface,
+        UserRepositoryInterface $userRepositoryInterface,
         CartRepositoryInterface $cartRepositoryInterface
         ){
-        $this->ri = $repositoryInterface;
+        $this->ri = $userRepositoryInterface;
         $this->cartRI = $cartRepositoryInterface;
         $this->cart = Cart::class;
     }
