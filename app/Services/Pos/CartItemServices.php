@@ -38,6 +38,7 @@ class CartItemServices{
         $this->itemFormat = $cartItemFormat;
     }
 
+    //Update Quantity of CartItem
     public function cartItemUpdate($request, $id)
     {
         $cartItem = $this->cartRI->findById($this->cartItemModel, $id);
