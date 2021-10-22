@@ -158,7 +158,6 @@ class CartItemController extends Controller
         }
     }
 
-    //Update Quantity of CartItem
     public function cartItemUpdate(Request $request, $id)
     {
         return $this->services->cartItemUpdate($request, $id);

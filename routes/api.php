@@ -28,6 +28,7 @@ use App\Http\Controllers\Pos\CartController;
 use App\Http\Controllers\Pos\CartItemController;
 
 use App\Http\Controllers\Pos\TransactionController;
+use App\Http\Controllers\System\ConfigurationController;
 
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
@@ -42,6 +43,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 Route::get('/testApi', [TransactionController::class, 'testApi']);
 Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);
+Route::get('/lineChart', [TransactionController::class, 'lineChart']);
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -132,5 +134,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/cartItemUpdate/{id}', [CartItemController::class, 'cartItemUpdate']);
     Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
 
-
+    //Configuration
+    Route::get('/config', [ConfigurationController::class, 'config']);
+    Route::put('/configUpdate', [ConfigurationController::class, 'configUpdate']);
 });
