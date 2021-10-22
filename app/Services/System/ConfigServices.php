@@ -47,9 +47,11 @@ class ConfigServices{
             $url  = url('');
             $exAppLogoPath = $configuration->app_logo;
             $exStoreLogoPath = $configuration->store_logo;
+            $appLogo = 'app_logo';
+            $storeLogo = 'store_logo';
             //image upload
-            $appLogo = $this->fileUtilities->fileUpload($request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
-            $storeLogo = $this->fileUtilities->fileUpload($request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
+            $appLogo = $this->fileUtilities->imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
+            $storeLogo = $this->fileUtilities->imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
             
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
