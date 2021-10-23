@@ -5,34 +5,44 @@ namespace App\Services\Pos;
 use Illuminate\Support\Str;
 
 //Interface
-use App\Contracts\Item\GeneralRepositoryInterface;
-
-//Resources
-use App\Http\Resources\PaginationResource;
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 
 //Models
 use App\Models\Customer;
 
 class CustomerServices{
     
-    private $repositoryInterface;
-    
-    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
-        $this->ri = $generalRepositoryInterface;
-        $this->model = Customer::class;
+    private $baseRepositoryInterface;
+    private $filterRepositoryInterface;
+
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
+        $this->customerModel = Customer::class;
     }
 
     public function customerList($request){
+        $prop1 = 'name';
+        $prop2 = 'email';
+        $prop3 = 'phone';
+        $prop4 = 'address';
         if ($request->has('q')){
-            $customer = $this->ri->customerSearch($this->model, $request->q, $request->limit);
+            $customer = $this->filterRI->filterBy4Prop(
+                $this->customerModel, $request->q, $request->limit,
+                $prop1, $prop2, $prop3, $prop4
+            );
         }else{
-            $customer = $this->ri->list($this->model, $request->limit);
+            $customer = $this->baseRI->listWithPagination($this->customerModel, $request->limit);
         }
         return $customer;
     }
 
     public function customerGetById($id){
-        $customer = $this->ri->dataGetById($this->model, $id);
+        $customer = $this->baseRI->findById($this->customerModel, $id);
         if($customer){
             return $customer;
         }else{
@@ -45,8 +55,8 @@ class CustomerServices{
             'name'=>'required|string|unique:categories,name',
             'phone'=>'required|numeric'
         ]);
-        $customer = $this->ri->dataCreate(
-            $this->model,
+        $customer = $this->baseRI->storeInDB(
+            $this->customerModel,
             [
                 'name' => $fields['name'],
                 'phone' => $fields['phone'],
@@ -56,11 +66,15 @@ class CustomerServices{
             ]
         );
 
-        return response($customer,201);
+        if($customer){
+            return response($customer,201);
+        }else{
+            return response(["failed"=>'Server Error'],404);
+        }
     }
 
     public function customerUpdate($request, $id){
-        $customer = $this->ri->dataGetById($this->model, $id);
+        $customer = $this->baseRI->findById($this->customerModel, $id);
         if($customer){
             $data = $request->all();
             $fields = $request->validate([
@@ -81,7 +95,7 @@ class CustomerServices{
     }
 
     public function customerDelete($id){
-        $customer = $this->ri->dataGetById($this->model, $id);
+        $customer = $this->baseRI->findById($this->customerModel, $id);
         if($customer){
             $customer->delete();
             return response(["done"=>'customer Deleted Successfully'],200);

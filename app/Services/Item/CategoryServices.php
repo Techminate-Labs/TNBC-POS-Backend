@@ -5,35 +5,40 @@ namespace App\Services\Item;
 use Illuminate\Support\Str;
 
 //Interface
-use App\Contracts\Item\GeneralRepositoryInterface;
-
-//Resources
-use App\Http\Resources\PaginationResource;
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 
 //Models
 use App\Models\Category;
 
 class CategoryServices{
     
-    private $repositoryInterface;
-    
-    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
-        $this->ri = $generalRepositoryInterface;
-        $this->model = Category::class;
+    private $baseRepositoryInterface;
+    private $filterRepositoryInterface;
+
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
+        $this->categoryModel = Category::class;
     }
 
     public function categoryList($request){
+        $countObj = 'item';
+        $prop1 = 'name';
         if ($request->has('q')){
-            $category = $this->ri->dataSearch($this->model, $request->q, $request->limit);
+            $category = $this->filterRI->filterBy1PropWithCount($this->categoryModel, $request->q, $request->limit, $countObj, $prop1);
         }else{
-            $category = $this->ri->listwithCount($this->model, $request->limit);
+            $category = $this->baseRI->listwithCount($this->categoryModel, $request->limit, $countObj);
         }
         return $category;
         // return new PaginationResource($category);
     }
 
     public function categoryGetById($id){
-        $category = $this->ri->dataGetById($this->model, $id);
+        $category = $this->baseRI->findById($this->categoryModel, $id);
         if($category){
             return $category;
         }else{
@@ -46,19 +51,23 @@ class CategoryServices{
             'name'=>'required|string|unique:categories,name',
         ]);
 
-        $category = $this->ri->dataCreate(
-            $this->model,
+        $category = $this->baseRI->storeInDB(
+            $this->categoryModel,
             [
                 'name' => $fields['name'],
                 'slug' => Str::slug($fields['name'])
             ]
         );
 
-        return response($category,201);
+        if($category){
+            return response($category,201);
+        }else{
+            return response(["failed"=>'Server Error'],500);
+        }
     }
 
     public function categoryUpdate($request, $id){
-        $category = $this->ri->dataGetById($this->model, $id);
+        $category = $this->baseRI->findById($this->categoryModel, $id);
         if($category){
             $data = $request->all();
             if($category->name==$data['name']){
@@ -80,7 +89,7 @@ class CategoryServices{
     }
 
     public function categoryDelete($id){
-        $category = $this->ri->dataGetById($this->model, $id);
+        $category = $this->baseRI->findById($this->categoryModel, $id);
         if($category){
             $category->delete();
             return response(["done"=>'category Deleted Successfully'],200);

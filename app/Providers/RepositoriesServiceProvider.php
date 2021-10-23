@@ -8,17 +8,21 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\User\UserRepositoryInterface;
 use App\Contracts\User\ProfileRepositoryInterface;
 use App\Contracts\User\RoleRepositoryInterface;
-use App\Contracts\Item\GeneralRepositoryInterface;
 use App\Contracts\Item\ItemRepositoryInterface;
 use App\Contracts\Pos\CartRepositoryInterface;
+
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 
 //Repositories
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\ProfileRepository;
 use App\Repositories\User\RoleRepository;
-use App\Repositories\Item\GeneralRepository;
 use App\Repositories\Item\ItemRepository;
 use App\Repositories\Pos\CartRepository;
+
+use App\Repositories\BaseRepository;
+use App\Repositories\FilterRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -55,11 +59,6 @@ class RepositoriesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            GeneralRepositoryInterface::class,
-            GeneralRepository::class,
-        );
-
-        $this->app->bind(
             ItemRepositoryInterface::class,
             ItemRepository::class,
         );
@@ -68,6 +67,16 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             CartRepositoryInterface::class,
             CartRepository::class,
+        );
+
+        $this->app->bind(
+            BaseRepositoryInterface::class,
+            BaseRepository::class,
+        );
+
+        $this->app->bind(
+            FilterRepositoryInterface::class,
+            FilterRepository::class,
         );
 
         // $models = array(
