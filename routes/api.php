@@ -41,10 +41,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-Route::get('/testApi', [TransactionController::class, 'testApi']);
-Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);
-Route::get('/lineChart', [TransactionController::class, 'lineChart']);
-
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //Auth
@@ -133,6 +129,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/cartItemCreate', [CartItemController::class, 'cartItemCreate']);
     Route::put('/cartItemUpdate/{id}', [CartItemController::class, 'cartItemUpdate']);
     Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
+
+    //Transactions
+    Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);
 
     //Configuration
     Route::get('/config', [ConfigurationController::class, 'config']);
