@@ -3,31 +3,39 @@
 namespace App\Services\Item;
 
 //Interface
-use App\Contracts\Item\GeneralRepositoryInterface;
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 
 //Models
 use App\Models\Unit;
 
 class UnitServices{
     
-    private $repositoryInterface;
+    private $baseRepositoryInterface;
+    private $filterRepositoryInterface;
 
-    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
-        $this->ri = $generalRepositoryInterface;
-        $this->model = Unit::class;
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
+        $this->unitModel = Unit::class;
     }
 
     public function unitList($request){
+        $countObj = 'item';
+        $prop1 = 'name';
         if ($request->has('q')){
-            $unit = $this->ri->dataSearch($this->model, $request->q, $request->limit);
+            $unit = $this->filterRI->filterBy1PropWithCount($this->unitModel, $request->q, $request->limit, $countObj, $prop1);
         }else{
-            $unit = $this->ri->listwithCount($this->model, $request->limit);
+            $unit = $this->baseRI->listwithCount($this->unitModel, $request->limit, $countObj);
         }
         return $unit;
     }
 
     public function unitGetById($id){
-        $unit = $this->ri->dataGetById($this->model, $id);
+        $unit = $this->baseRI->findById($this->unitModel, $id);
         if($unit){
             return $unit;
         }else{
@@ -40,18 +48,22 @@ class UnitServices{
             'name'=>'required|string|unique:units,name',
         ]);
 
-        $unit = $this->ri->dataCreate(
-            $this->model,
+        $unit = $this->baseRI->storeInDB(
+            $this->unitModel,
             [
                 'name' => $fields['name'],
             ]
         );
 
-        return response($unit,201);
+        if($unit){
+            return response($unit,201);
+        }else{
+            return response(["failed"=>'Server Error'],500);
+        }
     }
 
     public function unitUpdate($request, $id){
-        $unit = $this->ri->dataGetById($this->model, $id);
+        $unit = $this->baseRI->findById($this->unitModel, $id);
         if($unit){
             $data = $request->all();
             if($unit->name==$data['name']){
@@ -72,7 +84,7 @@ class UnitServices{
     }
 
     public function unitDelete($id){
-        $unit = $this->ri->dataGetById($this->model, $id);
+        $unit = $this->baseRI->findById($this->unitModel, $id);
         if($unit){
             $unit->delete();
             return response(["done"=>'unit Deleted Successfully'],200);

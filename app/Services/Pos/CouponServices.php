@@ -3,31 +3,38 @@
 namespace App\Services\Pos;
 
 //Interface
-use App\Contracts\Item\GeneralRepositoryInterface;
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 
 //Models
 use App\Models\Coupon;
 
 class CouponServices{
     
-    private $repositoryInterface;
-    
-    public function __construct(GeneralRepositoryInterface $generalRepositoryInterface){
-        $this->ri = $generalRepositoryInterface;
-        $this->model = Coupon::class;
+    private $baseRepositoryInterface;
+    private $filterRepositoryInterface;
+
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
+        $this->couponModel = Coupon::class;
     }
 
     public function couponList($request){
+        $prop1 = 'code';
         if ($request->has('q')){
-            $coupon = $this->ri->couponSearch($this->model, $request->q, $request->limit);
+            $coupon = $this->filterRI->filterBy1Prop($this->couponModel, $request->q, $request->limit, $prop1);
         }else{
-            $coupon = $this->ri->list($this->model, $request->limit);
+            $coupon = $this->baseRI->listWithPagination($this->couponModel, $request->limit);
         }
         return $coupon;
     }
 
     public function couponGetById($id){
-        $coupon = $this->ri->dataGetById($this->model, $id);
+        $coupon = $this->baseRI->findById($this->couponModel, $id);
         if($coupon){
             return $coupon;
         }else{
@@ -43,8 +50,8 @@ class CouponServices{
             'active'=>'required',
         ]);
 
-        $coupon = $this->ri->dataCreate(
-            $this->model,
+        $coupon = $this->baseRI->storeInDB(
+            $this->couponModel,
             [
                 'code' => rand(1111,100000),
                 'discount' => $fields['discount'],
@@ -54,11 +61,15 @@ class CouponServices{
             ]
         );
 
-        return response($coupon,201);
+        if($coupon){
+            return response($coupon,201);
+        }else{
+            return response(["failed"=>'server error'],500);
+        }
     }
 
     public function couponUpdate($request, $id){
-        $coupon = $this->ri->dataGetById($this->model, $id);
+        $coupon = $this->baseRI->findById($this->couponModel, $id);
         if($coupon){
             $data = $request->all();
             $fields = $request->validate([
@@ -79,7 +90,7 @@ class CouponServices{
     }
 
     public function couponDelete($id){
-        $coupon = $this->ri->dataGetById($this->model, $id);
+        $coupon = $this->baseRI->findById($this->couponModel, $id);
         if($coupon){
             $coupon->delete();
             return response(["done"=>'coupon Deleted Successfully'],200);
