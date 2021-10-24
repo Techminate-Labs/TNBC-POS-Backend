@@ -22,15 +22,15 @@ use App\Models\Supplier;
 
 class ItemServices{
     
-    private $itemRepositoryInterface;
+    private $repositoryInterface;
     private $fileUtilities;
     public static $imagePath = 'images/item';
     public static $explode_at = "item/";
 
     public function __construct(
-        ItemRepositoryInterface $itemRepositoryInterface,
+        ItemRepositoryInterface $repositoryInterface,
         FileUtilities $fileUtilities){
-        $this->itemRI = $itemRepositoryInterface;
+        $this->ri = $repositoryInterface;
         $this->fileUtilities = $fileUtilities;
 
         $this->itemModel = Item::class;
@@ -41,46 +41,37 @@ class ItemServices{
     }
 
     public function randomItems(){
-        return $this->itemRI->randomItems();
+        return $this->ri->randomItems();
     }
 
     public function itemList($request){
         $limit = $request->limit;
         if($request->has('q')){
             $q = $request->q;
-            $prop1 = 'category_id';
-            $prop2 = 'brand_id';
-            $prop3 = 'unit_id';
-            $prop4 = 'supplier_id';
             switch (true) {
-                case $this->itemRI->checkIfObj($this->categoryModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->categoryModel, $q, $limit, $prop1);
+                case $this->ri->checkIfCategory($q):
+                    $item = $this->ri->itemSearchByCategory($q, $limit);
                     break;
-                case $this->itemRI->checkIfObj($this->brandModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->brandModel, $q, $limit, $prop2);
+                case $this->ri->checkIfBrand($q):
+                    $item = $this->ri->itemSearchByBrand($q, $limit);
                     break;
-                case $this->itemRI->checkIfObj($this->unitModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->unitModel, $q, $limit, $prop3);
+                case $this->ri->checkIfUnit($q):
+                    $item = $this->ri->itemSearchByUnit($q, $limit);
                     break;
-                case $this->itemRI->checkIfObj($this->supplierModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->supplierModel, $q, $limit, $prop4);
+                case $this->ri->checkIfSupplier($q):
+                    $item = $this->ri->itemSearchBySupplier($q, $limit);
                     break;
                 default:
-                    $item = $this->itemRI->itemSearch($q, $limit);
+                    $item = $this->ri->itemSearch($q, $limit);
             }
         }else{
-            $item = $this->itemRI->itemList($limit);
+            $item = $this->ri->itemList($limit);
         }
-
-        if($item){
-            return $item;
-        }else{
-            return response(["failed"=>'item not found'],404);
-        }
+        return $item;
     }
 
     public function itemGetById($id){
-        $item = $this->itemRI->itemGetById($id);
+        $item = $this->ri->itemGetById($id);
         if($item){
             return $item;
         }else{
@@ -104,7 +95,7 @@ class ItemServices{
         $data = $request->all();
         $data['image'] = $image;
 
-        $item = $this->itemRI->itemCreate([
+        $item = $this->ri->itemCreate([
             'category_id' => $fields['category_id'],
             'brand_id' => $fields['brand_id'],
             'unit_id' => $fields['unit_id'],
@@ -124,7 +115,7 @@ class ItemServices{
     }
 
     public function itemUpdate($request, $id){
-        $item = $this->itemRI->itemFindById($id);
+        $item = $this->ri->itemFindById($id);
 
         if($item){
             $fields = $request->validate([
@@ -164,7 +155,7 @@ class ItemServices{
     }
 
     public function itemDelete($id){
-        $item = $this->itemRI->itemFindById($id);
+        $item = $this->ri->itemFindById($id);
         if($item){
             $item->delete();
             return response(["done"=>'item Deleted Successfully'],200);
