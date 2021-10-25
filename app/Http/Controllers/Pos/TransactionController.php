@@ -77,5 +77,57 @@ class TransactionController extends Controller
         ];
         return response($response, 200);
     }
-    
+
+    public function atm(Request $request){
+        $block = [];
+        $day = $request->day;
+        $invest = $request->invest;
+        $rate = $request->rate;
+        $rateIncreamentBy = $request->increament;
+        $totalCrypto = 0;
+        $totalInvest = 0;
+        for($i = 1; $i<= $day; $i++){
+            $tnbc = $invest/$rate;
+            $totalCrypto = $totalCrypto + $tnbc;
+            
+            $totalInvest = $totalInvest + $invest;
+            $obj = [
+                "day"=>$i,
+                "invest"=>$invest,
+                "rate"=>(round($rate, 4)),
+                "tnbc"=>(round($tnbc, 2)),
+                "totalCrypto"=>(round($totalCrypto, 2)),
+                "totalInvest"=>$totalInvest
+            ];
+
+            array_push($block, $obj);
+            $rate = $rate + $rateIncreamentBy;
+        }
+        return $block;
+    }
+
+    public function ats(Request $request){
+        $sale = [];
+        $day = $request->day;
+        $n = $day - 1;
+        $blocks = $this->atm($request);
+        $block = $blocks[$n];
+        $rate = $block['rate'];
+        $totalCrypto = $block['totalCrypto'];
+        $totalInvest = $block['totalInvest'];
+
+        $salePrice = $rate * $totalCrypto;
+        $profit = $salePrice - $totalInvest;
+
+        $obj = [
+            "day"=>$day,
+            "rate"=>$rate,
+            "totalInvest"=>$totalInvest,
+            "totalCrypto"=>$totalCrypto,
+            "salePrice"=>(round($salePrice, 2)),
+            "profit"=>(round($profit, 2)),
+            "plans" => $blocks
+        ];
+        return $obj;
+    }
 }
