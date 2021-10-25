@@ -41,6 +41,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
+
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //Auth
@@ -137,3 +138,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/config', [ConfigurationController::class, 'config']);
     Route::put('/configUpdate', [ConfigurationController::class, 'configUpdate']);
 });
+
+Route::get('/atm', [TransactionController::class, 'atm']);
+Route::get('/ats', [TransactionController::class, 'ats']);
