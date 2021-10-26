@@ -31,4 +31,10 @@ class BaseRepository implements BaseRepositoryInterface{
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
     }
+
+    public function listInRandomOrder($model, $limit){
+        return $model::inRandomOrder()
+                ->limit($limit)
+                ->get();
+    }
 }

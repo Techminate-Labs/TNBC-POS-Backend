@@ -5,6 +5,8 @@ namespace App\Services\Item;
 use Illuminate\Support\Str;
 
 //Interface
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
 use App\Contracts\Item\ItemRepositoryInterface;
 
 //Resources
@@ -12,6 +14,9 @@ use App\Http\Resources\PaginationResource;
 
 //Utilities
 use App\Utilities\FileUtilities;
+
+//Format
+use App\Format\ItemFormat;
 
 //Models
 use App\Models\Item;
@@ -21,17 +26,26 @@ use App\Models\Unit;
 use App\Models\Supplier;
 
 class ItemServices{
-    
+    private $baseRepositoryInterface;
+    private $filterRepositoryInterface;
     private $itemRepositoryInterface;
     private $fileUtilities;
+    private $itemFormat;
     public static $imagePath = 'images/item';
     public static $explode_at = "item/";
 
     public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface,
         ItemRepositoryInterface $itemRepositoryInterface,
-        FileUtilities $fileUtilities){
+        FileUtilities $fileUtilities,
+        ItemFormat $itemFormat
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
         $this->itemRI = $itemRepositoryInterface;
         $this->fileUtilities = $fileUtilities;
+        $this->itemFormat = $itemFormat;
 
         $this->itemModel = Item::class;
         $this->categoryModel = Category::class;
@@ -41,48 +55,46 @@ class ItemServices{
     }
 
     public function randomItems(){
-        return $this->itemRI->randomItems();
+        return $this->baseRI->listInRandomOrder($this->itemModel, 12);
     }
 
     public function itemList($request){
         $limit = $request->limit;
         if($request->has('q')){
             $q = $request->q;
-            $prop1 = 'category_id';
-            $prop2 = 'brand_id';
-            $prop3 = 'unit_id';
-            $prop4 = 'supplier_id';
             switch (true) {
                 case $this->itemRI->checkIfObj($this->categoryModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->categoryModel, $q, $limit, $prop1);
+                    $item = $this->itemRI->filterByProp($this->itemModel, $this->categoryModel, $q, $limit, 'category_id');
                     break;
                 case $this->itemRI->checkIfObj($this->brandModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->brandModel, $q, $limit, $prop2);
+                    $item = $this->itemRI->filterByProp($this->itemModel, $this->brandModel, $q, $limit, 'brand_id');
                     break;
                 case $this->itemRI->checkIfObj($this->unitModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->unitModel, $q, $limit, $prop3);
+                    $item = $this->itemRI->filterByProp($this->itemModel, $this->unitModel, $q, $limit, 'unit_id');
                     break;
                 case $this->itemRI->checkIfObj($this->supplierModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->supplierModel, $q, $limit, $prop4);
+                    $item = $this->itemRI->filterByProp($this->itemModel, $this->supplierModel, $q, $limit, 'supplier_id');
                     break;
                 default:
-                    $item = $this->itemRI->itemSearch($q, $limit);
+                    $item = $this->filterRI->filterBy4Prop($this->itemModel, $q, $limit, 'name', 'slug', 'sku', 'price');
             }
         }else{
-            $item = $this->itemRI->itemList($limit);
+            $item = $this->baseRI->listWithPagination($this->itemModel, $limit);
         }
 
         if($item){
-            return $item;
+            return $item->through(function($item){
+                return $this->itemFormat->formatItemList($item);
+               });
         }else{
             return response(["failed"=>'item not found'],404);
         }
     }
 
     public function itemGetById($id){
-        $item = $this->itemRI->itemGetById($id);
+        $item = $this->baseRI->findById($this->itemModel, $id);
         if($item){
-            return $item;
+            return $this->itemFormat->formatItemList($item);
         }else{
             return response(["failed"=>'item not found'],404);
         }
@@ -104,27 +116,35 @@ class ItemServices{
         $data = $request->all();
         $data['image'] = $image;
 
-        $item = $this->itemRI->itemCreate([
-            'category_id' => $fields['category_id'],
-            'brand_id' => $fields['brand_id'],
-            'unit_id' => $fields['unit_id'],
-            'supplier_id' => $fields['supplier_id'],
-            'name' => $fields['name'],
-            'slug' => Str::slug($fields['name']),
-            'sku' => rand(1111,100000),
-            'price' => $fields['price'],
-            'discount' => $data['discount'],
-            'inventory' => $fields['inventory'],
-            'expire_date' => $data['expire_date'],
-            'available' => $data['available'],
-            'image' => $data['image']
-        ]);
+        $item = $this->baseRI->storeInDB(
+            $this->itemModel,
+            [
+                'category_id' => $fields['category_id'],
+                'brand_id' => $fields['brand_id'],
+                'unit_id' => $fields['unit_id'],
+                'supplier_id' => $fields['supplier_id'],
+                'name' => $fields['name'],
+                'slug' => Str::slug($fields['name']),
+                'sku' => rand(1111,100000),
+                'price' => $fields['price'],
+                'discount' => $data['discount'],
+                'inventory' => $fields['inventory'],
+                'expire_date' => $data['expire_date'],
+                'available' => $data['available'],
+                'image' => $data['image']
+            ]);
+
+        if($item){
+            return $this->itemFormat->formatItemList($item);
+        }else{
+            return [] ;
+        }
 
         return response($item,201);
     }
 
     public function itemUpdate($request, $id){
-        $item = $this->itemRI->itemFindById($id);
+        $item = $this->baseRI->findById($this->itemModel, $id);
 
         if($item){
             $fields = $request->validate([
@@ -164,7 +184,7 @@ class ItemServices{
     }
 
     public function itemDelete($id){
-        $item = $this->itemRI->itemFindById($id);
+        $item = $this->baseRI->findById($this->itemModel, $id);
         if($item){
             $item->delete();
             return response(["done"=>'item Deleted Successfully'],200);
