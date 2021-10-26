@@ -13,4 +13,6 @@ interface BaseRepositoryInterface
     public function listWithPagination($model, $limit);
 
     public function listwithCount($model, $limit, $countAttrib);
+
+    public function listInRandomOrder($model, $limit);
 }
