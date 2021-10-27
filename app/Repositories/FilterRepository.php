@@ -7,7 +7,17 @@ use App\Contracts\FilterRepositoryInterface;
 
 class FilterRepository implements FilterRepositoryInterface{
 
-    public function filterBy1Prop($model, $query, $limit, $prop1){
+    public function filterBy1PropFirst($model, $query, $prop1){
+        return $model::where($prop1, 'LIKE', '%' . $query . '%')
+                ->first();
+    }
+
+    public function filterBy1Prop($model, $query, $prop1){
+        return $model::where($prop1, 'LIKE', '%' . $query . '%')
+                ->get();
+    }
+
+    public function filterBy1PropPaginated($model, $query, $limit, $prop1){
         return $model::where($prop1, 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
                 ->paginate($limit);
@@ -20,7 +30,7 @@ class FilterRepository implements FilterRepositoryInterface{
                 ->paginate($limit);
     }
 
-    public function filterBy4Prop($model, $query, $limit, $prop1, $prop2, $prop3, $prop4){
+    public function filterBy4PropPaginated($model, $query, $limit, $prop1, $prop2, $prop3, $prop4){
         return $model::where($prop1, 'LIKE', '%' . $query . '%')
                 ->orWhere($prop2, 'LIKE', '%' . $query . '%')
                 ->orWhere($prop3, 'LIKE', '%' . $query . '%')
