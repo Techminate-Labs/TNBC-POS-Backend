@@ -15,7 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class TransactionController extends Controller
 {
     public function transactionHistory(){
-        $url = 'http://54.183.16.194/bank_transactions?recipient=a5dbcded3501291743e0cb4c6a186afa2c87a54f4a876c620dbd68385cba80d0';
+        $url = 'http://54.183.16.194/bank_transactions?recipient=a5dbcded3501291743e0cb4c6a186afa2c87a54f4a876c620dbd68385cba80d0&fee=NONE';
         $fetch = Http::get($url);
         $data = json_decode($fetch);
         $results = $data->results;
@@ -54,26 +54,29 @@ class TransactionController extends Controller
         ];
     }
 
-    public function testApi(){
-        $url = 'http://54.183.16.194/bank_transactions?recipient=a5dbcded3501291743e0cb4c6a186afa2c87a54f4a876c620dbd68385cba80d0';
+    public function treasury(){
+        $url = 'http://54.183.16.194/bank_transactions?account_number=23676c35fce177aef2412e3ab12d22bf521ed423c6f55b8922c336500a1a27c5&fee=NONE';
         $fetch = Http::get($url);
         $data = json_decode($fetch);
-        // $results = $data['results'][1]['memo'];
         $results = $data->results;
-
+        // return $results;
         $transactions = [];
-        $date = [];
+        $total = 0;
         foreach($results as $result){
             $amount = $result->amount;
-            $block = $result->block->created_date;
-            array_push($transactions, $amount);
-            array_push($date, $block);
-            
+            if($amount == 1){
+                continue;
+            }
+            $obj = [
+                "transactions"=>$amount,
+            ];
+            array_push($transactions, $obj);
+            $total = $total + $amount; 
         }
-        // return $data;
+        
         $response = [
+            'total_treasury_withdrawals' => $total,
             'transactions' => $transactions,
-            'date' => $date
         ];
         return response($response, 200);
     }
@@ -107,7 +110,6 @@ class TransactionController extends Controller
     }
 
     public function ats(Request $request){
-        $sale = [];
         $day = $request->day;
         $n = $day - 1;
         $blocks = $this->atm($request);

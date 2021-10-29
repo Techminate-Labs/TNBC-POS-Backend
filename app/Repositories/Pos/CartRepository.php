@@ -13,8 +13,4 @@ class CartRepository implements CartRepositoryInterface{
         $cart->save();
         return $cart;
     }
-
-    public function getCart($model, $id){
-        return $model::where('user_id', $id)->first();
-    }
 }

@@ -146,7 +146,7 @@ class CartItemServices{
 
         if($inStock && $availableToPurchase){
             $user_id = auth()->user()->id;
-            $cart = $this->cartRI->getCart($this->cartModel, $user_id);
+            $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user_id, 'user_id');
 
             $cartItem = $this->baseRI->storeInDB(
                 $this->cartItemModel,
