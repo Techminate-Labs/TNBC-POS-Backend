@@ -21,7 +21,6 @@ class CartItemController extends Controller
         return $this->services->cartItemList($request);
     }
 
-    //add Item to cart
     public function cartItemCreate(Request $request)
     {
         return $this->services->cartItemCreate($request);
