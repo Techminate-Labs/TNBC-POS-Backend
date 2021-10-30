@@ -59,7 +59,7 @@ class ConfigServices{
             // $data['discount'] = $fields['discount'];
             $configuration->update($data);
 
-            return response($configuration,201);
+            return response($configuration,200);
         }else{
             return response(["failed"=>'Configuration not found'],404);
         }
