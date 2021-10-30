@@ -18,6 +18,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Item;
 use App\Models\Coupon;
+use App\Models\Configuration;
 
 //Format
 use App\Format\CartItemFormat;
@@ -44,6 +45,7 @@ class CartItemServices{
         $this->cartModel = Cart::class;
         $this->cartItemModel = CartItem::class;
         $this->couponModel = Coupon::class;
+        $this->configModel = Configuration::class;
     }
     
     public function subTotal($cartItems)
@@ -121,7 +123,8 @@ class CartItemServices{
             $discountRate = 0;
         }
 
-        $taxRate = 25;
+        $configuration = $this->baseRI->findById($this->configModel, 1);
+        $taxRate = $configuration->tax_rate;
 
         $payment = $this->calPayment($cartItems, $discountRate, $taxRate);
 
