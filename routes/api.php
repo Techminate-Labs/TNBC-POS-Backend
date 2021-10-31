@@ -27,6 +27,8 @@ use App\Http\Controllers\Pos\CouponController;
 use App\Http\Controllers\Pos\CartController;
 use App\Http\Controllers\Pos\CartItemController;
 
+use App\Http\Controllers\Pos\InvoiceController;
+
 use App\Http\Controllers\Pos\TransactionController;
 use App\Http\Controllers\System\ConfigurationController;
 
@@ -130,6 +132,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/cartItemCreate', [CartItemController::class, 'cartItemCreate']);
     Route::put('/cartItemUpdate/{id}', [CartItemController::class, 'cartItemUpdate']);
     Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
+
+    //Invoice
+    Route::get('/invoice', [InvoiceController::class, 'invoice']);
 
     //Transactions
     Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);

@@ -14,7 +14,13 @@ class CreateInvoiceItemsTable extends Migration
     public function up()
     {
         Schema::create('invoice_items', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('invoice_id')->nullable();
+            $table->unsignedBigInteger('item_id')->nullable();
+            $table->unsignedBigInteger('unit_id')->nullable();
+            $table->unsignedBigInteger('unit_price')->nullable();
+            $table->integer('qty')->nullable();
+            $table->integer('total_amount')->nullable();
             $table->timestamps();
         });
     }
