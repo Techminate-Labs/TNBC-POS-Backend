@@ -2,6 +2,7 @@
 
 namespace App\Services\Pos;
 
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
 //Interface
@@ -78,7 +79,8 @@ class CartItemServices{
         ];
     }
 
-    public function applyCoupon($code){
+    public function applyCoupon($code)
+    {
         $coupon = $this->filterRI->filterBy1PropFirst($this->couponModel,  $code, 'code');
 
         $today = Carbon::today();
@@ -107,9 +109,7 @@ class CartItemServices{
         return $discountRate;
     }
 
-    //Items of the Cart
-    public function cartItemList($request)
-    {
+    public function payDefault($request, $taxRate){
         $user_id = auth()->user()->id;
         $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user_id, 'user_id');
         $cartItems = $this->filterRI->filterBy1Prop($this->cartItemModel, $cart->id, 'cart_id');
@@ -123,19 +123,75 @@ class CartItemServices{
             $discountRate = 0;
         }
 
-        $configuration = $this->baseRI->findById($this->configModel, 1);
-        $taxRate = $configuration->tax_rate;
-
         $payment = $this->calPayment($cartItems, $discountRate, $taxRate);
 
-        $response = [
+        return [
             'cartItems' => $cartItems,
             'subTotal' => $payment['subTotal'],
             'discount' => $payment['discount'],
             'tax' => $payment['tax'],
             'total' => $payment['total'],
         ];
-        return response($response, 200);
+    }
+
+    public function payWithTNBC($request, $taxRate, $tnbcRate){
+        $rate = $tnbcRate;
+        $cart = $this->payDefault($request, $taxRate);
+        $subTotalTNBC = $cart['subTotal']/$rate;
+        $discountTNBC = $cart['discount']/$rate;
+        $taxTNBC = $cart['tax']/$rate;
+        $totalTNBC = $cart['total']/$rate;
+
+        $tnbc=[];
+
+        foreach($cart['cartItems'] as $cartItem){
+            $unit_price = $cartItem['unit_price'] /$rate;
+            $total = $cartItem['total'] /$rate;
+            $obj = [
+                "id"=>$cartItem['id'],
+                "cart_id"=>$cartItem['cart_id'],
+                "item_id"=>$cartItem['item_id'],
+                "item_name"=>$cartItem['item_name'],
+                "unit"=>$cartItem['unit'],
+                "unit_price"=>$unit_price,
+                "qty"=>$cartItem['qty'],
+                "total"=>$total
+            ];
+            array_push($tnbc, $obj);
+        }
+        return [
+            'cartItems' => $tnbc,
+            'subTotal' => $subTotalTNBC,
+            'discount' => $discountTNBC,
+            'tax' => $taxTNBC,
+            'total' => $totalTNBC
+        ];
+        
+    }
+
+    //Items of the Cart
+    public function cartItemList($request)
+    {
+        $configuration = $this->baseRI->findById($this->configModel, 1);
+        $taxRate = $configuration->tax_rate;
+        $tnbcRate = $configuration->tnbc_rate;
+
+        if($request->has('payment_method')){
+            $pm = $request->payment_method;
+            switch ($pm) {
+                case 'tnbc':
+                    $invoice = $this->payWithTNBC($request, $taxRate, $tnbcRate);
+                    break;
+                case 'fiat':
+                    $invoice = $this->payDefault($request, $taxRate);
+                    break;
+                default:
+                $invoice = $this->payDefault($request, $taxRate);
+            }
+            return response($invoice,200);
+        }else{
+            return $this->payDefault($request, $taxRate);
+        }
     }
 
     //add Item to cart

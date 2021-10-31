@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 //Service
 use App\Services\Pos\CartServices;
