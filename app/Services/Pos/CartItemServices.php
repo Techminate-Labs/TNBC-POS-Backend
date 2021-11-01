@@ -109,20 +109,7 @@ class CartItemServices{
         return $discountRate;
     }
 
-    public function payDefault($request, $taxRate){
-        $user_id = auth()->user()->id;
-        $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user_id, 'user_id');
-        $cartItems = $this->filterRI->filterBy1Prop($this->cartItemModel, $cart->id, 'cart_id');
-        $cartItems = $cartItems->map(function($cartItem){
-                        return $this->itemFormat->formatCartItemList($cartItem);
-                    });
-
-        if($request->has('coupon')){
-            $discountRate = $this->applyCoupon($request->coupon);
-        }else{
-            $discountRate = 0;
-        }
-
+    public function payDefault($request, $taxRate, $cartItems, $discountRate){
         $payment = $this->calPayment($cartItems, $discountRate, $taxRate);
 
         return [
@@ -134,9 +121,9 @@ class CartItemServices{
         ];
     }
 
-    public function payWithTNBC($request, $taxRate, $tnbcRate){
+    public function payWithTNBC($request, $taxRate, $tnbcRate, $cartItems, $discountRate){
         $rate = $tnbcRate;
-        $cart = $this->payDefault($request, $taxRate);
+        $cart = $this->payDefault($request, $taxRate, $cartItems, $discountRate);
         $subTotalTNBC = $cart['subTotal']/$rate;
         $discountTNBC = $cart['discount']/$rate;
         $taxTNBC = $cart['tax']/$rate;
@@ -172,25 +159,38 @@ class CartItemServices{
     //Items of the Cart
     public function cartItemList($request)
     {
+        $user_id = auth()->user()->id;
+        $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user_id, 'user_id');
+        $cartItems = $this->filterRI->filterBy1Prop($this->cartItemModel, $cart->id, 'cart_id');
+        $cartItems = $cartItems->map(function($cartItem){
+                        return $this->itemFormat->formatCartItemList($cartItem);
+                    });
+
         $configuration = $this->baseRI->findById($this->configModel, 1);
         $taxRate = $configuration->tax_rate;
         $tnbcRate = $configuration->tnbc_rate;
+
+        if($request->has('coupon')){
+            $discountRate = $this->applyCoupon($request->coupon);
+        }else{
+            $discountRate = 0;
+        }
 
         if($request->has('payment_method')){
             $pm = $request->payment_method;
             switch ($pm) {
                 case 'tnbc':
-                    $invoice = $this->payWithTNBC($request, $taxRate, $tnbcRate);
+                    $list = $this->payWithTNBC($request, $taxRate, $tnbcRate, $cartItems, $discountRate);
                     break;
                 case 'fiat':
-                    $invoice = $this->payDefault($request, $taxRate);
+                    $list = $this->payDefault($request, $taxRate, $cartItems, $discountRate);
                     break;
                 default:
-                $invoice = $this->payDefault($request, $taxRate);
+                $list= $this->payDefault($request, $taxRate, $cartItems, $discountRate);
             }
-            return response($invoice,200);
+            return response($list,200);
         }else{
-            return $this->payDefault($request, $taxRate);
+            return $this->payDefault($request, $taxRate, $cartItems, $discountRate);
         }
     }
 
