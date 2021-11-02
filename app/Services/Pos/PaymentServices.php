@@ -1,7 +1,31 @@
 <?php
-namespace App\Utilities;
 
-class PaymentUtilities{
+namespace App\Services\Pos;
+
+use Carbon\Carbon;
+
+//Interface
+use App\Contracts\BaseRepositoryInterface;
+use App\Contracts\FilterRepositoryInterface;
+
+//Models
+use App\Models\Coupon;
+use App\Models\Configuration;
+
+class PaymentServices{
+    private $baseRepositoryInterface;
+
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        FilterRepositoryInterface $filterRepositoryInterface
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->filterRI = $filterRepositoryInterface;
+
+        $this->configModel = Configuration::class;
+        $this->couponModel = Coupon::class;
+    }
+
     public function subTotal($cartItems)
     {
         $subTotal = 0;
@@ -16,9 +40,19 @@ class PaymentUtilities{
         return ($percentage/100) * $subTotal;
     }
 
-    public function calPayment($cartItems,  $discountRate, $taxRate)
+    public function calPayment($request, $cartItems)
     {
+        $configuration = $this->baseRI->findById($this->configModel, 1);
+        $taxRate = $configuration->tax_rate;
         $subTotal = $this->subTotal($cartItems);
+
+        if($request->has('coupon')){
+            $coupon = $this->filterRI->filterBy1PropFirst($this->couponModel, $request->coupon, 'code');
+            $discountRate = $this->applyCoupon($coupon);
+        }else{
+            $discountRate = 0;
+        }
+
         $discount = $this->percToAmount($discountRate, $subTotal);
         $total = $subTotal - $discount;
         $tax = $this->percToAmount($taxRate, $subTotal);

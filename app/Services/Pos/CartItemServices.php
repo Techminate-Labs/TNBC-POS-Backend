@@ -2,24 +2,16 @@
 
 namespace App\Services\Pos;
 
-use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
-
 //Interface
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\Pos\CartRepositoryInterface;
-use App\Contracts\Item\ItemRepositoryInterface;
 
 //Service
-use App\Services\Pos\CartServices;
+use App\Services\Pos\PaymentMethodServices;
 
 //Models
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\Item;
-use App\Models\Coupon;
-use App\Models\Configuration;
 
 //Format
 use App\Format\CartItemFormat;
@@ -27,133 +19,26 @@ use App\Format\CartItemFormat;
 class CartItemServices{
     private $baseRepositoryInterface;
     private $filterRepositoryInterface;
-    private $cartRepositoryInterface;
-    
+
+    private $paymentMethodServices;
+
     public function __construct(
         BaseRepositoryInterface $baseRepositoryInterface,
         FilterRepositoryInterface $filterRepositoryInterface,
-        CartRepositoryInterface $cartRepositoryInterface,
+
+        PaymentMethodServices $paymentMethodServices,
 
         CartItemFormat $cartItemFormat
     ){
         $this->baseRI = $baseRepositoryInterface;
         $this->filterRI = $filterRepositoryInterface;
-        $this->cartRI = $cartRepositoryInterface;
+
+        $this->paymentMethodServices = $paymentMethodServices;
         
         $this->itemFormat = $cartItemFormat;
 
-        $this->itemModel = Item::class;
         $this->cartModel = Cart::class;
         $this->cartItemModel = CartItem::class;
-        $this->couponModel = Coupon::class;
-        $this->configModel = Configuration::class;
-    }
-    
-    public function subTotal($cartItems)
-    {
-        $subTotal = 0;
-        foreach($cartItems as $cartItem){
-            $subTotal = $subTotal + $cartItem['total'];
-        }
-        return $subTotal;
-    }
-
-    public function percToAmount($percentage, $subTotal)
-    {
-        return ($percentage/100) * $subTotal;
-    }
-
-    public function calPayment($cartItems,  $discountRate, $taxRate)
-    {
-        $subTotal = $this->subTotal($cartItems);
-        $discount = $this->percToAmount($discountRate, $subTotal);
-        $total = $subTotal - $discount;
-        $tax = $this->percToAmount($taxRate, $subTotal);
-        $total = $total + $tax;
-        
-        return [
-            'subTotal' => $subTotal,
-            'discount' => $discount,
-            'tax' => $tax,
-            'total' => $total,
-        ];
-    }
-
-    public function applyCoupon($code)
-    {
-        $coupon = $this->filterRI->filterBy1PropFirst($this->couponModel,  $code, 'code');
-
-        $today = Carbon::today();
-        $startDate = $coupon->start_date; // start: 14 oct, 
-        $endDate = $coupon->end_date;     //end: 20 oct
-
-        //valid dates: 14, 15, 16, 17, 18, 19, 20;    
-        //active coupon based on start and end date
-        //Active : 14 <= today; 20 >= today
-        if($startDate <= $today && $endDate >= $today){
-            $coupon->active = 1;
-            $coupon->save();
-        }
-        //if date is expired, inactive coupon
-        //Invalid: 20 < today ; 20<17=false, 20<21=true
-        if($endDate < $today){
-            $coupon->active = 0;
-            $coupon->save();
-        }
-
-        if($coupon->active){
-            $discountRate = $coupon->discount;
-        }else{
-            $discountRate = 0;
-        }
-        return $discountRate;
-    }
-
-    public function payDefault($request, $taxRate, $cartItems, $discountRate){
-        $payment = $this->calPayment($cartItems, $discountRate, $taxRate);
-
-        return [
-            'cartItems' => $cartItems,
-            'subTotal' => $payment['subTotal'],
-            'discount' => $payment['discount'],
-            'tax' => $payment['tax'],
-            'total' => $payment['total'],
-        ];
-    }
-
-    public function payWithTNBC($request, $taxRate, $tnbcRate, $cartItems, $discountRate){
-        $rate = $tnbcRate;
-        $cart = $this->payDefault($request, $taxRate, $cartItems, $discountRate);
-        $subTotalTNBC = $cart['subTotal']/$rate;
-        $discountTNBC = $cart['discount']/$rate;
-        $taxTNBC = $cart['tax']/$rate;
-        $totalTNBC = $cart['total']/$rate;
-
-        $tnbc=[];
-
-        foreach($cart['cartItems'] as $cartItem){
-            $unit_price = $cartItem['unit_price'] /$rate;
-            $total = $cartItem['total'] /$rate;
-            $obj = [
-                "id"=>$cartItem['id'],
-                "cart_id"=>$cartItem['cart_id'],
-                "item_id"=>$cartItem['item_id'],
-                "item_name"=>$cartItem['item_name'],
-                "unit"=>$cartItem['unit'],
-                "unit_price"=>$unit_price,
-                "qty"=>$cartItem['qty'],
-                "total"=>$total
-            ];
-            array_push($tnbc, $obj);
-        }
-        return [
-            'cartItems' => $tnbc,
-            'subTotal' => $subTotalTNBC,
-            'discount' => $discountTNBC,
-            'tax' => $taxTNBC,
-            'total' => $totalTNBC
-        ];
-        
     }
 
     //Items of the Cart
@@ -166,31 +51,21 @@ class CartItemServices{
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
 
-        $configuration = $this->baseRI->findById($this->configModel, 1);
-        $taxRate = $configuration->tax_rate;
-        $tnbcRate = $configuration->tnbc_rate;
-
-        if($request->has('coupon')){
-            $discountRate = $this->applyCoupon($request->coupon);
-        }else{
-            $discountRate = 0;
-        }
-
         if($request->has('payment_method')){
             $pm = $request->payment_method;
             switch ($pm) {
                 case 'tnbc':
-                    $list = $this->payWithTNBC($request, $taxRate, $tnbcRate, $cartItems, $discountRate);
+                    $list = $this->paymentMethodServices->payWithTNBC($request, $cartItems);
                     break;
                 case 'fiat':
-                    $list = $this->payDefault($request, $taxRate, $cartItems, $discountRate);
+                    $list = $this->paymentMethodServices->payWithFIAT($request, $cartItems);
                     break;
                 default:
-                $list= $this->payDefault($request, $taxRate, $cartItems, $discountRate);
+                $list= $this->paymentMethodServices->payWithFIAT($request, $cartItems);
             }
             return response($list,200);
         }else{
-            return $this->payDefault($request, $taxRate, $cartItems, $discountRate);
+            return $this->paymentMethodServices->payWithFIAT($request, $cartItems);
         }
     }
 
