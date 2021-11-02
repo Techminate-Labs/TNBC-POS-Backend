@@ -12,7 +12,7 @@ use App\Services\Pos\PaymentMethodServices;
 //Models
 use App\Models\Cart;
 use App\Models\CartItem;
-
+use App\Models\Item;
 //Format
 use App\Format\CartItemFormat;
 
@@ -39,6 +39,7 @@ class CartItemServices{
 
         $this->cartModel = Cart::class;
         $this->cartItemModel = CartItem::class;
+        $this->itemModel = Item::class;
     }
 
     //Items of the Cart
