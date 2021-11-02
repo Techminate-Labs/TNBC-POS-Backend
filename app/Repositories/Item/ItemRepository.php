@@ -8,10 +8,6 @@ use App\Contracts\Item\ItemRepositoryInterface;
 
 class ItemRepository implements ItemRepositoryInterface{
 
-    public function __construct(ItemFormat $itemFormat){
-        $this->itemFormat = $itemFormat;
-    }
-    
     //Check
     public function checkIfObj($propModel, $query){
         if($this->propObj($propModel, $query)){
