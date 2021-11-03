@@ -19,27 +19,22 @@ use App\Format\CartItemFormat;
 class CartItemServices{
     private $baseRepositoryInterface;
     private $filterRepositoryInterface;
-
     private $paymentMethodServices;
+
+    private $cartModel = Cart::class;
+    private $cartItemModel = CartItem::class;
+    private $itemModel = Item::class;
 
     public function __construct(
         BaseRepositoryInterface $baseRepositoryInterface,
         FilterRepositoryInterface $filterRepositoryInterface,
-
         PaymentMethodServices $paymentMethodServices,
-
         CartItemFormat $cartItemFormat
     ){
         $this->baseRI = $baseRepositoryInterface;
         $this->filterRI = $filterRepositoryInterface;
-
         $this->paymentMethodServices = $paymentMethodServices;
-        
         $this->itemFormat = $cartItemFormat;
-
-        $this->cartModel = Cart::class;
-        $this->cartItemModel = CartItem::class;
-        $this->itemModel = Item::class;
     }
 
     //Items of the Cart
@@ -52,7 +47,17 @@ class CartItemServices{
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
         $list = $this->paymentMethodServices->paymentMethod($request, $cartItems);
-        return response($list,200);
+        return [
+            'user_id' => $user_id,
+            'customer_id' => $cart->customer_id,
+            'payment_method' => $list['payment_method'],
+            'subTotal' => $list['subTotal'],
+            'discount' => $list['discount'],
+            'tax' => $list['tax'],
+            'total' => $list['total'],
+            'date' => $cart->created_at,
+            'cartItems' => $list['cartItems']
+        ];
     }
 
     //add Item to cart

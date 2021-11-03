@@ -17,10 +17,11 @@ class CreateInvoiceItemsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('invoice_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedBigInteger('unit_id')->nullable();
+            $table->string('item_name')->nullable();
+            $table->string('unit')->nullable();
             $table->unsignedBigInteger('unit_price')->nullable();
             $table->integer('qty')->nullable();
-            $table->integer('total_amount')->nullable();
+            $table->integer('total')->nullable();
             $table->timestamps();
         });
     }

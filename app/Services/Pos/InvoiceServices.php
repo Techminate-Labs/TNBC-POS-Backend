@@ -2,134 +2,53 @@
 
 namespace App\Services\Pos;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\Pos\CartRepositoryInterface;
-use App\Contracts\Item\ItemRepositoryInterface;
-
 //Service
 use App\Services\Pos\CartItemServices;
 
 //Models
-use App\Models\Cart;
-use App\Models\CartItem;
-use App\Models\Item;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 
-class InvoiceServices{
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-    private $cartRepositoryInterface;
+class InvoiceServices extends CartItemServices{
+    private $invoiceModel = Invoice::class;
+    private $invoiceItemModel = InvoiceItem::class;
+       
+    public function invoice($request)
+    {
+        $list = $this->cartItemList($request);
+        $invoice = $this->baseRI->storeInDB(
+            $this->invoiceModel,
+            [
+                'user_id' => $list['user_id'],
+                'customer_id' => $list['customer_id'],
+                'invoice_number' => 'INV'.date('mdis').mt_rand(10,100),
+                'payment_method' => $list['payment_method'],
+                'subTotal' => $list['subTotal'],
+                'discount' => $list['discount'],
+                'tax' => $list['tax'],
+                'total' => $list['total'],
+                'date' => $list['date'],
+            ]
+        );
 
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface,
-        CartRepositoryInterface $cartRepositoryInterface,
+        // foreach($list['cartItems'] as $item){
+        //     $invoiceItem = $this->baseRI->storeInDB(
+        //         $this->invoiceItemModel,
+        //         [
+        //             //
+        //         ]
+        // }
 
-        CartItemServices $cartItemServices
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->cartRI = $cartRepositoryInterface;
-
-        $this->cartItemServices = $cartItemServices;
-
-        $this->itemModel = Item::class;
-        $this->cartModel = Cart::class;
-        $this->cartItemModel = CartItem::class;
-    }
-
-    public function invoice($request){
-        if($request->has('payment_method')){
-            $pm = $request->payment_method;
-            switch ($pm) {
-                case 'tnbc':
-                    $invoice = $this->payWithTNBC($request);
-                    break;
-                case 'fiat':
-                    $invoice = $this->cartItemServices->cartItemList($request);
-                    break;
-                default:
-                $invoice = $this->cartItemServices->cartItemList($request);
-            }
-            return response($invoice,200);
-        }else{
-            return response(["failed"=>'Please Select Payment Method'],404);
-        }
-    }
-
-    public function payWithTNBC($request){
-        $rate = 0.02;
-        $cart = $this->cartItemServices->payDefault($request);
-        $subTotalTNBC = $cart['subTotal']/$rate;
-        $discountTNBC = $cart['discount']/$rate;
-        $taxTNBC = $cart['tax']/$rate;
-        $totalTNBC = $cart['total']/$rate;
-
-        $tnbc=[];
-
-        foreach($cart['cartItems'] as $cartItem){
-            $unit_price = $cartItem['unit_price'] /$rate;
-            $total = $cartItem['total'] /$rate;
-            $obj = [
-                "id"=>$cartItem['id'],
-                "cart_id"=>$cartItem['cart_id'],
-                "item_id"=>$cartItem['item_id'],
-                "item_name"=>$cartItem['item_name'],
-                "unit"=>$cartItem['unit'],
-                "unit_price"=>$unit_price,
-                "qty"=>$cartItem['qty'],
-                "total"=>$total
-            ];
-            array_push($tnbc, $obj);
-        }
         return [
-            'cartItems' => $tnbc,
-            'subTotal' => $subTotalTNBC,
-            'discount' => $discountTNBC,
-            'tax' => $taxTNBC,
-            'total' => $totalTNBC
+            'cashier' => $invoice->user->name,
+            'invoice_number' => $invoice->invoice_number,
+            'payment_method' => $invoice->payment_method,
+            'subTotal' => $invoice->subTotal,
+            'discount' => $invoice->discount,
+            'tax' => $invoice->tax,
+            'total' => $invoice->total,
+            'date' => $invoice->date,
+            'invoiceItems' => $list['cartItems']
         ];
-        
-    }
-
-    public function payWithFIAT($request){
-        $rate = 0.02;
-        $cart = $this->cartItemServices->cartItemList($request);
-        $subTotalTNBC = $cart['subTotal']/$rate;
-        $discountTNBC = $cart['discount']/$rate;
-        $taxTNBC = $cart['tax']/$rate;
-        $totalTNBC = $cart['total']/$rate;
-
-        $tnbc=[];
-
-        foreach($cart['cartItems'] as $cartItem){
-            $unit_price = $cartItem['unit_price'] /$rate;
-            $total = $cartItem['total'] /$rate;
-            $obj = [
-                "id"=>$cartItem['id'],
-                "cart_id"=>$cartItem['cart_id'],
-                "item_id"=>$cartItem['item_id'],
-                "item_name"=>$cartItem['item_name'],
-                "unit"=>$cartItem['unit'],
-                "unit_price"=>$unit_price,
-                "qty"=>$cartItem['qty'],
-                "total"=>$total
-            ];
-            array_push($tnbc, $obj);
-        }
-        $response = [
-            'fiat' => $cart['cartItems'],
-            'tnbc' => $tnbc,
-            'subTotal' => $cart['subTotal'],
-            'discount' => $cart['discount'],
-            'tax' => $cart['tax'],
-            'total' => $cart['total'],
-            'subTotalTNBC' => $subTotalTNBC,
-            'discountTNBC' => $discountTNBC,
-            'taxTNBC' => $taxTNBC,
-            'totalTNBC' => $totalTNBC
-        ];
-        return response($response, 200);
     }
 }
