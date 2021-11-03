@@ -11,11 +11,22 @@ use App\Services\Pos\PaymentServices;
 //Models
 use App\Models\Configuration;
 
-class PaymentMethodServices extends PaymentServices{
+class PaymentMethodServices{
+    private $paymentServices;
+
+    public function __construct(
+        BaseRepositoryInterface $baseRepositoryInterface,
+        PaymentServices $paymentServices
+    ){
+        $this->baseRI = $baseRepositoryInterface;
+        $this->paymentServices = $paymentServices;
+
+        $this->configModel = Configuration::class;
+    }
 
     public function payWithFIAT($request, $cartItems)
     {
-        $payment = $this->calPayment($request, $cartItems);
+        $payment = $this->paymentServices->calPayment($request, $cartItems);
 
         return [
             'cartItems' => $cartItems,
@@ -31,7 +42,7 @@ class PaymentMethodServices extends PaymentServices{
         $configuration = $this->baseRI->findById($this->configModel, 1);
         $tnbcRate = $configuration->tnbc_rate;
 
-        $payment = $this->calPayment($request, $cartItems);
+        $payment = $this->paymentServices->calPayment($request, $cartItems);
 
         $subTotalTNBC = $payment['subTotal']/$tnbcRate;
         $discountTNBC = $payment['discount']/$tnbcRate;
@@ -63,25 +74,5 @@ class PaymentMethodServices extends PaymentServices{
             'total' => $totalTNBC
         ];
         
-    }
-
-    function paymentMethod($request, $cartItems)
-    {
-        if($request->has('payment_method')){
-            $pm = $request->payment_method;
-            switch ($pm) {
-                case 'tnbc':
-                    $list = $this->payWithTNBC($request, $cartItems);
-                    break;
-                case 'fiat':
-                    $list = $this->payWithFIAT($request, $cartItems);
-                    break;
-                default:
-                $list= $this->payWithFIAT($request, $cartItems);
-            }
-            return $list;
-        }else{
-            return $this->payWithFIAT($request, $cartItems);
-        }
     }
 }
