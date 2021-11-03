@@ -2,15 +2,6 @@
 
 namespace App\Services\Pos;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-
-//Service
-use App\Services\Pos\PaymentServices;
-
-//Models
-use App\Models\Configuration;
-
 class PaymentMethodServices extends PaymentServices{
 
     public function payWithFIAT($request, $cartItems)
@@ -23,6 +14,7 @@ class PaymentMethodServices extends PaymentServices{
             'discount' => $payment['discount'],
             'tax' => $payment['tax'],
             'total' => $payment['total'],
+            'payment_method' => 'fiat'
         ];
     }
 
@@ -60,7 +52,8 @@ class PaymentMethodServices extends PaymentServices{
             'subTotal' => $subTotalTNBC,
             'discount' => $discountTNBC,
             'tax' => $taxTNBC,
-            'total' => $totalTNBC
+            'total' => $totalTNBC,
+            'payment_method' => 'tnbc'
         ];
         
     }

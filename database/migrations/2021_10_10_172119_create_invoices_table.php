@@ -18,7 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->string('invoice_number');
-            $table->string('payment_type');
+            $table->string('payment_method');
             $table->integer('subTotal');
             $table->integer('discount');
             $table->integer('tax');
