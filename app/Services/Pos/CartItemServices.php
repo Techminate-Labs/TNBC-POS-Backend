@@ -51,23 +51,8 @@ class CartItemServices{
         $cartItems = $cartItems->map(function($cartItem){
                         return $this->itemFormat->formatCartItemList($cartItem);
                     });
-
-        if($request->has('payment_method')){
-            $pm = $request->payment_method;
-            switch ($pm) {
-                case 'tnbc':
-                    $list = $this->paymentMethodServices->payWithTNBC($request, $cartItems);
-                    break;
-                case 'fiat':
-                    $list = $this->paymentMethodServices->payWithFIAT($request, $cartItems);
-                    break;
-                default:
-                $list= $this->paymentMethodServices->payWithFIAT($request, $cartItems);
-            }
-            return response($list,200);
-        }else{
-            return $this->paymentMethodServices->payWithFIAT($request, $cartItems);
-        }
+        $list = $this->paymentMethodServices->paymentMethod($request, $cartItems);
+        return response($list,200);
     }
 
     //add Item to cart
@@ -161,7 +146,8 @@ class CartItemServices{
         }
     }
 
-    public function updateStock($model, $itemId, $qty){
+    public function updateStock($model, $itemId, $qty)
+    {
         $item = $this->baseRI->findById($model, $itemId);
         $stock = $item->inventory;
         $stock = $stock + $qty;
@@ -170,7 +156,8 @@ class CartItemServices{
         $item->save();
     }
 
-    public function updateAvailability($stock){
+    public function updateAvailability($stock)
+    {
         if($stock <= 0){
             return 0;
         }else{
