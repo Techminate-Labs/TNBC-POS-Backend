@@ -81,6 +81,34 @@ class TransactionController extends Controller
         return response($response, 200);
     }
 
+    public function graph(){
+        $url = 'http://54.183.16.194/bank_transactions?account_number=6e5ea8507e38be7250cde9b8ff1f7c8e39a1460de16b38e6f4d5562ae36b5c1a&fee=NONE&limit=20';
+        $fetch = Http::get($url);
+        $data = json_decode($fetch);
+        $results = $data->results;
+        $transactions = [];
+        foreach($results as $result){
+            $date = explode("T",$result->block->created_date);
+            $amount = 0;
+            foreach($results as $txs){
+                $txsDate = explode("T",$txs->block->created_date);
+                if($date[0] == $txsDate[0]){
+                    $amount = $amount + $txs->amount;
+                }
+            }
+            $obj = [
+                "amount"=>$amount,
+                "date"=>$date[0],
+            ];
+            array_push($transactions, $obj);
+        }
+        
+        $response = [
+            'transactions' => $transactions,
+        ];
+        return response($response, 200);
+    }
+
     public function atm(Request $request){
         $block = [];
         $day = $request->day;
