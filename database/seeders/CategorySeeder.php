@@ -29,29 +29,43 @@ class CategorySeeder extends Seeder
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'Sandwitch',
-            'slug' => 'sandwitch',
+            'name' => 'Soup',
+            'slug' => 'soup',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'Fried Chicken',
-            'slug' => 'friedchicken',
+            'name' => 'Chicken',
+            'slug' => 'chicken',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'Fired Rice',
-            'slug' => 'friedrice',
+            'name' => 'Rice',
+            'slug' => 'rice',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'Biriani',
-            'slug' => 'biriani',
+            'name' => 'Coffee',
+            'slug' => 'coffee',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('categories')->insert([
+            'name' => 'Noodles',
+            'slug' => 'noodles',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('categories')->insert([
+            'name' => 'Pasta',
+            'slug' => 'pasta',
             'created_at' => now(),
             'updated_at' => now()
         ]);

@@ -15,24 +15,6 @@ class UnitSeeder extends Seeder
     public function run()
     {
         DB::table('units')->insert([
-            'name' => '4 pis',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        DB::table('units')->insert([
-            'name' => '8 pis',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        DB::table('units')->insert([
-            'name' => '12 pis',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        DB::table('units')->insert([
             'name' => 'Small',
             'created_at' => now(),
             'updated_at' => now()
@@ -50,6 +32,28 @@ class UnitSeeder extends Seeder
             'updated_at' => now()
         ]);
 
+        DB::table('units')->insert([
+            'name' => '1 pis',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
+        DB::table('units')->insert([
+            'name' => '2 pis',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('units')->insert([
+            'name' => '4 pis',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('units')->insert([
+            'name' => '1 bowl',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }
