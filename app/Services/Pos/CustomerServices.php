@@ -26,14 +26,10 @@ class CustomerServices{
     }
 
     public function customerList($request){
-        $prop1 = 'name';
-        $prop2 = 'email';
-        $prop3 = 'phone';
-        $prop4 = 'address';
         if ($request->has('q')){
-            $customer = $this->filterRI->filterBy4Prop(
+            $customer = $this->filterRI->filterBy4PropPaginated(
                 $this->customerModel, $request->q, $request->limit,
-                $prop1, $prop2, $prop3, $prop4
+                'name', 'email', 'phone', 'address'
             );
         }else{
             $customer = $this->baseRI->listWithPagination($this->customerModel, $request->limit);

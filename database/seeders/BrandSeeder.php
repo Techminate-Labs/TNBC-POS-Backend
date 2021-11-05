@@ -15,6 +15,20 @@ class BrandSeeder extends Seeder
     public function run()
     {
         DB::table('brands')->insert([
+            'name' => 'PizzaHut',
+            'slug' => 'pizzahut',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('brands')->insert([
+            'name' => 'PizzaInn',
+            'slug' => 'pizzainn',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('brands')->insert([
             'name' => 'KFC',
             'slug' => 'kfc',
             'created_at' => now(),
@@ -31,20 +45,6 @@ class BrandSeeder extends Seeder
         DB::table('brands')->insert([
             'name' => 'FFC',
             'slug' => 'ffc',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        DB::table('brands')->insert([
-            'name' => 'PizzaHut',
-            'slug' => 'pizzahut',
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        DB::table('brands')->insert([
-            'name' => 'PizzaInn',
-            'slug' => 'pizzainn',
             'created_at' => now(),
             'updated_at' => now()
         ]);
