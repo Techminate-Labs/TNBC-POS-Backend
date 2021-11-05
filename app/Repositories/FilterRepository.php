@@ -17,6 +17,13 @@ class FilterRepository implements FilterRepositoryInterface{
                 ->get();
     }
 
+    public function filterBy3Prop($model, $query, $prop1, $prop2, $prop3){
+        return $model::where($prop1, 'LIKE', '%' . $query . '%')
+                ->orWhere($prop2, 'LIKE', '%' . $query . '%')
+                ->orWhere($prop3, 'LIKE', '%' . $query . '%')
+                ->get();
+    }
+
     public function filterBy1PropPaginated($model, $query, $limit, $prop1){
         return $model::where($prop1, 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')
