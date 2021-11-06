@@ -10,6 +10,8 @@ interface BaseRepositoryInterface
 
     public function findByIdGet($model, $id, $prop);
 
+    public function findByIdfirst($model, $id, $prop);
+
     public function listWithoutPagination($model, $limit);
 
     public function listWithPagination($model, $limit);

@@ -21,6 +21,11 @@ class BaseRepository implements BaseRepositoryInterface{
                 ->get();
     }
 
+    public function findByIdfirst($model, $id, $prop){
+        return $model::where($prop, $id)
+                ->first();
+    }
+
     public function listWithoutPagination($model, $limit){
         return $model::orderBy('created_at', 'desc')
                 ->all();
