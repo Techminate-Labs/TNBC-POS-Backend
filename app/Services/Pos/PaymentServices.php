@@ -47,8 +47,12 @@ class PaymentServices{
         $subTotal = $this->subTotal($cartItems);
 
         if($request->has('coupon')){
-            $coupon = $this->filterRI->filterBy1PropFirst($this->couponModel, $request->coupon, 'code');
-            $discountRate = $this->applyCoupon($coupon);
+            $coupon = $this->baseRI->findByIdfirst($this->couponModel, $request->coupon, 'code');
+            if($coupon){
+                $discountRate = $this->applyCoupon($coupon);
+            }else{
+                $discountRate = 0;
+            }
         }else{
             $discountRate = 0;
         }
