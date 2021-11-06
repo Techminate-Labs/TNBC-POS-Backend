@@ -41,9 +41,9 @@ class PaymentMethodServices extends PaymentServices{
                 "item_id"=>$cartItem['item_id'],
                 "item_name"=>$cartItem['item_name'],
                 "unit"=>$cartItem['unit'],
-                "unit_price"=>$unit_price,
+                "unit_price"=>(round($unit_price, 0)),
                 "qty"=>$cartItem['qty'],
-                "total"=>$total
+                "total"=>(round($total, 0)),
             ];
             array_push($tnbc, $obj);
         }

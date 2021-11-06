@@ -46,13 +46,13 @@ class TransactionServices{
             ];
         });
 
-        $lastTransactionAmount = $formattedList[0]['amount'];
-        $lastSenderPK = $formattedList[0]['sender'];
         $tableData = $this->paginate($formattedList);
 
         $response = [
-            'lastTransactionAmount' => $lastTransactionAmount,
-            'lastSenderPK' => $lastSenderPK,
+            'storePK' => $pk,
+            'lastSenderPK' => $formattedList[0]['sender'],
+            'lastTransactionAmount' => $formattedList[0]['amount'],
+            'lastTransactionMemo' => $formattedList[0]['memo'],
             'tableData' => $tableData
         ];
 

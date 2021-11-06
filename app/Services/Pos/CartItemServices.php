@@ -48,14 +48,16 @@ class CartItemServices{
                     });
         $list = $this->paymentMethodServices->paymentMethod($request, $cartItems);
         return [
+            'cashier' => $cart->user->name,
+            'payment_method' => $list['payment_method'],
+            'invoice_number' => 'POS-'.date('md').'-'.date('is').mt_rand(10,100),
+            'subTotal' => (round($list['subTotal'], 0)),
+            'discount' => (round($list['discount'], 0)),
+            'tax' => (round($list['tax'], 0)),
+            'total' => (round($list['total'], 0)),
+            'date' => $cart->created_at,
             'user_id' => $user_id,
             'customer_id' => $cart->customer_id,
-            'payment_method' => $list['payment_method'],
-            'subTotal' => $list['subTotal'],
-            'discount' => $list['discount'],
-            'tax' => $list['tax'],
-            'total' => $list['total'],
-            'date' => $cart->created_at,
             'cartItems' => $list['cartItems']
         ];
     }
