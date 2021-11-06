@@ -20,4 +20,14 @@ class InvoiceController extends Controller
     {
         return $this->services->invoice($request);
     }
+
+    public function invoiceList(Request $request)
+    {
+        return $this->services->invoiceList($request);
+    }
+
+    public function invoiceGetById($id)
+    {
+        return $this->services->invoiceGetById($id);
+    }
 }

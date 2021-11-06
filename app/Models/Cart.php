@@ -11,8 +11,16 @@ class Cart extends Model
 
     protected $guarded=[];
 
+    // public function user(){
+    // 	return $this->hasOne(User::class);
+    // }
+
     public function user(){
-    	return $this->hasOne(User::class);
+    	return $this->belongsTo(User::class);
+    }
+    
+    public function customer(){
+    	return $this->belongsTo(Customer::class);
     }
 
     public function cartItem(){

@@ -136,6 +136,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Invoice
     Route::get('/invoice', [InvoiceController::class, 'invoice']);
+    Route::get('/invoiceList', [InvoiceController::class, 'invoiceList']);
+    Route::get('/invoiceGetById/{id}', [InvoiceController::class, 'invoiceGetById']);
 
     //Transactions
     Route::get('/transactionHistory', [TransactionController::class, 'transactionHistory']);
