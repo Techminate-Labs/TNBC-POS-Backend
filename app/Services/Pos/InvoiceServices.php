@@ -9,12 +9,14 @@ use App\Services\Pos\CartItemServices;
 //Models
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Customer;
 
 class InvoiceServices extends CartItemServices{
     private $invoiceModel = Invoice::class;
     private $invoiceItemModel = InvoiceItem::class;
+    private $customerModel = Customer::class;
        
-    public function invoice($request)
+    public function invoiceCreate($request)
     {
         if($request->has('invoice_number')){
             $invoice_number = $request->invoice_number;
@@ -50,6 +52,14 @@ class InvoiceServices extends CartItemServices{
                     'total' => $item['total']
                 ]
             );
+            $cartItem = $this->baseRI->findById($this->cartItemModel, $item['id']);
+            $cartItem->delete();
+        }
+
+        $cart = $this->baseRI->findById($this->cartModel, $list['cart_id'],);
+        if($cart){
+            $cart->customer_id = NULL;
+            $cart->save();
         }
 
         return response(["done"=>'Invoice Saved Successfully'],201);

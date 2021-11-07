@@ -32,6 +32,8 @@ use App\Http\Controllers\Pos\InvoiceController;
 use App\Http\Controllers\Pos\TransactionController;
 use App\Http\Controllers\System\ConfigurationController;
 
+use App\Http\Controllers\Report\ReportController;
+
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -135,7 +137,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/cartItemDelete/{id}', [CartItemController::class, 'cartItemDelete']);
 
     //Invoice
-    Route::get('/invoice', [InvoiceController::class, 'invoice']);
+    Route::get('/invoice', [InvoiceController::class, 'invoiceCreate']);
     Route::get('/invoiceList', [InvoiceController::class, 'invoiceList']);
     Route::get('/invoiceGetById/{id}', [InvoiceController::class, 'invoiceGetById']);
 
@@ -145,6 +147,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Configuration
     Route::get('/config', [ConfigurationController::class, 'config']);
     Route::put('/configUpdate', [ConfigurationController::class, 'configUpdate']);
+
+    //Report
+    Route::get('/report', [ReportController::class, 'report']);
 });
 
 // Route::get('/atm', [TransactionController::class, 'atm']);

@@ -16,9 +16,9 @@ class InvoiceController extends Controller
         $this->services = $invoiceServices;
     }
 
-    public function invoice(Request $request)
+    public function invoiceCreate(Request $request)
     {
-        return $this->services->invoice($request);
+        return $this->services->invoiceCreate($request);
     }
 
     public function invoiceList(Request $request)

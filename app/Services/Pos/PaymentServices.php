@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 //Interface
 use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
 
 //Models
 use App\Models\Coupon;
@@ -16,11 +15,9 @@ class PaymentServices{
     private $baseRepositoryInterface;
 
     public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
+        BaseRepositoryInterface $baseRepositoryInterface
     ){
         $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
 
         $this->configModel = Configuration::class;
         $this->couponModel = Coupon::class;
