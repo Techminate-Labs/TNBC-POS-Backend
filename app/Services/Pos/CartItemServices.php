@@ -21,8 +21,8 @@ class CartItemServices{
     private $filterRepositoryInterface;
     private $paymentMethodServices;
 
-    private $cartModel = Cart::class;
-    private $cartItemModel = CartItem::class;
+    public $cartModel = Cart::class;
+    public $cartItemModel = CartItem::class;
     private $itemModel = Item::class;
 
     public function __construct(
@@ -56,7 +56,8 @@ class CartItemServices{
             'tax' => (round($list['tax'], 0)),
             'total' => (round($list['total'], 0)),
             'date' => $cart->created_at,
-            'user_id' => $user_id,
+            'cart_id' => $cart->id,
+            'user_id' => $cart->user_id,
             'customer_id' => $cart->customer_id,
             'cartItems' => $list['cartItems']
         ];
