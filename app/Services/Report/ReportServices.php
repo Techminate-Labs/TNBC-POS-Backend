@@ -48,6 +48,7 @@ class ReportServices{
         }
         return [
             'payment_method' => $sales[0]->payment_method,
+            'duration' => $duration,
             'total' => $total,
             'discount' => $discount,
             'tax' => $tax,
