@@ -135,7 +135,7 @@ class ItemSeeder extends Seeder
             'inventory' => '3',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'http://127.0.0.1:8000/images/item/noodles.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/noodles.png',
             'created_at' => now(),
             'updated_at' => now()
         ]);

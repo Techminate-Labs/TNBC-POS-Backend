@@ -27,7 +27,51 @@ class ReportServices{
     // date, payment_method, invoice_id, num_of_items, sold_by, customer, subTotal, discount, tax, total, profit
     public function report($request)
     {
+        if($request->has('payment_method')){
+            $payment_method = $request->payment_method;
+        }else{
+            $payment_method = 'fiat';
+        }
+        if($request->has('duration')){
+            $duration = $request->duration;
+        }else{
+            $duration = Carbon::today();
+        }
+        $sales = Invoice::where('payment_method', $payment_method)->get();
+        $total = 0;
+        $tax = 0;
+        $discount = 0;
+        foreach($sales as $sale){
+            $total = $total + $sale->total;
+            $tax = $tax + $sale->tax;
+            $discount = $discount + $sale->discount;
+        }
+        return [
+            'payment_method' => $sales[0]->payment_method,
+            'total' => $total,
+            'discount' => $discount,
+            'tax' => $tax,
+            'sales'=> $sales
+        ];
+    }
 
-        return 'ok';
+    public function reportTNBC($request)
+    {
+        $sales = Invoice::where('payment_method', 'fiat')->get();
+        $total = 0;
+        $tax = 0;
+        $discount = 0;
+        foreach($sales as $sale){
+            $total = $total + $sale->total;
+            $tax = $tax + $sale->tax;
+            $discount = $discount + $sale->discount;
+        }
+        return [
+            'payment_method' => 'fiat',
+            'total' => $total,
+            'discount' => $discount,
+            'tax' => $tax,
+            'sales'=> $sales
+        ];
     }
 } 
