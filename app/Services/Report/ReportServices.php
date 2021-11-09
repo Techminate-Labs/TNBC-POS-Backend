@@ -23,8 +23,33 @@ class ReportServices{
        //
     }
     
-    // daily, weekly, monthly, yearly
     // date, payment_method, invoice_id, num_of_items, sold_by, customer, subTotal, discount, tax, total, profit
+    
+    public function reportDay($payment_method){
+        return Invoice::where('payment_method', $payment_method)
+                        ->whereMonth('created_at','=', date("m"))
+                        ->whereDate('created_at', '=', Carbon::today())->get();
+    }
+
+    public function reportWeek($payment_method){
+        return Invoice::where('payment_method', $payment_method)
+        ->whereBetween('created_at', [Carbon::now()->startOfWeek(Carbon::SATURDAY),Carbon::now()->endOfWeek(Carbon::FRIDAY)])
+        ->get();
+    }
+
+    public function reportMonth($payment_method){
+        return Invoice::where('payment_method', $payment_method)
+        ->whereYear('created_at', date('Y'))
+        ->whereMonth('created_at','=', date("m"))
+        ->get();
+    }
+
+    public function reportYear($payment_method){
+        return Invoice::where('payment_method', $payment_method)
+        ->whereYear('created_at', date('Y'))
+        ->get();
+    }
+    
     public function report($request)
     {
         if($request->has('payment_method')){
@@ -32,12 +57,29 @@ class ReportServices{
         }else{
             $payment_method = 'fiat';
         }
+
         if($request->has('duration')){
             $duration = $request->duration;
+            switch ($duration) {
+                case 'today':
+                    $sales = $this->reportDay($payment_method);
+                    break;
+                case 'week':
+                    $sales = $this->reportWeek($payment_method);
+                    break;
+                case 'month':
+                    $sales = $this->reportMonth($payment_method);
+                    break;
+                case 'year':
+                    $sales = $this->reportMonth($payment_method);
+                    break;
+                default:
+                $sales = $this->reportDay($payment_method);
+            }
         }else{
-            $duration = Carbon::today();
+            $sales = $this->reportDay($payment_method);
         }
-        $sales = Invoice::where('payment_method', $payment_method)->get();
+        
         $total = 0;
         $tax = 0;
         $discount = 0;
@@ -49,26 +91,6 @@ class ReportServices{
         return [
             'payment_method' => $sales[0]->payment_method,
             'duration' => $duration,
-            'total' => $total,
-            'discount' => $discount,
-            'tax' => $tax,
-            'sales'=> $sales
-        ];
-    }
-
-    public function reportTNBC($request)
-    {
-        $sales = Invoice::where('payment_method', 'fiat')->get();
-        $total = 0;
-        $tax = 0;
-        $discount = 0;
-        foreach($sales as $sale){
-            $total = $total + $sale->total;
-            $tax = $tax + $sale->tax;
-            $discount = $discount + $sale->discount;
-        }
-        return [
-            'payment_method' => 'fiat',
             'total' => $total,
             'discount' => $discount,
             'tax' => $tax,
