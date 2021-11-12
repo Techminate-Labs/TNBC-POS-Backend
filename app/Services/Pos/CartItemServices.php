@@ -2,6 +2,8 @@
 
 namespace App\Services\Pos;
 
+use Carbon\Carbon;
+
 //Interface
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
@@ -55,7 +57,7 @@ class CartItemServices{
             'discount' => (round($list['discount'], 0)),
             'tax' => (round($list['tax'], 0)),
             'total' => (round($list['total'], 0)),
-            'date' => $cart->created_at,
+            'date' => Carbon::now(),
             'cart_id' => $cart->id,
             'user_id' => $cart->user_id,
             'customer_id' => $cart->customer_id,
