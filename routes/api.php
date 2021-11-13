@@ -23,14 +23,13 @@ use App\Http\Controllers\Item\ItemController;
 
 use App\Http\Controllers\Pos\CustomerController;
 use App\Http\Controllers\Pos\CouponController;
-
 use App\Http\Controllers\Pos\CartController;
 use App\Http\Controllers\Pos\CartItemController;
-
 use App\Http\Controllers\Pos\InvoiceController;
-
 use App\Http\Controllers\Pos\TransactionController;
+
 use App\Http\Controllers\System\ConfigurationController;
+use App\Http\Controllers\System\ActivityLogController;
 
 use App\Http\Controllers\Report\ReportController;
 
@@ -147,6 +146,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Configuration
     Route::get('/config', [ConfigurationController::class, 'config']);
     Route::put('/configUpdate', [ConfigurationController::class, 'configUpdate']);
+    Route::get('/logCreate', [ActivityLogController::class, 'logCreate']);
+    Route::get('/logList', [ActivityLogController::class, 'logList']);
 
     //Report
     Route::get('/report', [ReportController::class, 'report']);
