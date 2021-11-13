@@ -23,33 +23,30 @@ class ReportServices{
        //
     }
     
-    // date, payment_method, invoice_id, num_of_items, sold_by, customer, subTotal, discount, tax, total, profit
+    // num_of_items, PNL
     
     //Today
     public function reportToday($payment_method){
         return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', date('Y'))
-                        ->whereMonth('date','=', date("m"))
-                        ->whereDate('date', '=', Carbon::today())
+                        ->whereYear('date', Carbon::now()->year)
+                        ->whereMonth('date', Carbon::now()->month)
+                        ->whereDate('date', Carbon::today())
                         ->get();
     }
 
     //Yesterday
     public function reportYesterday($payment_method){
         return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', date('Y'))
-                        ->whereMonth('date','=', date("m"))
-                        ->whereDate('date', '=', Carbon::today()->subDay())
+                        ->whereYear('date', Carbon::now()->year)
+                        ->whereMonth('date', Carbon::now()->month)
+                        ->whereDate('date', Carbon::today()->subDay())
                         ->get();
     }
 
     //This Week
     public function reportWeek($payment_method){
-        // $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::SATURDAY);
-        // $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::FRIDAY);
-
-        $startOfTheWeek = Carbon::now()->startOfWeek();
-        $endOfTheWeek = Carbon::now()->endOfWeek();
+        $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
 
         return Invoice::where('payment_method', $payment_method)
                         ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
@@ -69,26 +66,83 @@ class ReportServices{
     //This Month
     public function reportMonth($payment_method){
         return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', date('Y'))
-                        ->whereMonth('date','=', date("m"))
+                        ->whereYear('date', Carbon::now()->year)
+                        ->whereMonth('date', Carbon::now()->month)
                         ->get();
     }
 
      //Last Month
      public function reportLastMonth($payment_method){
-        $startDay = Carbon::now()->subWeek(1)->startOfWeek();
-        $endDay = Carbon::now()->subWeek(1)->endOfWeek();
-
         return Invoice::where('payment_method', $payment_method)
-                        ->whereBetween('date', [$startDay, $endDay])
+                        ->whereYear('date', Carbon::now()->year)
+                        ->whereMonth('date','=', Carbon::now()->subMonth())
                         ->get();
     }
 
     //This Year
     public function reportYear($payment_method){
         return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', date('Y'))
+                        ->whereYear('date', Carbon::now()->year)
                         ->get();
+    }
+
+     //Last Year
+     public function reportLastYear($payment_method){
+        return Invoice::where('payment_method', $payment_method)
+                        ->whereYear('date', Carbon::now()->subYear())
+                        ->get();
+    }
+
+    public function getByDuration($duration, $payment_method){  
+        switch ($duration) {
+            case 'today':
+                $sales = $this->reportToday($payment_method);
+                break;
+            case 'yesterday':
+                $sales = $this->reportYesterday($payment_method);
+                break;
+            case 'week':
+                $sales = $this->reportWeek($payment_method);
+                break;
+            case 'lastWeek':
+                $sales = $this->reportLastWeek($payment_method);
+                break;
+            case 'month':
+                $sales = $this->reportMonth($payment_method);
+                break;
+            case 'lastMonth':
+                $sales = $this->reportLastMonth($payment_method);
+                break;
+            case 'year':
+                $sales = $this->reportYear($payment_method);
+                break;
+            case 'lastYear':
+                $sales = $this->reportLastYear($payment_method);
+                break;
+            default:
+            $sales = $this->reportToday($payment_method);
+        }
+        return $sales;
+    }
+
+    public function PNL($duration, $payment_method){  
+        switch ($duration) {
+            case 'today':
+                $sales = $this->reportToday($payment_method);
+                break;
+            case 'week':
+                $sales = $this->reportWeek($payment_method);
+                break;
+            case 'month':
+                $sales = $this->reportMonth($payment_method);
+                break;
+            case 'year':
+                $sales = $this->reportYear($payment_method);
+                break;
+            default:
+            $sales = $this->reportToday($payment_method);
+        }
+        return $sales;
     }
     
     public function report($request)
@@ -101,31 +155,7 @@ class ReportServices{
 
         if($request->has('duration')){
             $duration = $request->duration;
-            switch ($duration) {
-                case 'today':
-                    $sales = $this->reportToday($payment_method);
-                    break;
-                case 'yesterday':
-                    $sales = $this->reportYesterday($payment_method);
-                    break;
-                case 'week':
-                    $sales = $this->reportWeek($payment_method);
-                    break;
-                case 'lastWeek':
-                    $sales = $this->reportLastWeek($payment_method);
-                    break;
-                case 'month':
-                    $sales = $this->reportMonth($payment_method);
-                    break;
-                case 'lastMonth':
-                    $sales = $this->reportMonth($payment_method);
-                    break;
-                case 'year':
-                    $sales = $this->reportYear($payment_method);
-                    break;
-                default:
-                $sales = $this->reportToday($payment_method);
-            }
+            $sales = $this->getByDuration($duration, $payment_method);
         }else{
             $sales = $this->reportToday($payment_method);
         }
