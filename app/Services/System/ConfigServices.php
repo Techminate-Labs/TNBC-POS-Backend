@@ -3,7 +3,6 @@
 namespace App\Services\System;
 
 //Interface
-use App\Contracts\User\ProfileRepositoryInterface;
 
 //Utilities
 use App\Utilities\FileUtilities;
