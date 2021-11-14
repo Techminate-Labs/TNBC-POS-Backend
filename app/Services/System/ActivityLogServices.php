@@ -1,26 +1,18 @@
 <?php
-namespace App\Utilities;
-use Request;
+
+namespace App\Services\System;
+
+//Service
+use App\Services\BaseServices;
+
+//Interface
 
 //Models
-use App\Models\ActivityLog;
 
-class ActivityLogServices
-{
-    public static function addToLog($subject)
+class ActivityLogServices extends BaseServices{
+    public function logList($request)
     {
-    	$log = [];
-    	$log['subject'] = $subject;
-    	$log['url'] = Request::fullUrl();
-    	$log['method'] = Request::method();
-    	$log['ip'] = Request::ip();
-    	$log['agent'] = Request::header('user-agent');
-    	$log['user_id'] = auth()->check() ? auth()->user()->id : 1;
-    	ActivityLog::create($log);
-    }
-
-    public static function logActivityLists()
-    {
-    	return ActivityLog::latest()->get();
+        $this->logCreate($request);
+        return $this->baseRI->listWithPagination($this->logModel, $request->limit);
     }
 }
