@@ -63,18 +63,6 @@ class InvoiceServices extends CartItemServices{
         }
 
         return response(["done"=>'Invoice Saved Successfully'],201);
-
-        // return [
-        //     'cashier' => $invoice->user->name,
-        //     'payment_method' => $invoice->payment_method,
-        //     'invoice_number' => $invoice->invoice_number,
-        //     'subTotal' => $invoice->subTotal,
-        //     'discount' => $invoice->discount,
-        //     'tax' => $invoice->tax,
-        //     'total' => $invoice->total,
-        //     'date' => $invoice->date,
-        //     'invoiceItems' => $list['cartItems']
-        // ];
     }
 
     public function invoiceList($request)
@@ -96,4 +84,16 @@ class InvoiceServices extends CartItemServices{
             'invoiceItems' => $invoiceItems
         ];
     }
+
+    // return [
+        //     'cashier' => $invoice->user->name,
+        //     'payment_method' => $invoice->payment_method,
+        //     'invoice_number' => $invoice->invoice_number,
+        //     'subTotal' => $invoice->subTotal,
+        //     'discount' => $invoice->discount,
+        //     'tax' => $invoice->tax,
+        //     'total' => $invoice->total,
+        //     'date' => $invoice->date,
+        //     'invoiceItems' => $list['cartItems']
+        // ];
 }
