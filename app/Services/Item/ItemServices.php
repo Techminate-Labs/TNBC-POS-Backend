@@ -54,17 +54,13 @@ class ItemServices{
         $this->supplierModel = Supplier::class;
     }
 
-    public function searchItems($request){
+    public function randomItems($request){
         if($request->has('q')){
             return $this->filterRI->filterBy3Prop($this->itemModel, $request->q, 'name', 'slug', 'sku');
         }
         else{
-            return [];
+            return $this->baseRI->listInRandomOrder($this->itemModel, 12);
         }
-    }
-
-    public function randomItems(){
-        return $this->baseRI->listInRandomOrder($this->itemModel, 12);
     }
 
     public function itemList($request){
