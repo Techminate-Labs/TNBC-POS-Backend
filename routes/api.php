@@ -105,7 +105,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //item
     Route::get('/randomItems', [ItemController::class, 'randomItems']);
-    Route::get('/searchItems', [ItemController::class, 'searchItems']);
     Route::get('/itemList', [ItemController::class, 'itemList']);
     Route::get('/itemGetById/{id}', [ItemController::class, 'itemGetById']);
     Route::post('/itemCreate', [ItemController::class, 'itemCreate']);

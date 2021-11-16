@@ -15,13 +15,9 @@ class ItemController extends Controller
     public function __construct(ItemServices $itemServices){
         $this->services = $itemServices;
     }
-
-    public function searchItems(Request $request){
-        return $this->services->searchItems($request);
-    }
-
-    public function randomItems(){
-       return $this->services->randomItems();
+    
+    public function randomItems(Request $request){
+       return $this->services->randomItems($request);
     }
 
     public function itemList(Request $request)
