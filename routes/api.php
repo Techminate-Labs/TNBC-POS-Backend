@@ -151,7 +151,3 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/report', [ReportController::class, 'report']);
 });
 
-// Route::get('/atm', [TransactionController::class, 'atm']);
-// Route::get('/ats', [TransactionController::class, 'ats']);
-// Route::get('/treasury', [TransactionController::class, 'treasury']);
-// Route::get('/graph', [TransactionController::class, 'graph']);
