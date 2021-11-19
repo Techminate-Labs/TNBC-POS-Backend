@@ -24,16 +24,16 @@ class DashboardController extends Controller
 
     public function countTotal()
     {
-        return 'ok';
+        return $this->countServices->countTotal();
     }
 
     public function monthlySalesChart()
     {
-        return 'ok';
+        return $this->graphServices->monthlySalesChart();
     }
 
     public function dayChart()
     {
-        return 'ok';
+        return $this->graphServices->dayChart();
     }
 }
