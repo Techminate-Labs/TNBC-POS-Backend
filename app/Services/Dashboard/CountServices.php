@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Item;
+namespace App\Services\Dashboard;
 
 use Illuminate\Support\Str;
 
