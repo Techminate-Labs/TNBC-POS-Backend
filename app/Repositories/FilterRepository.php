@@ -24,6 +24,12 @@ class FilterRepository implements FilterRepositoryInterface{
                 ->get();
     }
 
+    public function filterBy2PropFirst($model, $query1, $query2, $prop1, $prop2){
+        return $model::where($prop1, 'LIKE', '%' . $query1 . '%')
+                ->Where($prop2, 'LIKE', '%' . $query2 . '%')
+                ->first();
+    }
+
     public function filterBy1PropPaginated($model, $query, $limit, $prop1){
         return $model::where($prop1, 'LIKE', '%' . $query . '%')
                 ->orderBy('created_at', 'desc')

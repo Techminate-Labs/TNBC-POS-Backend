@@ -16,7 +16,7 @@ interface FilterRepositoryInterface
 
     public function filterBy4PropWithCount($model, $query, $limit, $countObj, $prop1, $prop2, $prop3, $prop4);
 
-    // public function filterBy2Prop($model, $query, $limit, $prop1, $prop2);
+    public function filterBy2PropFirst($model, $query1, $query2, $prop1, $prop2);
 
     // public function filterBy2PropWithCount($model, $query, $limit, $countObj, $prop1, $prop2);
 
