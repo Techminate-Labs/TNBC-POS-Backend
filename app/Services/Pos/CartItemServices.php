@@ -78,17 +78,25 @@ class CartItemServices{
             $user_id = auth()->user()->id;
             $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user_id, 'user_id');
 
-            $cartItem = $this->baseRI->storeInDB(
-                $this->cartItemModel,
-                [
-                    'cart_id' => $cart->id,
-                    'item_id' => $item->id,
-                    'unit_id' => $item->unit_id,
-                    'unit_price' => $item->price,
-                    'qty'=> 1,
-                    'total_amount' => $item->price
-                ]
-            );
+            //check if Item exist
+            $itemExits = $this->filterRI->filterBy2PropFirst($this->cartItemModel, $cart->id, $item->id, 'cart_id', 'item_id');
+            if(count((array)$itemExits)>0){
+                $itemExits->qty = $itemExits->qty + 1;
+                $itemExits->total_amount = $itemExits->qty * $itemExits->unit_price;
+                $itemExits->save();
+            }else{
+                $cartItem = $this->baseRI->storeInDB(
+                    $this->cartItemModel,
+                    [
+                        'cart_id' => $cart->id,
+                        'item_id' => $item->id,
+                        'unit_id' => $item->unit_id,
+                        'unit_price' => $item->price,
+                        'qty'=> 1,
+                        'total_amount' => $item->price
+                    ]
+                );
+            }
 
             $item->inventory = $item->inventory - 1;
             $item->save();
