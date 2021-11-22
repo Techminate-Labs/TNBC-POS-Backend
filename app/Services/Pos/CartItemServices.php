@@ -106,7 +106,7 @@ class CartItemServices{
             }  
             return response(["done"=>'Item Added Successfully'],201);
         }else{
-            return response(["failed"=>'Not Available To Purchase.'],200);
+            return response(["failed"=>'Not Available To Purchase.'],201);
         }
     }
 
