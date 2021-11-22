@@ -13,6 +13,7 @@ use App\Contracts\Pos\CartRepositoryInterface;
 
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
+use App\Contracts\ReportRepositoryInterface;
 
 //Repositories
 use App\Repositories\User\UserRepository;
@@ -23,6 +24,7 @@ use App\Repositories\Pos\CartRepository;
 
 use App\Repositories\BaseRepository;
 use App\Repositories\FilterRepository;
+use App\Repositories\ReportRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -77,6 +79,11 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             FilterRepositoryInterface::class,
             FilterRepository::class,
+        );
+
+        $this->app->bind(
+            ReportRepositoryInterface::class,
+            ReportRepository::class,
         );
 
         // $models = array(

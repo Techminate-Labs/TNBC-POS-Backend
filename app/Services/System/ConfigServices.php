@@ -2,8 +2,6 @@
 
 namespace App\Services\System;
 
-//Interface
-
 //Utilities
 use App\Utilities\FileUtilities;
 

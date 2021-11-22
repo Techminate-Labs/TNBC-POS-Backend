@@ -2,28 +2,15 @@
 
 namespace App\Services\Dashboard;
 
-use Illuminate\Support\Str;
-
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Service
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Invoice;
 
-class CountServices{
-    
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
+class CountServices extends BaseServices{
 
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->brandModel = Invoice::class;
-    }
+    private $brandModel = Invoice::class;
 
     public function countTotal()
     {
@@ -39,5 +26,4 @@ class CountServices{
     {
         return 'ok';
     }
-
 }
