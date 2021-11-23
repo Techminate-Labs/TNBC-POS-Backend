@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 //Interface
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\Item\ItemRepositoryInterface;
+use App\Contracts\ItemRepositoryInterface;
 
 //Resources
 use App\Http\Resources\PaginationResource;

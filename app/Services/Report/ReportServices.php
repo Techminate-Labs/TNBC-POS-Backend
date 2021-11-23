@@ -68,7 +68,7 @@ class ReportServices{
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date', Carbon::now()->month)
-                        ->get();
+                        ->paginate(2);
     }
 
      //Last Month

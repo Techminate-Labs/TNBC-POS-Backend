@@ -3,7 +3,7 @@
 namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\User\UserRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
 
 //Format
 use App\Format\UserFormat;

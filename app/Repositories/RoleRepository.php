@@ -3,7 +3,7 @@
 namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\User\RoleRepositoryInterface;
+use App\Contracts\RoleRepositoryInterface;
 
 //Format
 use App\Format\RoleFormat;

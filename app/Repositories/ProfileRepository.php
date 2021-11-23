@@ -3,7 +3,7 @@
 namespace App\Repositories\User;
 
 //Interface
-use App\Contracts\User\ProfileRepositoryInterface;
+use App\Contracts\ProfileRepositoryInterface;
 
 //Models
 use App\Models\Profile;

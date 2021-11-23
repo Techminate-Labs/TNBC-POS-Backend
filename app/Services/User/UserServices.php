@@ -3,7 +3,7 @@
 namespace App\Services\User;
 
 //Interface
-use App\Contracts\User\UserRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
 
 //Resources
 use App\Http\Resources\PaginationResource;
