@@ -8,8 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Contracts\User\UserRepositoryInterface;
 use App\Contracts\User\ProfileRepositoryInterface;
 use App\Contracts\User\RoleRepositoryInterface;
-use App\Contracts\Item\ItemRepositoryInterface;
-use App\Contracts\Pos\CartRepositoryInterface;
+use App\Contracts\ItemRepositoryInterface;
+use App\Contracts\CartRepositoryInterface;
 
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
@@ -19,8 +19,8 @@ use App\Contracts\ReportRepositoryInterface;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\ProfileRepository;
 use App\Repositories\User\RoleRepository;
-use App\Repositories\Item\ItemRepository;
-use App\Repositories\Pos\CartRepository;
+use App\Repositories\ItemRepository;
+use App\Repositories\CartRepository;
 
 use App\Repositories\BaseRepository;
 use App\Repositories\FilterRepository;
