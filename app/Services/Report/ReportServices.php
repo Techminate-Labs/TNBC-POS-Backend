@@ -26,101 +26,101 @@ class ReportServices{
     // num_of_items, PNL
     
     //Today
-    public function reportToday($payment_method){
+    public function reportToday($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date', Carbon::now()->month)
                         ->whereDate('date', Carbon::today())
-                        ->get();
+                        ->paginate($limit);
     }
 
     //Yesterday
-    public function reportYesterday($payment_method){
+    public function reportYesterday($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date', Carbon::now()->month)
                         ->whereDate('date', Carbon::today()->subDay())
-                        ->get();
+                        ->paginate($limit);
     }
 
     //This Week
-    public function reportWeek($payment_method){
+    public function reportWeek($payment_method, $limit){
         $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
         $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
 
         return Invoice::where('payment_method', $payment_method)
                         ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
-                        ->get();
+                        ->paginate($limit);
     }
 
     //Last Week
-    public function reportLastWeek($payment_method){
+    public function reportLastWeek($payment_method, $limit){
         $startOfTheWeek = Carbon::now()->subWeek(1)->startOfWeek();
         $endOfTheWeek = Carbon::now()->subWeek(1)->endOfWeek();
         
         return Invoice::where('payment_method', $payment_method)
                         ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
-                        ->get();
+                        ->paginate($limit);
     }
 
     //This Month
-    public function reportMonth($payment_method){
+    public function reportMonth($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date', Carbon::now()->month)
-                        ->paginate(2);
+                        ->paginate($limit);
     }
 
      //Last Month
-     public function reportLastMonth($payment_method){
+     public function reportLastMonth($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date','=', Carbon::now()->subMonth())
-                        ->get();
+                        ->paginate($limit);
     }
 
     //This Year
-    public function reportYear($payment_method){
+    public function reportYear($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->year)
-                        ->get();
+                        ->paginate($limit);
     }
 
      //Last Year
-     public function reportLastYear($payment_method){
+     public function reportLastYear($payment_method, $limit){
         return Invoice::where('payment_method', $payment_method)
                         ->whereYear('date', Carbon::now()->subYear())
-                        ->get();
+                        ->paginate($limit);
     }
 
-    public function getByDuration($duration, $payment_method){  
+    public function getByDuration($duration, $payment_method, $limit){  
         switch ($duration) {
             case 'today':
-                $sales = $this->reportToday($payment_method);
+                $sales = $this->reportToday($payment_method, $limit);
                 break;
             case 'yesterday':
-                $sales = $this->reportYesterday($payment_method);
+                $sales = $this->reportYesterday($payment_method, $limit);
                 break;
             case 'week':
-                $sales = $this->reportWeek($payment_method);
+                $sales = $this->reportWeek($payment_method, $limit);
                 break;
             case 'lastWeek':
-                $sales = $this->reportLastWeek($payment_method);
+                $sales = $this->reportLastWeek($payment_method, $limit);
                 break;
             case 'month':
-                $sales = $this->reportMonth($payment_method);
+                $sales = $this->reportMonth($payment_method, $limit);
                 break;
             case 'lastMonth':
-                $sales = $this->reportLastMonth($payment_method);
+                $sales = $this->reportLastMonth($payment_method, $limit);
                 break;
             case 'year':
-                $sales = $this->reportYear($payment_method);
+                $sales = $this->reportYear($payment_method, $limit);
                 break;
             case 'lastYear':
-                $sales = $this->reportLastYear($payment_method);
+                $sales = $this->reportLastYear($payment_method, $limit);
                 break;
             default:
-            $sales = $this->reportToday($payment_method);
+            $sales = $this->reportToday($payment_method, $limit);
         }
         return $sales;
     }
@@ -153,11 +153,17 @@ class ReportServices{
             $payment_method = 'fiat';
         }
 
+        if($request->has('limit')){
+            $limit = $request->limit;
+        }else{
+            $limit = 5;
+        }
+
         if($request->has('duration')){
             $duration = $request->duration;
-            $sales = $this->getByDuration($duration, $payment_method);
+            $sales = $this->getByDuration($duration, $payment_method, $limit);
         }else{
-            $sales = $this->reportToday($payment_method);
+            $sales = $this->reportToday($payment_method, $limit);
         }
         
         $total = 0;
