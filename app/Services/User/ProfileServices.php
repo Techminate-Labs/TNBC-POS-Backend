@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
 
 //Interface
-use App\Contracts\User\ProfileRepositoryInterface;
-use App\Contracts\User\UserRepositoryInterface;
+use App\Contracts\ProfileRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
 
 //Utilities
 use App\Utilities\FileUtilities;

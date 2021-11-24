@@ -5,22 +5,22 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 //Interfaces
-use App\Contracts\User\UserRepositoryInterface;
-use App\Contracts\User\ProfileRepositoryInterface;
-use App\Contracts\User\RoleRepositoryInterface;
-use App\Contracts\Item\ItemRepositoryInterface;
-use App\Contracts\Pos\CartRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
+use App\Contracts\ProfileRepositoryInterface;
+use App\Contracts\RoleRepositoryInterface;
+use App\Contracts\ItemRepositoryInterface;
+use App\Contracts\CartRepositoryInterface;
 
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
 use App\Contracts\ReportRepositoryInterface;
 
 //Repositories
-use App\Repositories\User\UserRepository;
-use App\Repositories\User\ProfileRepository;
-use App\Repositories\User\RoleRepository;
-use App\Repositories\Item\ItemRepository;
-use App\Repositories\Pos\CartRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\ProfileRepository;
+use App\Repositories\RoleRepository;
+use App\Repositories\ItemRepository;
+use App\Repositories\CartRepository;
 
 use App\Repositories\BaseRepository;
 use App\Repositories\FilterRepository;

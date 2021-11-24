@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Hash;
 //Interface
 use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\User\UserRepositoryInterface;
-use App\Contracts\Pos\CartRepositoryInterface;
+use App\Contracts\UserRepositoryInterface;
+use App\Contracts\CartRepositoryInterface;
 
 //Models
 use App\Models\Cart;
