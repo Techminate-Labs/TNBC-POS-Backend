@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Item;
+namespace App\Repositories;
 use Illuminate\Support\Facades\DB;
 
 //Interface
-use App\Contracts\Item\ItemRepositoryInterface;
+use App\Contracts\ItemRepositoryInterface;
 
 class ItemRepository implements ItemRepositoryInterface{
 

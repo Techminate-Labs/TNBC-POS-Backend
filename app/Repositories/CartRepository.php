@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories\Pos;
+namespace App\Repositories;
 
 //Interface
-use App\Contracts\Pos\CartRepositoryInterface;
+use App\Contracts\CartRepositoryInterface;
 
 class CartRepository implements CartRepositoryInterface{
 
