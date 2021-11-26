@@ -1,42 +1,33 @@
 <?php
 
 namespace App\Services\Dashboard;
+// use Illuminate\Support\Facades\DB;
 
 //Service
 use App\Services\BaseServices;
 
-//Models
-use App\Models\Invoice;
-use App\Models\Item;
-
 class CountServices extends BaseServices{
-
-    private $brandModel = Invoice::class;
 
     public function countTotal()
     {
-        $invoiceTnbc = Invoice::where('payment_method','tnbc')->get();
-        $invoiceFiat = Invoice::where('payment_method','fiat')->get();
-        $items = Item::all();
+        $invoiceTable = 'invoices';
+        $itemTable = 'items';
+        $categoryTable = 'categories';
+
+        $prop = 'payment_method';
+        $query1 = 'tnbc';
+        $query2 = 'fiat';
+
+        $salesTnbc = \DB::table($invoiceTable)->where($prop, $query1)->count();
+        $salesFiat = \DB::table($invoiceTable)->where($prop, $query2)->count();
+        $items = \DB::table($itemTable)->count();
+        $categories = \DB::table($categoryTable)->count();
         
-        $salesTnbc = count($invoiceTnbc);
-        $salesFiat = count($invoiceFiat);
-        $totalItems = count($items);
         return [
             'salesTnbc'=> $salesTnbc,
             'salesFiat'=> $salesFiat,
-            'totalItems'=> $totalItems
+            'totalItems'=> $items,
+            'totalCategories'=> $categories,
         ];
     }
-
-    public function monthlySalesChart()
-    {
-        return 'ok';
-    }
-
-    public function dayChart()
-    {
-        return 'ok';
-    }
-
 }
