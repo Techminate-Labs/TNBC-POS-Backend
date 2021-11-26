@@ -33,6 +33,8 @@ use App\Http\Controllers\System\ActivityLogController;
 
 use App\Http\Controllers\Report\ReportController;
 
+use App\Http\Controllers\Dashboard\DashboardController;
+
 
 Route::middleware('auth:sanctum','verified')->get('/user', function (Request $request) {
     return $request->user();
@@ -149,5 +151,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Report
     Route::get('/report', [ReportController::class, 'report']);
+
+    //Dashboard
+    Route::get('/countTotal', [DashboardController::class, 'countTotal']);
 });
 

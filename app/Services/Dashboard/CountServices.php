@@ -7,6 +7,7 @@ use App\Services\BaseServices;
 
 //Models
 use App\Models\Invoice;
+use App\Models\Item;
 
 class CountServices extends BaseServices{
 
@@ -14,7 +15,18 @@ class CountServices extends BaseServices{
 
     public function countTotal()
     {
-        return 'ok';
+        $invoiceTnbc = Invoice::where('payment_method','tnbc')->get();
+        $invoiceFiat = Invoice::where('payment_method','fiat')->get();
+        $items = Item::all();
+        
+        $salesTnbc = count($invoiceTnbc);
+        $salesFiat = count($invoiceFiat);
+        $totalItems = count($items);
+        return [
+            'salesTnbc'=> $salesTnbc,
+            'salesFiat'=> $salesFiat,
+            'totalItems'=> $totalItems
+        ];
     }
 
     public function monthlySalesChart()
