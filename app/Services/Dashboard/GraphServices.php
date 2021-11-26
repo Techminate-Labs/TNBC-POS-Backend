@@ -8,7 +8,7 @@ use App\Services\BaseServices;
 //Models
 use App\Models\Invoice;
 
-class CountServices extends BaseServices{
+class GraphServices extends BaseServices{
 
     private $brandModel = Invoice::class;
 
