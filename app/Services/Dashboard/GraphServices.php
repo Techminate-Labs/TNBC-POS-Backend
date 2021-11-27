@@ -37,6 +37,24 @@ class GraphServices extends BaseServices{
 
     public function dayChart()
     {
-        return 'ok';
+        $invoiceTable = 'invoices';
+        $sales = DB::table($invoiceTable)->select(
+                            DB::raw("DAYNAME(date) as day_name"),
+                            DB::raw("DAY(date) as day"),
+                            DB::raw('sum(total) as total'),
+                        )
+                        ->whereYear('date', Carbon::now()->year)
+                        ->whereMonth('date', Carbon::now()->month)
+                        ->where('date', '>', Carbon::today()->subDay(6))
+                        ->groupBy('day_name','day')
+                        ->orderBy('day', 'desc')
+                        ->get();
+
+        $data = [];
+        foreach($sales as $sale) {
+            $data['label'][] = $sale->day_name;
+            $data['total'][] = (int)$sale->total;
+        }
+        return  $data;
     }
 }
