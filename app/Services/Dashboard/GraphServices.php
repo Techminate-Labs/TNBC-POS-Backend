@@ -13,7 +13,7 @@ class GraphServices extends BaseServices{
 
     private $brandModel = Invoice::class;
 
-    public function monthlySalesChart()
+    public function dateViewChart()
     {
         $invoiceTable = 'invoices';
 
@@ -24,7 +24,7 @@ class GraphServices extends BaseServices{
                         ->whereYear('date', Carbon::now()->year)
                         ->whereMonth('date', Carbon::now()->month)
                         ->groupBy('months')
-                        ->orderBy('date', 'desc')
+                        ->orderBy('date', 'asc')
                         ->get();
 
         $data = [];
@@ -35,7 +35,7 @@ class GraphServices extends BaseServices{
         return  $data;
     }
 
-    public function dayChart()
+    public function dayViewChart()
     {
         $invoiceTable = 'invoices';
         $sales = DB::table($invoiceTable)->select(
@@ -47,12 +47,33 @@ class GraphServices extends BaseServices{
                         ->whereMonth('date', Carbon::now()->month)
                         ->where('date', '>', Carbon::today()->subDay(6))
                         ->groupBy('day_name','day')
-                        ->orderBy('day', 'desc')
+                        ->orderBy('day', 'asc')
                         ->get();
 
         $data = [];
         foreach($sales as $sale) {
             $data['label'][] = $sale->day_name;
+            $data['total'][] = (int)$sale->total;
+        }
+        return  $data;
+    }
+
+    public function monthViewChart()
+    {
+        $invoiceTable = 'invoices';
+        $sales = DB::table($invoiceTable)->select(
+                            DB::raw("MONTHNAME(date) as month_name"),
+                            DB::raw("MONTH(date) as month"),
+                            DB::raw('sum(total) as total'),
+                        )
+                        ->whereYear('date', Carbon::now()->year)
+                        ->groupBy('month_name','month')
+                        ->orderBy('month', 'asc')
+                        ->get();
+
+        $data = [];
+        foreach($sales as $sale) {
+            $data['label'][] = $sale->month_name;
             $data['total'][] = (int)$sale->total;
         }
         return  $data;

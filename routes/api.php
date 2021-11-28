@@ -154,7 +154,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Dashboard
     Route::get('/countTotal', [DashboardController::class, 'countTotal']);
-    Route::get('/monthlySalesChart', [DashboardController::class, 'monthlySalesChart']);
-    Route::get('/dayChart', [DashboardController::class, 'dayChart']);
+    Route::get('/dateViewChart', [DashboardController::class, 'dateViewChart']);
+    Route::get('/dayViewChart', [DashboardController::class, 'dayViewChart']);
+    Route::get('/monthViewChart', [DashboardController::class, 'monthViewChart']);
 });
 
