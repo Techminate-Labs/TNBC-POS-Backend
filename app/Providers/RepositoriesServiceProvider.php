@@ -15,6 +15,8 @@ use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
 use App\Contracts\ReportRepositoryInterface;
 
+use App\Contracts\DashboardRepositoryInterface;
+
 //Repositories
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
@@ -25,6 +27,8 @@ use App\Repositories\CartRepository;
 use App\Repositories\BaseRepository;
 use App\Repositories\FilterRepository;
 use App\Repositories\ReportRepository;
+
+use App\Repositories\DashboardRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
@@ -84,6 +88,11 @@ class RepositoriesServiceProvider extends ServiceProvider
         $this->app->bind(
             ReportRepositoryInterface::class,
             ReportRepository::class,
+        );
+
+        $this->app->bind(
+            DashboardRepositoryInterface::class,
+            DashboardRepository::class,
         );
 
         // $models = array(
