@@ -9,6 +9,15 @@ use Carbon\Carbon;
 use App\Contracts\DashboardRepositoryInterface;
 
 class DashboardRepository implements DashboardRepositoryInterface{
+
+    public function countData($table){
+        return DB::table($table)->count();
+    }
+
+    public function countDataProp1($table, $prop, $query){
+        return DB::table($table)->where($prop, $query)->count();
+    }
+
     public function dateViewChart($invoiceTable, $prop, $payment_method){
         return DB::table($invoiceTable)->select(
                         DB::raw("DATE_FORMAT(date,'%D-%b') as months"),
