@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Services\Dashboard;
-// use Illuminate\Support\Facades\DB;
 
-//Service
-use App\Services\BaseServices;
+//Interface
+use App\Contracts\DashboardRepositoryInterface;
 
-class CountServices extends BaseServices{
+class CountServices{
+    public function __construct(
+        DashboardRepositoryInterface $dashboardRepositoryInterface
+    ){
+        $this->dashboardRI = $dashboardRepositoryInterface;
+    }
 
     public function countTotal()
     {
@@ -18,10 +22,10 @@ class CountServices extends BaseServices{
         $query1 = 'tnbc';
         $query2 = 'fiat';
 
-        $salesTnbc = \DB::table($invoiceTable)->where($prop, $query1)->count();
-        $salesFiat = \DB::table($invoiceTable)->where($prop, $query2)->count();
-        $items = \DB::table($itemTable)->count();
-        $categories = \DB::table($categoryTable)->count();
+        $salesTnbc = $this->dashboardRI->countDataProp1($invoiceTable, $prop, $query1);
+        $salesFiat = $this->dashboardRI->countDataProp1($invoiceTable, $prop, $query2);
+        $items = $this->dashboardRI->countData($itemTable);
+        $categories = $this->dashboardRI->countData($categoryTable);
         
         return [
             'salesTnbc'=> $salesTnbc,
