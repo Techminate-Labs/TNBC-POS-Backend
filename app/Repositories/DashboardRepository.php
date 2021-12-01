@@ -39,7 +39,6 @@ class DashboardRepository implements DashboardRepositoryInterface{
                     )
                     ->where($prop, $payment_method)
                     ->whereYear('date', Carbon::now()->year)
-                    ->whereMonth('date', Carbon::now()->month)
                     ->where('date', '>', Carbon::today()->subDay(6))
                     ->groupBy('day_name','day')
                     ->orderBy('day', 'asc')
