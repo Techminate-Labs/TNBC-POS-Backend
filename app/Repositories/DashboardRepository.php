@@ -14,16 +14,16 @@ class DashboardRepository implements DashboardRepositoryInterface{
         return DB::table($table)->count();
     }
 
-    public function countDataProp1($table, $prop, $query){
-        return DB::table($table)->where($prop, $query)->count();
+    public function countSales($payment_method){
+        return DB::table('invoices')->where('payment_method', $payment_method)->count();
     }
 
-    public function dateViewChart($invoiceTable, $prop, $payment_method){
-        return DB::table($invoiceTable)->select(
+    public function dateViewChart($payment_method){
+        return DB::table('invoices')->select(
                         DB::raw("DATE_FORMAT(date,'%D-%b') as months"),
                         DB::raw('sum(total) as total'),
                     )
-                    ->where($prop, $payment_method)
+                    ->where('payment_method', $payment_method)
                     ->whereYear('date', Carbon::now()->year)
                     ->whereMonth('date', Carbon::now()->month)
                     ->groupBy('months')
@@ -31,13 +31,13 @@ class DashboardRepository implements DashboardRepositoryInterface{
                     ->get();
     }
 
-    public function dayViewChart($invoiceTable, $prop, $payment_method){
-        return DB::table($invoiceTable)->select(
+    public function dayViewChart($payment_method){
+        return DB::table('invoices')->select(
                         DB::raw("DAYNAME(date) as day_name"),
                         DB::raw("DAY(date) as day"),
                         DB::raw('sum(total) as total'),
                     )
-                    ->where($prop, $payment_method)
+                    ->where('payment_method', $payment_method)
                     ->whereYear('date', Carbon::now()->year)
                     ->where('date', '>', Carbon::today()->subDay(6))
                     ->groupBy('day_name','day')
@@ -45,13 +45,13 @@ class DashboardRepository implements DashboardRepositoryInterface{
                     ->get();
     }
 
-    public function monthViewChart($invoiceTable, $prop, $payment_method){
-        return DB::table($invoiceTable)->select(
+    public function monthViewChart($payment_method){
+        return DB::table('invoices')->select(
                         DB::raw("MONTHNAME(date) as month_name"),
                         DB::raw("MONTH(date) as month"),
                         DB::raw('sum(total) as total'),
                     )
-                    ->where($prop, $payment_method)
+                    ->where('payment_method', $payment_method)
                     ->whereYear('date', Carbon::now()->year)
                     ->groupBy('month_name','month')
                     ->orderBy('month', 'asc')
