@@ -2,34 +2,30 @@
 
 namespace App\Services\System;
 
+//Service
+use App\Services\BaseServices;
+
 //Utilities
 use App\Utilities\FileUtilities;
 
 //Models
 use App\Models\Configuration;
 
-class ConfigServices{
-    private $fileUtilities;
+class ConfigServices extends BaseServices{
     public static $imagePath = 'images/logo';
     public static $explode_at = "logo/";
-
-    public function __construct(
-        FileUtilities $fileUtilities
-    ){
-        $this->fileUtilities = $fileUtilities;
-    }
-
+    private $configModel = Configuration::class;
     public function config()
     {
         $id = 1;
-        $configuration = Configuration::where('id', $id)->first();
+        $configuration = $this->baseRI->findById($this->configModel, $id);
         return $configuration;
     }
 
     public function configUpdate($request)
     {
         $id = 1;
-        $configuration = Configuration::where('id', $id)->first();
+        $configuration = $this->config();
         if($configuration){
             $fields = $request->validate([
                 'app_name'=>'required|string',
@@ -47,8 +43,9 @@ class ConfigServices{
             $appLogo = 'app_logo';
             $storeLogo = 'store_logo';
             //image upload
-            $appLogo = $this->fileUtilities->imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
-            $storeLogo = $this->fileUtilities->imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
+            $fileUtilities = new FileUtilities;
+            $appLogo = $fileUtilities->imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
+            $storeLogo = $fileUtilities->imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
             
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
