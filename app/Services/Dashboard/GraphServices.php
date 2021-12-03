@@ -16,11 +16,7 @@ class GraphServices{
 
     public function dateViewChart($request)
     {
-        $invoiceTable = 'invoices';
-        $prop = 'payment_method';
-        $payment_method = $request->payment_method;
-
-        $sales = $this->dashboardRI->dateViewChart($invoiceTable, $prop, $payment_method);
+        $sales = $this->dashboardRI->dateViewChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {
@@ -32,11 +28,7 @@ class GraphServices{
 
     public function dayViewChart($request)
     {
-        $invoiceTable = 'invoices';
-        $prop = 'payment_method';
-        $payment_method = $request->payment_method;
-
-        $sales = $this->dashboardRI->dayViewChart($invoiceTable, $prop, $payment_method);
+        $sales = $this->dashboardRI->dayViewChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {
@@ -48,11 +40,7 @@ class GraphServices{
 
     public function monthViewChart($request)
     {
-        $invoiceTable = 'invoices';
-        $prop = 'payment_method';
-        $payment_method = $request->payment_method;
-
-        $sales = $this->dashboardRI-> monthViewChart($invoiceTable, $prop, $payment_method);
+        $sales = $this->dashboardRI-> monthViewChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {

@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 //Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+use App\Contracts\ReportRepositoryInterface;
 
 //Models
 use App\Models\Invoice;
@@ -15,68 +14,32 @@ use App\Models\InvoiceItem;
 use App\Models\Item;
 
 class ReportServices{
+    private $reportRepositoryInterface;
     private $invoiceModel = Invoice::class;
-    private $invoiceItemModel = InvoiceItem::class;
-    private $itemModel = Item::class;
 
-    public function __construct(){
-       //
+    public function __construct(
+        ReportRepositoryInterface $reportRepositoryInterface
+    ){
+        $this->reportRI = $reportRepositoryInterface;
     }
     
-    // num_of_items, PNL
-    
-    //Today
-    public function reportToday($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->year)
-                        ->whereMonth('date', Carbon::now()->month)
-                        ->whereDate('date', Carbon::today())
-                        ->paginate($limit);
+    //Day
+    public function reportDay($payment_method, $limit, $day){
+        $year = Carbon::now()->year;
+        $month = Carbon::now()->month;
+        return $this->reportRI->reportDay($payment_method, $limit, $year, $month, $day);
     }
 
-    //Yesterday
-    public function reportYesterday($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->year)
-                        ->whereMonth('date', Carbon::now()->month)
-                        ->whereDate('date', Carbon::today()->subDay())
-                        ->paginate($limit);
-    }
-
-    //This Week
-    public function reportWeek($payment_method, $limit){
-        $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
-                        ->paginate($limit);
-    }
-
-    //Last Week
-    public function reportLastWeek($payment_method, $limit){
-        $startOfTheWeek = Carbon::now()->subWeek(1)->startOfWeek();
-        $endOfTheWeek = Carbon::now()->subWeek(1)->endOfWeek();
-        
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
-                        ->paginate($limit);
+    //Week
+    public function reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek){
+        $year = Carbon::now()->year;
+        return $this->reportRI->reportWeek($payment_method, $limit, $year, $startOfTheWeek, $endOfTheWeek);
     }
 
     //This Month
-    public function reportMonth($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->year)
-                        ->whereMonth('date', Carbon::now()->month)
-                        ->paginate($limit);
-    }
-
-     //Last Month
-     public function reportLastMonth($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->year)
-                        ->whereMonth('date','=', Carbon::now()->subMonth())
-                        ->paginate($limit);
+    public function reportMonth($payment_method, $limit, $month){
+        $year = Carbon::now()->year;
+        return $this->reportRI->reportMonth($payment_method, $limit, $year, $month);
     }
 
     //This Year
@@ -96,22 +59,30 @@ class ReportServices{
     public function getByDuration($duration, $payment_method, $limit){  
         switch ($duration) {
             case 'today':
-                $sales = $this->reportToday($payment_method, $limit);
+                $day = Carbon::today();
+                $sales = $this->reportDay($payment_method, $limit, $day);
                 break;
             case 'yesterday':
-                $sales = $this->reportYesterday($payment_method, $limit);
+                $day = Carbon::today()->subDay();
+                $sales = $this->reportDay($payment_method, $limit, $day);
                 break;
             case 'week':
-                $sales = $this->reportWeek($payment_method, $limit);
+                $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+                $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+                $sales = $this->reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek);
                 break;
             case 'lastWeek':
-                $sales = $this->reportLastWeek($payment_method, $limit);
+                $startOfTheWeek = Carbon::now()->subWeek(1)->startOfWeek();
+                $endOfTheWeek = Carbon::now()->subWeek(1)->endOfWeek();        
+                $sales = $this->reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek);
                 break;
             case 'month':
-                $sales = $this->reportMonth($payment_method, $limit);
+                $month = Carbon::now()->month;
+                $sales = $this->reportMonth($payment_method, $limit, $month);
                 break;
             case 'lastMonth':
-                $sales = $this->reportLastMonth($payment_method, $limit);
+                $year = Carbon::now()->subMonth();
+                $sales = $this->reportMonth($payment_method, $limit, $month);
                 break;
             case 'year':
                 $sales = $this->reportYear($payment_method, $limit);

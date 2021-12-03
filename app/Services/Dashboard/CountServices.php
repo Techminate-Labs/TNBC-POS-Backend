@@ -14,13 +14,8 @@ class CountServices{
 
     public function countTotal()
     {
-        $invoiceTable = 'invoices';
-        $prop = 'payment_method';
-        $query1 = 'tnbc';
-        $query2 = 'fiat';
-
-        $salesTnbc = $this->dashboardRI->countDataProp1($invoiceTable, $prop, $query1);
-        $salesFiat = $this->dashboardRI->countDataProp1($invoiceTable, $prop, $query2);
+        $salesTnbc = $this->dashboardRI->countSales('tnbc');
+        $salesFiat = $this->dashboardRI->countSales('fiat');
         $items = $this->dashboardRI->countData('items');
         $categories = $this->dashboardRI->countData('categories');
         $users = $this->dashboardRI->countData('users');
