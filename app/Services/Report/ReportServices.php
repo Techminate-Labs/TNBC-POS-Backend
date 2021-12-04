@@ -43,10 +43,8 @@ class ReportServices{
     }
 
     //This Year
-    public function reportYear($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->year)
-                        ->paginate($limit);
+    public function reportYear($payment_method, $limit, $year){
+        return $this->reportRI->reportYear($payment_method, $limit, $year);
     }
 
      //Last Year
@@ -81,13 +79,15 @@ class ReportServices{
                 $sales = $this->reportMonth($payment_method, $limit, $month);
                 break;
             case 'lastMonth':
-                $year = Carbon::now()->subMonth();
+                $month = Carbon::now()->subMonth();
                 $sales = $this->reportMonth($payment_method, $limit, $month);
                 break;
             case 'year':
+                $year = Carbon::now()->year;
                 $sales = $this->reportYear($payment_method, $limit);
                 break;
             case 'lastYear':
+                $year = Carbon::now()->year;
                 $sales = $this->reportLastYear($payment_method, $limit);
                 break;
             default:
