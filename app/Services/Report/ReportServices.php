@@ -1,119 +1,85 @@
 <?php
 
 namespace App\Services\Report;
-use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 
 //Interface
 use App\Contracts\ReportRepositoryInterface;
 
-//Models
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
-use App\Models\Item;
-
 class ReportServices{
     private $reportRepositoryInterface;
-    private $invoiceModel = Invoice::class;
 
     public function __construct(
         ReportRepositoryInterface $reportRepositoryInterface
     ){
         $this->reportRI = $reportRepositoryInterface;
+        $this->year = Carbon::now()->year;
+        $this->lastYear = Carbon::now()->subYear();
+        $this->month = Carbon::now()->month;
+        $this->lastMonth = Carbon::now()->subMonth();
+        $this->yesterday = Carbon::today()->subDay();
+        $this->today = Carbon::today();
+        $this->nowWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $this->nowWeekEnd = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+        $this->lastWeekStart = Carbon::now()->subWeek(1)->startOfWeek();
+        $this->lastWeekEnd = Carbon::now()->subWeek(1)->endOfWeek();    
     }
     
     //Day
     public function reportDay($payment_method, $limit, $day){
-        $year = Carbon::now()->year;
-        $month = Carbon::now()->month;
-        return $this->reportRI->reportDay($payment_method, $limit, $year, $month, $day);
+        return $this->reportRI->reportDay($payment_method, $limit, $this->year, $this->month, $day);
     }
 
     //Week
     public function reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek){
-        $year = Carbon::now()->year;
-        return $this->reportRI->reportWeek($payment_method, $limit, $year, $startOfTheWeek, $endOfTheWeek);
+        return $this->reportRI->reportWeek($payment_method, $limit, $this->year, $startOfTheWeek, $endOfTheWeek);
     }
 
-    //This Month
+    //Month
     public function reportMonth($payment_method, $limit, $month){
-        $year = Carbon::now()->year;
-        return $this->reportRI->reportMonth($payment_method, $limit, $year, $month);
+        return $this->reportRI->reportMonth($payment_method, $limit, $this->year, $month);
     }
 
-    //This Year
+    //Year
     public function reportYear($payment_method, $limit, $year){
         return $this->reportRI->reportYear($payment_method, $limit, $year);
-    }
-
-     //Last Year
-     public function reportLastYear($payment_method, $limit){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', Carbon::now()->subYear())
-                        ->paginate($limit);
     }
 
     public function getByDuration($duration, $payment_method, $limit){  
         switch ($duration) {
             case 'today':
-                $day = Carbon::today();
-                $sales = $this->reportDay($payment_method, $limit, $day);
+                $sales = $this->reportDay($payment_method, $limit, $this->today);
                 break;
             case 'yesterday':
-                $day = Carbon::today()->subDay();
-                $sales = $this->reportDay($payment_method, $limit, $day);
+                $sales = $this->reportDay($payment_method, $limit, $this->yesterday);
                 break;
             case 'week':
-                $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-                $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-                $sales = $this->reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek);
+                $sales = $this->reportWeek($payment_method, $limit, $this->nowWeekStart, $this->nowWeekEnd);
                 break;
-            case 'lastWeek':
-                $startOfTheWeek = Carbon::now()->subWeek(1)->startOfWeek();
-                $endOfTheWeek = Carbon::now()->subWeek(1)->endOfWeek();        
-                $sales = $this->reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek);
+            case 'lastWeek':    
+                $sales = $this->reportWeek($payment_method, $limit, $this->lastWeekStart, $this->lastWeekEnd);
                 break;
             case 'month':
-                $month = Carbon::now()->month;
-                $sales = $this->reportMonth($payment_method, $limit, $month);
+                $sales = $this->reportMonth($payment_method, $limit, $this->month);
                 break;
             case 'lastMonth':
-                $month = Carbon::now()->subMonth();
-                $sales = $this->reportMonth($payment_method, $limit, $month);
+                $sales = $this->reportMonth($payment_method, $limit, $this->lastMonth);
                 break;
             case 'year':
-                $year = Carbon::now()->year;
-                $sales = $this->reportYear($payment_method, $limit);
+                $sales = $this->reportYear($payment_method, $limit, $this->year);
                 break;
             case 'lastYear':
-                $year = Carbon::now()->year;
-                $sales = $this->reportLastYear($payment_method, $limit);
+                $sales = $this->reportYear($payment_method, $limit, $this->lastYear);
                 break;
             default:
-            $sales = $this->reportToday($payment_method, $limit);
+            $sales = $this->reportDay($payment_method, $limit, $this->today);
         }
         return $sales;
     }
 
-    public function PNL($duration, $payment_method){  
-        switch ($duration) {
-            case 'today':
-                $sales = $this->reportToday($payment_method);
-                break;
-            case 'week':
-                $sales = $this->reportWeek($payment_method);
-                break;
-            case 'month':
-                $sales = $this->reportMonth($payment_method);
-                break;
-            case 'year':
-                $sales = $this->reportYear($payment_method);
-                break;
-            default:
-            $sales = $this->reportToday($payment_method);
-        }
-        return $sales;
+    public function PNL($duration, $payment_method){
+        //
     }
     
     public function report($request)
@@ -134,7 +100,7 @@ class ReportServices{
             $duration = $request->duration;
             $sales = $this->getByDuration($duration, $payment_method, $limit);
         }else{
-            $sales = $this->reportToday($payment_method, $limit);
+            $sales = $this->reportDay($payment_method, $limit, $this->today);
         }
         
         $total = 0;
@@ -155,7 +121,7 @@ class ReportServices{
                 'sales'=> $sales
             ];
         }else{
-            return response(["notFound"=>'Record Not Found'],404);
+            return response(["message"=>'Record Not Found'],404);
         }
     }
 } 

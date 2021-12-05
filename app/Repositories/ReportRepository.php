@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 //Interface
 use App\Contracts\ReportRepositoryInterface;
@@ -38,10 +37,10 @@ class ReportRepository implements ReportRepositoryInterface{
     }
 
     public function reportYear($payment_method, $limit, $year){
-        return Invoice::where('payment_method', $payment_method)
-                        ->whereYear('date', $year)
-                        ->paginate($limit);
+        return DB::table('invoices')
+        ->where('payment_method', $payment_method)
+        ->whereYear('date', $year)
+        ->orderBy('date', 'asc')
+        ->paginate($limit);
     }
-
-
 }
