@@ -43,14 +43,11 @@ class ConfigServices extends BaseServices{
             $appLogo = 'app_logo';
             $storeLogo = 'store_logo';
             //image upload
-            $fileUtilities = new FileUtilities;
-            $appLogo = $fileUtilities->imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
-            $storeLogo = $fileUtilities->imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
+            $appLogo = FileUtilities::imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
+            $storeLogo = FileUtilities::imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
             
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
-
-            // $data['discount'] = $fields['discount'];
             $configuration->update($data);
 
             return response($configuration,200);
