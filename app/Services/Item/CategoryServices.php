@@ -4,26 +4,15 @@ namespace App\Services\Item;
 
 use Illuminate\Support\Str;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Category;
 
-class CategoryServices{
+class CategoryServices extends BaseServices{
     
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->categoryModel = Category::class;
-    }
+    private  $categoryModel = Category::class;
 
     public function categoryList($request){
         $countObj = 'item';
@@ -34,7 +23,6 @@ class CategoryServices{
             $category = $this->baseRI->listwithCount($this->categoryModel, $request->limit, $countObj);
         }
         return $category;
-        // return new PaginationResource($category);
     }
 
     public function categoryGetById($id){

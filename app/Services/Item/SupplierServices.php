@@ -2,26 +2,15 @@
 
 namespace App\Services\Item;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Supplier;
 
-class SupplierServices{
+class SupplierServices extends BaseServices{
     
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->supplierModel = Supplier::class;
-    }
+    private $supplierModel = Supplier::class;
 
     public function supplierList($request){
         $countObj = 'item';

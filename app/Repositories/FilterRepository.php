@@ -14,7 +14,6 @@ class FilterRepository implements FilterRepositoryInterface{
 
     public function filterBy1PropEmail($model, $query, $prop1){
         return $model::where($prop1, 'LIKE', '%' . $query . '%')
-                ->orderBy('created_at', 'desc')
                 ->with('role')
                 ->first();
     }

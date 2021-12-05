@@ -4,5 +4,5 @@ namespace App\Contracts;
 
 interface CartRepositoryInterface
 {
-    public function createCart($model, $id);
+    public static function createCart($model, $id);
 }

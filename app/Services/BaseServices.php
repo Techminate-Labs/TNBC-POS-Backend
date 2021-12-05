@@ -48,17 +48,9 @@ class BaseServices{
             ]
         );
     }
+    
     public function authUser()
     {
         return $this->baseRI->findById($this->userModel, auth()->user()->id);
     }
-
-    public function userAuthenticated(){
-        return auth()->user();
-    }
-
-    public function userGetByEmail($email){
-        return $this->filterRI->filterBy1PropEmail($this->userModel, $email, 'email');
-    }
-
 }
