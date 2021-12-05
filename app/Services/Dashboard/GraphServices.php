@@ -40,7 +40,7 @@ class GraphServices{
 
     public function monthViewChart($request)
     {
-        $sales = $this->dashboardRI-> monthViewChart($request->payment_method);
+        $sales = $this->dashboardRI->monthViewChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {

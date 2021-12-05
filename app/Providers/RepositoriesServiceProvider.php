@@ -12,7 +12,6 @@ use App\Contracts\ItemRepositoryInterface;
 use App\Contracts\CartRepositoryInterface;
 
 use App\Contracts\ReportRepositoryInterface;
-
 use App\Contracts\DashboardRepositoryInterface;
 
 //Repositories
@@ -23,7 +22,6 @@ use App\Repositories\ItemRepository;
 use App\Repositories\CartRepository;
 
 use App\Repositories\ReportRepository;
-
 use App\Repositories\DashboardRepository;
 
 class RepositoriesServiceProvider extends ServiceProvider
