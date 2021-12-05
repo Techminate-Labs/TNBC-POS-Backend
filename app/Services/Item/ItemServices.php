@@ -9,6 +9,9 @@ use App\Contracts\BaseRepositoryInterface;
 use App\Contracts\FilterRepositoryInterface;
 use App\Contracts\ItemRepositoryInterface;
 
+//Services
+use App\Services\BaseServices;
+
 //Resources
 use App\Http\Resources\PaginationResource;
 

@@ -2,26 +2,15 @@
 
 namespace App\Services\Item;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Unit;
 
-class UnitServices{
+class UnitServices extends BaseServices{
     
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->unitModel = Unit::class;
-    }
+    private $unitModel = Unit::class;
 
     public function unitList($request){
         $countObj = 'item';

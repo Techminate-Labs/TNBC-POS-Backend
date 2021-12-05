@@ -4,36 +4,17 @@ namespace App\Services\Auth;
 
 use Illuminate\Support\Facades\Hash;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\UserRepositoryInterface;
-use App\Contracts\CartRepositoryInterface;
+//Repository
+use App\Repositories\CartRepository;
+
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Cart;
-use App\Models\User;
 
-class AuthServices{
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-    private $userRepositoryInterface;
-    private $cartRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface,
-        UserRepositoryInterface $userRepositoryInterface,
-        CartRepositoryInterface $cartRepositoryInterface
-        ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->userRI = $userRepositoryInterface;
-        $this->cartRI = $cartRepositoryInterface;
-        
-        $this->cartModel = Cart::class;
-        $this->userModel = User::class;
-    }
+class AuthServices extends BaseServices{
+    private $cartModel = Cart::class;
 
     public function userCreate($request){
         $fields = $request->validate([
@@ -70,7 +51,7 @@ class AuthServices{
         ]);
 
         // Check email
-        $user = $this->userRI->userGetByEmail($fields['email']);
+        $user = $this->filterRI->filterBy1PropFirst($this->userModel, $fields['email'], 'email');
 
         // Check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
@@ -84,7 +65,7 @@ class AuthServices{
         //create cart for a user
         $cart = $this->filterRI->filterBy1PropFirst($this->cartModel, $user->id, 'user_id');
         if(!$cart){
-            $cart = $this->cartRI->createCart($this->cartModel, $user->id);
+            $cart = CartRepository::createCart($this->cartModel, $user->id);
         }
         
         $response = [
@@ -96,8 +77,7 @@ class AuthServices{
     }
 
     public function logout(){
-        $this->userRI->userAuthenticated()->tokens()->delete();
-
+        auth()->user()->tokens()->delete();
         return [
             'message' => 'Logged out'
         ];

@@ -4,26 +4,15 @@ namespace App\Services\Item;
 
 use Illuminate\Support\Str;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Brand;
 
-class BrandServices{
+class BrandServices extends BaseServices{
     
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->brandModel = Brand::class;
-    }
+    private $brandModel = Brand::class;
 
     public function brandList($request){
         $countObj = 'item';
