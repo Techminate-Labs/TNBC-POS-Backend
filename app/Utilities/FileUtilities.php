@@ -3,7 +3,7 @@ namespace App\Utilities;
 use Illuminate\Support\Facades\File;
 
 class FileUtilities{
-    public function fileUpload($request, $url, $imagePath, $explode_at, $exImagePath, $is_update){
+    public static function fileUpload($request, $url, $imagePath, $explode_at, $exImagePath, $is_update){
         if($request->hasFile('image')){
             $validated = $request->validate([
                 'image'=>'required|mimes:jpeg,jpg,png',
@@ -20,7 +20,7 @@ class FileUtilities{
 
             //remove existing image
             if($is_update){
-                $this->removeExistingFile($imagePath, $exImagePath, $explode_at);
+                self::removeExistingFile($imagePath, $exImagePath, $explode_at);
             } 
         return $profileImage;
         }else{
@@ -33,7 +33,7 @@ class FileUtilities{
         }
     }
 
-    public function imageUpload($attributeName, $request, $url, $imagePath, $explode_at, $exImagePath, $is_update){
+    public static function imageUpload($attributeName, $request, $url, $imagePath, $explode_at, $exImagePath, $is_update){
         if($request->hasFile($attributeName)){
             $validated = $request->validate([
                 $attributeName=>'required|mimes:jpeg,jpg,png',
@@ -50,7 +50,7 @@ class FileUtilities{
 
             //remove existing image
             if($is_update){
-                $this->removeExistingFile($imagePath, $exImagePath, $explode_at);
+                self::removeExistingFile($imagePath, $exImagePath, $explode_at);
             } 
         return $profileImage;
         }else{
@@ -63,7 +63,7 @@ class FileUtilities{
         }
     }
 
-    public function removeExistingFile($imagePath, $exImagePath, $explode_at){
+    public static function removeExistingFile($imagePath, $exImagePath, $explode_at){
         $splitImg = explode($explode_at,$exImagePath);
         $storageImg = $splitImg[1];
         if($storageImg !== "default.jpg" && $storageImg !== "default.png"){

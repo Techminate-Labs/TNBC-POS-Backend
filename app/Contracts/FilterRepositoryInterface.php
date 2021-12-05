@@ -6,6 +6,8 @@ interface FilterRepositoryInterface
 {
     public function filterBy1PropFirst($model, $query, $prop1);
 
+    public function filterBy1PropEmail($model, $query, $prop1);
+
     public function filterBy1Prop($model, $query, $prop1);
 
     public function filterBy1PropPaginated($model, $query, $limit, $prop1);
