@@ -3,7 +3,7 @@
 namespace App\Format;
 
 class RoleFormat{
-    public function formatRoleList($role){
+    public static function formatRoleList($role){
         return[
             'id' => $role->id,
             'name' => $role->name,

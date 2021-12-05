@@ -2,35 +2,39 @@
 
 namespace App\Services\User;
 
-//Interface
-use App\Contracts\RoleRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
-//Resources
-use App\Http\Resources\PaginationResource;
+//Format
+use App\Format\RoleFormat;
 
-class RoleServices{
-    
-    private $repositoryInterface;
+//Models
+use App\Models\Role;
 
-    public function __construct(RoleRepositoryInterface $repositoryInterface){
-        $this->ri = $repositoryInterface;
-    }
+class RoleServices extends BaseServices{
+    private $roleModel = Role::class;
 
     public function roleList($request){
         if ($request->has('q')){
-            $roles = $this->ri->roleSearch($request->q, $request->limit);
+            $roles = $this->filterRI->filterBy1PropPaginated($this->roleModel, $request->q, $request->limit, 'name');
         }else{
-            $roles = $this->ri->roleList($request->limit);
+            $roles = $this->baseRI->listWithPagination($this->roleModel, $request->limit);
         }
-        return $roles;
+        if($roles){
+            return $roles->through(function($role){
+                return RoleFormat::formatRoleList($role);
+            });
+        }else{
+            return response(["message"=>'Role not found'],404);
+        }
     }
 
     public function roleGetById($id){
-        $role = $this->ri->roleGetById($id);
+        $role = $this->baseRI->findById($this->roleModel, $id);
         if($role){
             return $role;
         }else{
-            return response(["failed"=>'Role not found'],404);
+            return response(["message"=>'Role not found'],404);
         }
     }
 
@@ -41,7 +45,7 @@ class RoleServices{
         ]);
         $data = $request->all();
 
-        $role = $this->ri->roleCreate($data);
+        $role = $this->baseRI->storeInDB($this->roleModel, $data);
         return response($role,201);
     }
 
@@ -50,23 +54,23 @@ class RoleServices{
             'name'=>'required',
             'permissions'=>'required'
         ]);
-        $role = $this->ri->roleGetById($id);
+        $role = $this->baseRI->findById($this->roleModel, $id);
         if($role){
             $data = $request->all();
             $role->update($data);
             return response($role,201);
         }else{
-            return response(["failed"=>'Role not found'],404);
+            return response(["message"=>'Role not found'],404);
         }
     }
 
     public function roleDelete($id){
-        $role = $this->ri->roleGetById($id);
+        $role = $this->baseRI->findById($this->roleModel, $id);
         if($role){
             $role->delete();
-            return response(["done"=>'Role Deleted Successfully'],200);
+            return response(["message"=>'Delete Successfull'],200);
         }else{
-            return response(["failed"=>'Role not found'],404);
+            return response(["message"=>'Role not found'],404);
         }
     }
 

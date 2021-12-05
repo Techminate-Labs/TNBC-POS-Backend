@@ -4,7 +4,7 @@ namespace App\Format;
 
 class UserFormat{
 
-    public function isEmailVerified($data){
+    public static function isEmailVerified($data){
         if($data == null){
             return 'Not Verified Yet';
         }else{
@@ -12,20 +12,20 @@ class UserFormat{
         }
     }
 
-    public function formatList($user){
+    public static function formatList($user){
         return[
             'user_id' => $user->id,
             'role_id' => $user->role_id,
             'role' => $user->role->name,
             'name' => $user->name,
             'email' => $user->email,
-            'email_verified_at' => $this->isEmailVerified($user->email_verified_at),
+            'email_verified_at' => self::isEmailVerified($user->email_verified_at),
             'created_at'=>$user->created_at->diffForHumans(),
             'updated_at'=>$user->updated_at->diffForHumans()
         ];
     }
 
-    public function formatUserProfile($user){
+    public static function formatUserProfile($user){
         return[
             'user_id' => $user->id,
             'role' => $user->role->name,
