@@ -21,9 +21,9 @@ class RoleController extends Controller
         return $this->services->roleList($request);
     }
 
-    public function roleGetById($id)
+    public function roleGetById(Request $request, $id)
     {
-        return $this->services->roleGetById($id);
+        return $this->services->roleGetById($request, $id);
     }
    
     public function roleCreate(Request $request)
@@ -36,8 +36,8 @@ class RoleController extends Controller
         return $this->services->roleUpdate($request, $id);
     }
    
-    public function roleDelete($id)
+    public function roleDelete(Request $request, $id)
     {
-        return $this->services->roleDelete($id);
+        return $this->services->roleDelete($request, $id);
     }
 }
