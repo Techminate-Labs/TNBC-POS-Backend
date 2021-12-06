@@ -48,6 +48,15 @@ class BaseServices{
             ]
         );
     }
+
+    public function getUserName($id){
+        if($id == 0){
+            return 'Unknown';
+        }else{
+            $user = $this->baseRI->findById($this->userModel, $id);
+            return $user->name;
+        }
+    }
     
     public function authUser()
     {
