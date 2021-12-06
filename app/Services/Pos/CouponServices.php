@@ -2,31 +2,19 @@
 
 namespace App\Services\Pos;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Coupon;
 
-class CouponServices{
+class CouponServices extends BaseServices{
     
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->couponModel = Coupon::class;
-    }
+    private $couponModel = Coupon::class;
 
     public function couponList($request){
-        $prop1 = 'code';
         if ($request->has('q')){
-            $coupon = $this->filterRI->filterBy1Prop($this->couponModel, $request->q, $request->limit, $prop1);
+            $coupon = $this->filterRI->filterBy1PropPaginated($this->couponModel, $request->q, $request->limit, 'code');
         }else{
             $coupon = $this->baseRI->listWithPagination($this->couponModel, $request->limit);
         }

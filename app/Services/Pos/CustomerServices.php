@@ -4,26 +4,15 @@ namespace App\Services\Pos;
 
 use Illuminate\Support\Str;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
+//Services
+use App\Services\BaseServices;
 
 //Models
 use App\Models\Customer;
 
-class CustomerServices{
-    
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
+class CustomerServices extends BaseServices{
 
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->customerModel = Customer::class;
-    }
+    private $customerModel = Customer::class;
 
     public function customerList($request){
         if ($request->has('q')){
