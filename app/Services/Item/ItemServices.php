@@ -4,16 +4,11 @@ namespace App\Services\Item;
 
 use Illuminate\Support\Str;
 
-//Interface
-use App\Contracts\BaseRepositoryInterface;
-use App\Contracts\FilterRepositoryInterface;
-use App\Contracts\ItemRepositoryInterface;
+//Repository
+use App\Repositories\ItemRepository;
 
 //Services
 use App\Services\BaseServices;
-
-//Resources
-use App\Http\Resources\PaginationResource;
 
 //Utilities
 use App\Utilities\FileUtilities;
@@ -28,34 +23,15 @@ use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\Supplier;
 
-class ItemServices{
-    private $baseRepositoryInterface;
-    private $filterRepositoryInterface;
-    private $itemRepositoryInterface;
-    private $fileUtilities;
-    private $itemFormat;
+class ItemServices extends BaseServices{
     public static $imagePath = 'images/item';
     public static $explode_at = "item/";
 
-    public function __construct(
-        BaseRepositoryInterface $baseRepositoryInterface,
-        FilterRepositoryInterface $filterRepositoryInterface,
-        ItemRepositoryInterface $itemRepositoryInterface,
-        FileUtilities $fileUtilities,
-        ItemFormat $itemFormat
-    ){
-        $this->baseRI = $baseRepositoryInterface;
-        $this->filterRI = $filterRepositoryInterface;
-        $this->itemRI = $itemRepositoryInterface;
-        $this->fileUtilities = $fileUtilities;
-        $this->itemFormat = $itemFormat;
-
-        $this->itemModel = Item::class;
-        $this->categoryModel = Category::class;
-        $this->brandModel = Brand::class;
-        $this->unitModel = Unit::class;
-        $this->supplierModel = Supplier::class;
-    }
+    private $itemModel = Item::class;
+    private $categoryModel = Category::class;
+    private $brandModel = Brand::class;
+    private $unitModel = Unit::class;
+    private $supplierModel = Supplier::class;
 
     public function randomItems($request){
         if($request->has('q')){
@@ -70,18 +46,19 @@ class ItemServices{
         $limit = $request->limit;
         if($request->has('q')){
             $q = $request->q;
+            $itemRI = new ItemRepository;
             switch (true) {
-                case $this->itemRI->checkIfObj($this->categoryModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->categoryModel, $q, $limit, 'category_id');
+                case $itemRI->checkIfObj($this->categoryModel, $q):
+                    $item = $itemRI->filterByProp($this->itemModel, $this->categoryModel, $q, $limit, 'category_id');
                     break;
-                case $this->itemRI->checkIfObj($this->brandModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->brandModel, $q, $limit, 'brand_id');
+                case $itemRI->checkIfObj($this->brandModel, $q):
+                    $item = $itemRI->filterByProp($this->itemModel, $this->brandModel, $q, $limit, 'brand_id');
                     break;
-                case $this->itemRI->checkIfObj($this->unitModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->unitModel, $q, $limit, 'unit_id');
+                case $itemRI->checkIfObj($this->unitModel, $q):
+                    $item = $itemRI->filterByProp($this->itemModel, $this->unitModel, $q, $limit, 'unit_id');
                     break;
-                case $this->itemRI->checkIfObj($this->supplierModel, $q):
-                    $item = $this->itemRI->filterByProp($this->itemModel, $this->supplierModel, $q, $limit, 'supplier_id');
+                case $itemRI->checkIfObj($this->supplierModel, $q):
+                    $item = $itemRI->filterByProp($this->itemModel, $this->supplierModel, $q, $limit, 'supplier_id');
                     break;
                 default:
                     $item = $this->filterRI->filterBy4Prop($this->itemModel, $q, $limit, 'name', 'slug', 'sku', 'price');
@@ -92,7 +69,7 @@ class ItemServices{
 
         if($item){
             return $item->through(function($item){
-                return $this->itemFormat->formatItemList($item);
+                return ItemFormat::formatItemList($item);
                });
         }else{
             return response(["failed"=>'item not found'],404);
@@ -102,7 +79,7 @@ class ItemServices{
     public function itemGetById($id){
         $item = $this->baseRI->findById($this->itemModel, $id);
         if($item){
-            return $this->itemFormat->formatItemList($item);
+            return ItemFormat::formatItemList($item);
         }else{
             return response(["failed"=>'item not found'],404);
         }
@@ -120,7 +97,7 @@ class ItemServices{
         ]);
 
         //image upload
-        $image = $this->fileUtilities->fileUpload($request, url(''), self::$imagePath, false, false, false);
+        $image = FileUtilities::fileUpload($request, url(''), self::$imagePath, false, false, false);
         $data = $request->all();
         $data['image'] = $image;
 
@@ -143,7 +120,7 @@ class ItemServices{
             ]);
 
         if($item){
-            return $this->itemFormat->formatItemList($item);
+            return ItemFormat::formatItemList($item);
         }else{
             return [] ;
         }
@@ -168,7 +145,7 @@ class ItemServices{
             $data = $request->all();
             //image upload
             $exImagePath = $item->image;
-            $image = $this->fileUtilities->fileUpload($request, url(''), self::$imagePath, self::$explode_at, $exImagePath, true);
+            $image = FileUtilities::fileUpload($request, url(''), self::$imagePath, self::$explode_at, $exImagePath, true);
             $data['image'] = $image;
 
             $item->update([
