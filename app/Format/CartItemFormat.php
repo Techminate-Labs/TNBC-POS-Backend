@@ -3,7 +3,7 @@
 namespace App\Format;
 
 class cartItemFormat{
-    public function formatCartItemList($cartItem){
+    public static function formatCartItemList($cartItem){
         return[
             'id' => $cartItem->id,
             'cart_id' => $cartItem->cart_id,
