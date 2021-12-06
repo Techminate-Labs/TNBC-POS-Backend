@@ -3,7 +3,7 @@
 namespace App\Format;
 
 class ItemFormat{
-    public function isAvailable($data){
+    public static function isAvailable($data){
         if($data == 1){
             return true;
         }else{
@@ -11,7 +11,7 @@ class ItemFormat{
         }
     }
 
-    public function formatItemList($item){
+    public static function formatItemList($item){
         return[
             'item_id' => $item->id,
             'category_id' => $item->category_id,
@@ -30,7 +30,7 @@ class ItemFormat{
             'discount' => $item->discount,
             'inventory' => $item->inventory,
             'expire_date' => $item->expire_date,
-            'available' => $this->isAvailable($item->available),
+            'available' => self::isAvailable($item->available),
             'image' => $item->image,
             'created_at'=>$item->created_at->diffForHumans(),
             'updated_at'=>$item->updated_at->diffForHumans()
