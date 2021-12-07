@@ -21,6 +21,20 @@ class PaymentMethodServices extends PaymentServices{
     public function payWithTNBC($request, $cartItems)
     {
         $configuration = $this->baseRI->findById($this->configModel, 1);
+        
+        //Convert local price to USD and USD to TNBC
+        // $config = [];
+        // rates = https://api.exchangerate-api.com/v4/latest/USD
+        // for(i=0;i<rates.length; i++){
+        //     if(rates[i] === $config){
+                
+        //     }
+        // }
+        // BDT price 500 tk
+        // USD price 
+        // 1 bdt 0.012
+
+        //Rate at usd
         $tnbcRate = $configuration->tnbc_rate;
 
         $payment = $this->calPayment($request, $cartItems);
@@ -64,6 +78,7 @@ class PaymentMethodServices extends PaymentServices{
             $pm = $request->payment_method;
             switch ($pm) {
                 case 'tnbc':
+                    //convert local price to USD and USD to TNBC
                     $list = $this->payWithTNBC($request, $cartItems);
                     break;
                 case 'fiat':
