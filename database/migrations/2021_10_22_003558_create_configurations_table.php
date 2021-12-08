@@ -20,8 +20,9 @@ class CreateConfigurationsTable extends Migration
             $table->string('currency')->nullable();
             $table->string('currency_symble')->nullable();
             $table->string('tnbc_pk')->nullable();
-            $table->float('tnbc_rate', 8, 2)->nullable();
-            $table->float('tax_rate', 8, 2)->nullable();
+            $table->float('tnbc_rate', 8, 4)->nullable();
+            $table->float('usd_rate', 8, 4)->nullable();
+            $table->float('tax_rate', 8, 4)->nullable();
             $table->string('time_zone')->nullable();
             $table->string('app_logo')->nullable();
             $table->string('store_logo')->nullable();

@@ -43,8 +43,8 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'role_id' => '2',
-            'name' => 'Sazid',
-            'email' => 'sazidahmed.official@gmail.com',
+            'name' => 'Cashier',
+            'email' => 'cashier@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
             'created_at' => now(),
@@ -53,8 +53,8 @@ class UserSeeder extends Seeder
 
         DB::table('profiles')->insert([
             'user_id' => '1',
-            'first_name' => 'Sazid',
-            'last_name' => 'Ahmed',
+            'first_name' => 'System',
+            'last_name' => 'Admin',
             'mobile' => '01680800810',
             'present_address' => 'Uttara, dhaka, Bangladesh, 1230',
             'permanent_address' => 'Uttara, dhaka, Bangladesh, 1230',
@@ -68,8 +68,8 @@ class UserSeeder extends Seeder
 
         DB::table('profiles')->insert([
             'user_id' => '2',
-            'first_name' => 'Admin',
-            'last_name' => 'User',
+            'first_name' => 'POS',
+            'last_name' => 'Cashier',
             'mobile' => '01911908431',
             'present_address' => 'Uttara, dhaka, Bangladesh, 1230',
             'permanent_address' => 'Uttara, dhaka, Bangladesh, 1230',
