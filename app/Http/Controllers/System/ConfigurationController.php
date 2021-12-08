@@ -26,5 +26,8 @@ class ConfigurationController extends Controller
         return $this->services->configUpdate($request);
     }
 
-    // 'https://api.exchangerate-api.com/v4/latest/USD'
+    public function convCur(Request $request)
+    {
+        return $this->services->convCur($request);
+    }
 }

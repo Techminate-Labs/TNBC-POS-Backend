@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services\System;
-
+use Illuminate\Support\Facades\Http;
 //Service
 use App\Services\BaseServices;
 
@@ -20,6 +20,17 @@ class ConfigServices extends BaseServices{
         $id = 1;
         $configuration = $this->baseRI->findById($this->configModel, $id);
         return $configuration;
+    }
+
+    public function usdRate($ticker)
+    {
+        // $ticker = 'BDT';
+        $url = 'https://api.exchangerate-api.com/v4/latest/'.$ticker;
+        $fetch = Http::get($url);
+        $data = json_decode($fetch);
+        $results = $data->rates;
+        $rateUSD = $results->USD;
+        return $rateUSD;
     }
 
     public function configUpdate($request)
@@ -45,9 +56,11 @@ class ConfigServices extends BaseServices{
             //image upload
             $appLogo = FileUtilities::imageUpload($appLogo, $request, $url, self::$imagePath, self::$explode_at, $exAppLogoPath, true);
             $storeLogo = FileUtilities::imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
-            
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
+            // $rateUSD = $this->usdRate($data['currency']);
+            // $data['usd_rate'] = $rateUSD;
+            // return $rateUSD;
             $configuration->update($data);
 
             return response($configuration,200);
@@ -56,4 +69,17 @@ class ConfigServices extends BaseServices{
         }
     }
 
+    public function convCur($request)
+    {
+        $ticker = 'BDT';
+        $url = 'https://api.exchangerate-api.com/v4/latest/'.$ticker;
+        $fetch = Http::get($url);
+        $data = json_decode($fetch);
+        $results = $data->rates;
+        $rateUSD = $results->USD;
+
+        $priceBDT = 500;
+        $priceUSD = $priceBDT * $rateUSD;
+        return $priceUSD;
+    }
 }
