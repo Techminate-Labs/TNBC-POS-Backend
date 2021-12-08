@@ -18,22 +18,25 @@ class PaymentMethodServices extends PaymentServices{
         ];
     }
 
+    public function convToUsd(){
+        // $config = [];
+        // $ticker = $config->currency;
+        // $data = 'https://api.exchangerate-api.com/v4/latest/BDT'+$ticker
+        // for(i=0;i<rates.length; i++){
+        //     if(rates[i] === $ticker){
+        //         get the value
+        //     }
+        // }
+        // rate = 0.0117
+        // BDT price 500 tk
+        // USD price 500 x rate
+    }
+
     public function payWithTNBC($request, $cartItems)
     {
         $configuration = $this->baseRI->findById($this->configModel, 1);
         
-        //Convert local price to USD and USD to TNBC
-        // $config = [];
-        // rates = https://api.exchangerate-api.com/v4/latest/USD
-        // for(i=0;i<rates.length; i++){
-        //     if(rates[i] === $config){
-                
-        //     }
-        // }
-        // BDT price 500 tk
-        // USD price 
-        // 1 bdt 0.012
-
+        // Convert local price to USD and USD to TNBC
         //Rate at usd
         $tnbcRate = $configuration->tnbc_rate;
 
