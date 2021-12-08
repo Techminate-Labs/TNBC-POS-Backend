@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Configuration
     Route::get('/config', [ConfigurationController::class, 'config']);
+    Route::get('/convCur', [ConfigurationController::class, 'convCur']);
     Route::put('/configUpdate', [ConfigurationController::class, 'configUpdate']);
     Route::get('/logList', [ActivityLogController::class, 'logList']);
 
