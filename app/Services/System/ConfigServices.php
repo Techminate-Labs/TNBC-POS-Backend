@@ -71,15 +71,25 @@ class ConfigServices extends BaseServices{
 
     public function convCur($request)
     {
-        $ticker = 'BDT';
+        $ticker = 'INR';
         $url = 'https://api.exchangerate-api.com/v4/latest/'.$ticker;
         $fetch = Http::get($url);
         $data = json_decode($fetch);
         $results = $data->rates;
+        // return $results;
         $rateUSD = $results->USD;
-
+        // return $rateUSD;
         $priceBDT = 500;
         $priceUSD = $priceBDT * $rateUSD;
+        // $subTotalTNBC = ($payment['subTotal'] * $usdRate)/$tnbcRate;
         return $priceUSD;
+        return [
+            'cartItems' => $tnbc,
+            'subTotal' => $subTotalTNBC,
+            'discount' => $discountTNBC,
+            'tax' => $taxTNBC,
+            'total' => $totalTNBC,
+            'payment_method' => 'tnbc'
+        ];
     }
 }
