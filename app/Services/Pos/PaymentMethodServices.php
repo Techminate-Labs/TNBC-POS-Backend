@@ -21,32 +21,31 @@ class PaymentMethodServices extends PaymentServices{
     public function payWithTNBC($request, $cartItems)
     {
         $configuration = $this->baseRI->findById($this->configModel, 1); 
-        $tnbcRate = $configuration->tnbc_rate;
-        $payment = $this->calPayment($request, $cartItems);
-        // Convert local price to USD
+        // $tnbcRate = $configuration->tnbc_rate;
         // $usdRate = $configuration->usd_rate;
-        // $priceBDT = 500;
-        // $priceUSD = $priceBDT * $usdRate;
-        // Convert USD to TNBC
-        $subTotalTNBC = $payment['subTotal']/$tnbcRate;
-        $discountTNBC = $payment['discount']/$tnbcRate;
-        $taxTNBC = $payment['tax']/$tnbcRate;
-        $totalTNBC = $payment['total']/$tnbcRate;
+        $usdRate = 1;
+        $tnbcRate = 5.15;
+        $payment = $this->calPayment($request, $cartItems);
+        //Convert local price to USD and USD to TNBC
+        $subTotalTNBC = ($payment['subTotal'] * $usdRate)/$tnbcRate;
+        $discountTNBC = ($payment['discount'] * $usdRate)/$tnbcRate;
+        $taxTNBC = ($payment['tax'] * $usdRate)/$tnbcRate;
+        $totalTNBC = ($payment['total'] * $usdRate)/$tnbcRate;
 
         $tnbc=[];
 
         foreach($cartItems as $cartItem){
-            $unit_price = $cartItem['unit_price'] /$tnbcRate;
-            $total = $cartItem['total'] /$tnbcRate;
+            $unit_price = ($cartItem['unit_price'] * $usdRate)/$tnbcRate;
+            $total = ($cartItem['total'] * $usdRate)/$tnbcRate;
             $obj = [
                 "id"=>$cartItem['id'],
                 "cart_id"=>$cartItem['cart_id'],
                 "item_id"=>$cartItem['item_id'],
                 "item_name"=>$cartItem['item_name'],
                 "unit"=>$cartItem['unit'],
-                "unit_price"=>(round($unit_price, 0)),
+                "unit_price"=>(round($unit_price, 4)),
                 "qty"=>$cartItem['qty'],
-                "total"=>(round($total, 0)),
+                "total"=>(round($total, 4)),
             ];
             array_push($tnbc, $obj);
         }
@@ -67,7 +66,6 @@ class PaymentMethodServices extends PaymentServices{
             $pm = $request->payment_method;
             switch ($pm) {
                 case 'tnbc':
-                    //convert local price to USD and USD to TNBC
                     $list = $this->payWithTNBC($request, $cartItems);
                     break;
                 case 'fiat':
