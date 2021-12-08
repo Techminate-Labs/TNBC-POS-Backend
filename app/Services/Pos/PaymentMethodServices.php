@@ -21,12 +21,10 @@ class PaymentMethodServices extends PaymentServices{
     public function payWithTNBC($request, $cartItems)
     {
         $configuration = $this->baseRI->findById($this->configModel, 1); 
-        // $tnbcRate = $configuration->tnbc_rate;
-        // $usdRate = $configuration->usd_rate;
-        $usdRate = 1;
-        $tnbcRate = 5.15;
+        $tnbcRate = $configuration->tnbc_rate;
+        $usdRate = $configuration->usd_rate;
+
         $payment = $this->calPayment($request, $cartItems);
-        //Convert local price to USD and USD to TNBC
         $subTotalTNBC = ($payment['subTotal'] * $usdRate)/$tnbcRate;
         $discountTNBC = ($payment['discount'] * $usdRate)/$tnbcRate;
         $taxTNBC = ($payment['tax'] * $usdRate)/$tnbcRate;

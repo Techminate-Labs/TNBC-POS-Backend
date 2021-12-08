@@ -22,15 +22,22 @@ class ConfigServices extends BaseServices{
         return $configuration;
     }
 
-    public function usdRate($ticker)
+    public function usdRate($currency)
     {
-        // $ticker = 'BDT';
-        $url = 'https://api.exchangerate-api.com/v4/latest/'.$ticker;
-        $fetch = Http::get($url);
-        $data = json_decode($fetch);
-        $results = $data->rates;
-        $rateUSD = $results->USD;
-        return $rateUSD;
+        // $currency = 'BDT';
+        $req_url = 'https://open.er-api.com/v6/latest/'.$currency;
+        $response_json = file_get_contents($req_url);
+        if(false !== $response_json) {
+            try {
+                $response = json_decode($response_json);
+                if('success' === $response->result) {
+                    return $response->rates->USD;
+                }
+            }
+            catch(Exception $e) {
+                return [];
+            }
+        }
     }
 
     public function configUpdate($request)
@@ -58,11 +65,8 @@ class ConfigServices extends BaseServices{
             $storeLogo = FileUtilities::imageUpload($storeLogo, $request, $url, self::$imagePath, self::$explode_at, $exStoreLogoPath, true);
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
-            // $rateUSD = $this->usdRate($data['currency']);
-            // $data['usd_rate'] = $rateUSD;
-            // return $rateUSD;
+            $data['usd_rate'] = $this->usdRate($data['currency']);
             $configuration->update($data);
-
             return response($configuration,200);
         }else{
             return response(["failed"=>'Configuration not found'],404);
@@ -71,25 +75,30 @@ class ConfigServices extends BaseServices{
 
     public function convCur($request)
     {
-        $ticker = 'INR';
-        $url = 'https://api.exchangerate-api.com/v4/latest/'.$ticker;
-        $fetch = Http::get($url);
-        $data = json_decode($fetch);
-        $results = $data->rates;
-        // return $results;
-        $rateUSD = $results->USD;
-        // return $rateUSD;
-        $priceBDT = 500;
-        $priceUSD = $priceBDT * $rateUSD;
-        // $subTotalTNBC = ($payment['subTotal'] * $usdRate)/$tnbcRate;
-        return $priceUSD;
-        return [
-            'cartItems' => $tnbc,
-            'subTotal' => $subTotalTNBC,
-            'discount' => $discountTNBC,
-            'tax' => $taxTNBC,
-            'total' => $totalTNBC,
-            'payment_method' => 'tnbc'
-        ];
+        $currency = 'BDT';
+        $req_url = 'https://open.er-api.com/v6/latest/'.$currency;
+        $response_json = file_get_contents($req_url);
+
+        if(false !== $response_json) {
+            try {
+                $response = json_decode($response_json);
+                if('success' === $response->result) {
+                    $localPrice = 500;
+                    $rateTnbc = 0.02;
+                    $priceUsd = $localPrice * $response->rates->USD;
+                    $priceTnbc = $priceUsd / $rateTnbc;
+                    return [
+                        $currency.' to USD'=>$response->rates->USD,
+                        'rate TNBC' => $rateTnbc,
+                        'price Local' => $localPrice,
+                        'price USD' => $priceUsd,
+                        'price TNBC' => $priceTnbc
+                    ];
+                }
+            }
+            catch(Exception $e) {
+                return [];
+            }
+        }
     }
 }
