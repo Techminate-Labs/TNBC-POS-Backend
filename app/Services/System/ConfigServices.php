@@ -42,7 +42,7 @@ class ConfigServices extends BaseServices{
     // this method is to get TNBC rate from exchange
     public function tnbcRate()
     {
-        $req_url = 'https://open.er-api.com/v6/latest/';
+        $req_url = 'https://tnbcrow.pythonanywhere.com/recent-trades';
         $response_json = file_get_contents($req_url);
         if(false !== $response_json) {
             try {
