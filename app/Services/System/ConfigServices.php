@@ -39,6 +39,23 @@ class ConfigServices extends BaseServices{
             }
         }
     }
+    // this method is to get TNBC rate from exchange
+    public function tnbcRate()
+    {
+        $req_url = 'https://open.er-api.com/v6/latest/';
+        $response_json = file_get_contents($req_url);
+        if(false !== $response_json) {
+            try {
+                $response = json_decode($response_json);
+                if('success' === $response->result) {
+                    //
+                }
+            }
+            catch(Exception $e) {
+                return [];
+            }
+        }
+    }
 
     public function configUpdate($request)
     {
