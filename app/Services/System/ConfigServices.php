@@ -39,17 +39,17 @@ class ConfigServices extends BaseServices{
             }
         }
     }
+
     // this method is to get TNBC rate from exchange
     public function tnbcRate()
     {
         $req_url = 'https://tnbcrow.pythonanywhere.com/recent-trades';
         $response_json = file_get_contents($req_url);
+
         if(false !== $response_json) {
             try {
                 $response = json_decode($response_json);
-                if('success' === $response->result) {
-                    //
-                }
+                return $response->results[0]->rate/10000;
             }
             catch(Exception $e) {
                 return [];
@@ -83,6 +83,7 @@ class ConfigServices extends BaseServices{
             $data['app_logo'] = $appLogo;
             $data['store_logo'] = $storeLogo;
             $data['usd_rate'] = $this->usdRate($data['currency']);
+            // $data['tnbc_rate'] = $this->tnbcRate();
             $configuration->update($data);
             return response($configuration,200);
         }else{
@@ -92,30 +93,46 @@ class ConfigServices extends BaseServices{
 
     public function convCur($request)
     {
-        $currency = 'BDT';
-        $req_url = 'https://open.er-api.com/v6/latest/'.$currency;
+        $req_url = 'https://tnbcrow.pythonanywhere.com/recent-trades';
         $response_json = file_get_contents($req_url);
 
         if(false !== $response_json) {
             try {
                 $response = json_decode($response_json);
-                if('success' === $response->result) {
-                    $localPrice = 500;
-                    $rateTnbc = 0.02;
-                    $priceUsd = $localPrice * $response->rates->USD;
-                    $priceTnbc = $priceUsd / $rateTnbc;
-                    return [
-                        $currency.' to USD'=>$response->rates->USD,
-                        'rate TNBC' => $rateTnbc,
-                        'price Local' => $localPrice,
-                        'price USD' => $priceUsd,
-                        'price TNBC' => $priceTnbc
-                    ];
-                }
+                return $response->results[0]->rate/10000;
             }
             catch(Exception $e) {
                 return [];
             }
         }
     }
+
+    // public function convCur($request)
+    // {
+    //     $currency = 'BDT';
+    //     $req_url = 'https://open.er-api.com/v6/latest/'.$currency;
+    //     $response_json = file_get_contents($req_url);
+
+    //     if(false !== $response_json) {
+    //         try {
+    //             $response = json_decode($response_json);
+    //             if('success' === $response->result) {
+    //                 $localPrice = 500;
+    //                 $rateTnbc = 0.02;
+    //                 $priceUsd = $localPrice * $response->rates->USD;
+    //                 $priceTnbc = $priceUsd / $rateTnbc;
+    //                 return [
+    //                     $currency.' to USD'=>$response->rates->USD,
+    //                     'rate TNBC' => $rateTnbc,
+    //                     'price Local' => $localPrice,
+    //                     'price USD' => $priceUsd,
+    //                     'price TNBC' => $priceTnbc
+    //                 ];
+    //             }
+    //         }
+    //         catch(Exception $e) {
+    //             return [];
+    //         }
+    //     }
+    // }
 }
