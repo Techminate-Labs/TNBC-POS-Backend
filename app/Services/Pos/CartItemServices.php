@@ -52,7 +52,7 @@ class CartItemServices{
         return [
             'cashier' => $cart->user->name,
             'payment_method' => $list['payment_method'],
-            'invoice_number' => 'POS-'.date('md').'-'.date('is').mt_rand(10,100),
+            'invoice_number' => 'POS_'.date('md').'_'.date('is').mt_rand(10,100),
             'subTotal' => (round($list['subTotal'], 4)),
             'discount' => (round($list['discount'], 4)),
             'tax' => (round($list['tax'], 4)),
