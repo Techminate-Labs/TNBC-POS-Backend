@@ -19,7 +19,7 @@ class ConfigSeeder extends Seeder
             'store_name' => 'Techminate',
             'currency' => 'USD',
             'currency_symble' => '$',
-            'tnbc_pk' => 'a5dbcded3501291743e0cb4c6a186afa2c87a54f4a876c620dbd68385cba80d0',
+            'tnbc_pk' => '8c44cb32b7b0394fe7c6a8c1778d19d095063249b734b226b28d9fb2115dbc74',
             'tnbc_rate' => '0.02',
             'usd_rate' => '1',
             'tax_rate' => '10.00',
