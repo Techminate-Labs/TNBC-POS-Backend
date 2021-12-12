@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         DB::table('roles')->insert([
             'name'=>'admin',
-            'permissions'=> '{"Users":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Roles":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"POS":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Items":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Sales":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Config":{"create":true,"view":true,"edit":true,"delete":true,"list":true}}',
+            'permissions'=> '{"Users":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Roles":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"POS":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Coupon":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Items":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Sales":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Config":{"create":true,"view":true,"edit":true,"delete":true,"list":true}}',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         
         DB::table('roles')->insert([
             'name'=>'cashier',
-            'permissions'=> '{"Users":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Roles":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"POS":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Items":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Sales":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Config":{"create":false,"view":false,"edit":false,"delete":false,"list":false}}',
+            'permissions'=> '{"Users":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Roles":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"POS":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Coupon":{"create":true,"view":true,"edit":true,"delete":true,"list":true},"Items":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Sales":{"create":false,"view":false,"edit":false,"delete":false,"list":false},"Config":{"create":false,"view":false,"edit":false,"delete":false,"list":false}}',
             'created_at' => now(),
             'updated_at' => now()
         ]);
