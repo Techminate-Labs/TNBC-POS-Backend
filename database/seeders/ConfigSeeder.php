@@ -24,6 +24,8 @@ class ConfigSeeder extends Seeder
             'usd_rate' => '1',
             'tax_rate' => '10.00',
             'time_zone' => 'GMT+6',
+            'protocol' => 'http',
+            'bank' => '20.98.98.0',
             'app_logo' => 'http://127.0.0.1:8000/images/logo/default.png',
             'store_logo' => 'http://127.0.0.1:8000/images/logo/default.png',
             'created_at' => now(),

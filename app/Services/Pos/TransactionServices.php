@@ -28,11 +28,9 @@ class TransactionServices{
     {
         $configuration = $this->baseRI->findById($this->configModel, 1);
         $pk = $configuration->tnbc_pk;
-        $protocol = 'http';
-        $bank = '20.98.98.0';
-        // $bank = '54.183.16.194';
+        $protocol = $configuration->protocol;
+        $bank = $configuration->bank;
         $url = $protocol.'://'.$bank.'/bank_transactions?recipient='.$pk.'&limit=30&fee=NONE';
-        
         $fetch = Http::get($url);
         $data = json_decode($fetch);
         $results = $data->results;

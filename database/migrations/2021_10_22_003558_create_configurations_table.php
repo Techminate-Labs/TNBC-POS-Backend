@@ -24,6 +24,8 @@ class CreateConfigurationsTable extends Migration
             $table->float('usd_rate', 8, 4)->nullable();
             $table->float('tax_rate', 8, 4)->nullable();
             $table->string('time_zone')->nullable();
+            $table->string('protocol')->nullable();
+            $table->string('bank')->nullable();
             $table->string('app_logo')->nullable();
             $table->string('store_logo')->nullable();
             $table->timestamps();
