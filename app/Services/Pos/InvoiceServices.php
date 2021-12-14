@@ -67,7 +67,12 @@ class InvoiceServices extends CartItemServices{
 
     public function invoiceList($request)
     {
-        return $this->baseRI->listWithPagination($this->invoiceModel, $request->limit);
+        if ($request->has('q')){
+            $invoice = $this->filterRI->filterBy1PropPaginated($this->invoiceModel, $request->q, $request->limit, 'invoice_number');
+        }else{
+            $invoice = $this->baseRI->listWithPagination($this->invoiceModel, $request->limit);
+        }
+        return $invoice; 
     }
 
     public function invoiceGetById($id)
