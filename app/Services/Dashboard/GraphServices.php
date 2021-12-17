@@ -32,7 +32,7 @@ class GraphServices{
 
         $data = [];
         foreach($sales as $sale) {
-            $data['label'][] = $sale->day_name;
+            $data['label'][] = $sale->day;
             $data['total'][] = (int)$sale->total;
         }
         return  $data;
@@ -44,7 +44,7 @@ class GraphServices{
 
         $data = [];
         foreach($sales as $sale) {
-            $data['label'][] = $sale->month_name;
+            $data['label'][] = $sale->created_at;
             $data['total'][] = (int)$sale->total;
         }
         return  $data;

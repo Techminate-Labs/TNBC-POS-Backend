@@ -5,6 +5,9 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+//Models
+use App\Models\Invoice;
+
 //Interface
 use App\Contracts\DashboardRepositoryInterface;
 
@@ -23,7 +26,7 @@ class DashboardRepository implements DashboardRepositoryInterface{
     public function dateViewChart($payment_method){
         return DB::table('invoices')
         ->select(
-            DB::raw("DATE_FORMAT(date,'%D-%b') as months"),
+            DB::raw("DATE_FORMAT(date,'%Y-%m-%d') as months"),
             DB::raw('sum(total) as total'),
         )
         ->where('payment_method', $payment_method)
@@ -37,19 +40,22 @@ class DashboardRepository implements DashboardRepositoryInterface{
     public function dayViewChart($payment_method){
         return DB::table('invoices')
         ->select(
-            DB::raw("DAYNAME(date) as day_name"),
-            DB::raw("DAY(date) as day"),
+            DB::raw("DATE_FORMAT(date,'%Y-%m-%d') as day"),
             DB::raw('sum(total) as total'),
         )
         ->where('payment_method', $payment_method)
         ->whereYear('date', Carbon::now()->year)
         ->where('date', '>', Carbon::today()->subDay(6))
-        ->groupBy('day_name','day')
-        ->orderBy('day', 'asc')
+        ->groupBy('day')
+        ->orderBy('date', 'asc')
         ->get();
     }
 
     public function monthViewChart($payment_method){
+        return Invoice::all();
+    }
+
+    public function backup($payment_method){
         return DB::table('invoices')
         ->select(
             DB::raw("MONTHNAME(date) as month_name"),
