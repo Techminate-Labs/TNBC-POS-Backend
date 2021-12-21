@@ -52,14 +52,14 @@ class DashboardController extends Controller
         $sales = Invoice::
         where('payment_method', $payment_method)
         ->whereYear('date', Carbon::now()->year)
-        
-        
         ->orderBy('date', 'asc')
         ->get();
 
         $data = [];
         foreach($sales as $sale) {
-            $data['label'][] = strtotime($sale->created_at);
+            // $store = strtotime($sale->date);
+            // return date('Y-m-d',$store);
+            $data['label'][] = $sale->created_at;
             $data['total'][] = (int)$sale->total;
         }
         return $data;
