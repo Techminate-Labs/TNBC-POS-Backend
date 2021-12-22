@@ -14,9 +14,9 @@ class GraphServices{
         $this->dashboardRI = $dashboardRepositoryInterface;
     }
 
-    public function dateViewChart($request)
+    public function currentMonthSalesChart($request)
     {
-        $sales = $this->dashboardRI->dateViewChart($request->payment_method);
+        $sales = $this->dashboardRI->currentMonthSalesChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {
@@ -26,9 +26,9 @@ class GraphServices{
         return  $data;
     }
 
-    public function dayViewChart($request)
+    public function currentWeekSalesChart($request)
     {
-        $sales = $this->dashboardRI->dayViewChart($request->payment_method);
+        $sales = $this->dashboardRI->currentWeekSalesChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {
@@ -38,9 +38,9 @@ class GraphServices{
         return  $data;
     }
 
-    public function monthViewChart($request)
+    public function currentYearSalesChart($request)
     {
-        $sales = $this->dashboardRI->monthViewChart($request->payment_method);
+        $sales = $this->dashboardRI->currentYearSalesChart($request->payment_method);
 
         $data = [];
         foreach($sales as $sale) {

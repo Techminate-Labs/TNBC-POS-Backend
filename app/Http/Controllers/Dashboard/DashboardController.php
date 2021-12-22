@@ -32,58 +32,18 @@ class DashboardController extends Controller
         return $this->countServices->countTotal();
     }
 
-    public function dateViewChart(Request $request)
+    public function currentMonthSalesChart(Request $request)
     {
-        return $this->graphServices->dateViewChart($request);
+        return $this->graphServices->currentMonthSalesChart($request);
     }
 
-    public function dayViewChart(Request $request)
+    public function currentWeekSalesChart(Request $request)
     {
-        return $this->graphServices->dayViewChart($request);
+        return $this->graphServices->currentWeekSalesChart($request);
     }
 
-    public function monthViewChart(Request $request)
+    public function currentYearSalesChart(Request $request)
     {
-        return $this->graphServices->monthViewChart($request);
-    }
-
-    public function testData1(Request $request){
-        $payment_method = $request->payment_method;
-        $sales = Invoice::
-        where('payment_method', $payment_method)
-        ->whereYear('date', Carbon::now()->year)
-        ->orderBy('date', 'asc')
-        ->get();
-
-        $data = [];
-        foreach($sales as $sale) {
-            // $store = strtotime($sale->date);
-            // return date('Y-m-d',$store);
-            $data['label'][] = $sale->created_at;
-            $data['total'][] = (int)$sale->total;
-        }
-        return $data;
-    }
-
-    public function testData2(Request $request){
-        $payment_method = $request->payment_method;
-        $sales = DB::table('invoices')
-        ->select(
-            DB::raw("DATE_FORMAT(date,'%Y-%m-%d') as months"),
-            DB::raw('sum(total) as total'),
-        )
-        ->where('payment_method', $payment_method)
-        ->whereYear('date', Carbon::now()->year)
-        ->whereMonth('date', Carbon::now()->month)
-        ->groupBy('months')
-        ->orderBy('date', 'asc')
-        ->get();
-
-        $data = [];
-        foreach($sales as $sale) {
-            $data['label'][] = strtotime($sale->months);
-            $data['total'][] = (int)$sale->total;
-        }
-        return  $data;
+        return $this->graphServices->currentYearSalesChart($request);
     }
 }
