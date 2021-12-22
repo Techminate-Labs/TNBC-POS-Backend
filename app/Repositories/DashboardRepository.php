@@ -20,7 +20,7 @@ class DashboardRepository implements DashboardRepositoryInterface{
         ->count();
     }
 
-    public function dateViewChart($payment_method){
+    public function currentMonthSalesChart($payment_method){
         return DB::table('invoices')
         ->select(
             DB::raw("DATE_FORMAT(date,'%D-%b') as months"),
@@ -34,7 +34,7 @@ class DashboardRepository implements DashboardRepositoryInterface{
         ->get();
     }
 
-    public function dayViewChart($payment_method){
+    public function currentWeekSalesChart($payment_method){
         return DB::table('invoices')
         ->select(
             DB::raw("DAYNAME(date) as day_name"),
@@ -49,7 +49,7 @@ class DashboardRepository implements DashboardRepositoryInterface{
         ->get();
     }
 
-    public function monthViewChart($payment_method){
+    public function currentYearSalesChart($payment_method){
         return DB::table('invoices')
         ->select(
             DB::raw("MONTHNAME(date) as month_name"),
