@@ -21,14 +21,14 @@ class UserController extends Controller
         return $this->services->userList($request);
     }
 
-    public function userProfileView($id)
+    public function userProfileView(Request $request, $id)
     {
-        return $this->services->userProfileView($id);
+        return $this->services->userProfileView($request, $id);
     }
 
-    public function userGetById($id)
+    public function userGetById(Request $request, $id)
     {
-        return $this->services->userGetById($id);
+        return $this->services->userGetById($request, $id);
     }
 
     public function userUpdate(Request $request, $id)
@@ -36,8 +36,8 @@ class UserController extends Controller
         return $this->services->userUpdate($request, $id);
     }
 
-    public function userDelete($id)
+    public function userDelete(Request $request, $id)
     {
-        return $this->services->userDelete($id);
+        return $this->services->userDelete($request, $id);
     }
 }

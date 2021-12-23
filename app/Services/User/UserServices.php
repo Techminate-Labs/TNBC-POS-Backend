@@ -10,6 +10,7 @@ use App\Format\UserFormat;
 
 class UserServices extends BaseServices{
     public function userList($request){
+        $this->logCreate($request);
         if ($request->has('q')){
             $users = $this->filterRI->filterBy2PropPaginated($this->userModel, $request->q, $request->limit, 'name', 'email');
         }else{
@@ -24,7 +25,8 @@ class UserServices extends BaseServices{
         }
     }
 
-    public function userProfileView($id){
+    public function userProfileView($request, $id){
+        $this->logCreate($request);
         $user = $this->baseRI->findById($this->userModel, $id);
         if($user){
             return UserFormat::formatUserProfile($user);
@@ -33,7 +35,8 @@ class UserServices extends BaseServices{
         }
     }
 
-    public function userGetById($id){
+    public function userGetById($request, $id){
+        $this->logCreate($request);
         $user = $this->baseRI->findById($this->userModel, $id);
         if($user){
             return UserFormat::formatList($user);
@@ -43,6 +46,7 @@ class UserServices extends BaseServices{
     }
 
     public function userUpdate($request, $id){
+        $this->logCreate($request);
         $user = $this->baseRI->findById($this->userModel, $id);
         if($user){
             $data = $request->all();
@@ -67,7 +71,8 @@ class UserServices extends BaseServices{
         }
     }
 
-    public function userDelete($id){
+    public function userDelete($request, $id){
+        $this->logCreate($request);
         $user = $this->baseRI->findById($this->userModel, $id);
         if($user){
             $user->delete();
