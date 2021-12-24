@@ -26,13 +26,13 @@ class ProfileController extends Controller
         return $this->service->userProfileUpdate($request, $id);
     }
 
-    public function userProfileDelete($id)
+    public function userProfileDelete(Request $request, $id)
     {
-        return $this->service->userProfileDelete($id);
+        return $this->service->userProfileDelete($request, $id);
     }
 
-    public function userProfileGetById($id){
-        return $this->service->userProfileGetById($id);
+    public function userProfileGetById(Request $request, $id){
+        return $this->service->userProfileGetById($request, $id);
     }
 
     public function profileSettingPhotoUpdate(Request $request)
