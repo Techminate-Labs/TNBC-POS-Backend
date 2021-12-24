@@ -26,7 +26,8 @@ class ProfileServices extends BaseServices{
     public static $explode_at = "profile/";
     private $profileModel = Profile::class;
 
-    public function userProfileGetById($id){
+    public function userProfileGetById($request, $id){
+        $this->logCreate($request);
         $profile = $this->baseRI->findById($this->profileModel, $id);
         if($profile){
             return $profile;
@@ -36,6 +37,7 @@ class ProfileServices extends BaseServices{
     }
 
     public function userProfileCreate($request){
+        $this->logCreate($request);
         $request->validate([
             'mobile'=>'required',
             'present_address'=>'required|min:3',
@@ -55,6 +57,7 @@ class ProfileServices extends BaseServices{
     }
 
     public function userProfileUpdate($request, $id){
+        $this->logCreate($request);
         $profile = $this->baseRI->findById($this->profileModel, $id);
         if($profile){
             $request->validate([
@@ -78,7 +81,8 @@ class ProfileServices extends BaseServices{
         }
     }
 
-    public function userProfileDelete($id){
+    public function userProfileDelete($request, $id){
+        $this->logCreate($request);
         $profile = $this->baseRI->findById($this->profileModel, $id);
         if($profile){
             $exImagePath = $profile->image;
@@ -91,6 +95,7 @@ class ProfileServices extends BaseServices{
     }
 
     public function profileSettingPhotoUpdate($request){
+        $this->logCreate($request);
         $user = $this->authUser();
         $profile = $user->profile;
         if($profile){
@@ -111,6 +116,7 @@ class ProfileServices extends BaseServices{
     }
 
     public function profileSettingPasswordUpdate($request){
+        $this->logCreate($request);
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],
             'new_password' => ['required'],
