@@ -7,6 +7,9 @@ use Carbon\Carbon;
 //Interface
 use App\Contracts\ReportRepositoryInterface;
 
+//Services
+use App\Services\BaseServices;
+
 class ReportServices{
     private $reportRepositoryInterface;
 
@@ -27,26 +30,31 @@ class ReportServices{
     }
     
     //Day
-    public function reportDay($payment_method, $limit, $day){
+    public function reportDay($payment_method, $limit, $day)
+    {
         return $this->reportRI->reportDay($payment_method, $limit, $this->year, $this->month, $day);
     }
 
     //Week
-    public function reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek){
+    public function reportWeek($payment_method, $limit, $startOfTheWeek, $endOfTheWeek)
+    {
         return $this->reportRI->reportWeek($payment_method, $limit, $this->year, $startOfTheWeek, $endOfTheWeek);
     }
 
     //Month
-    public function reportMonth($payment_method, $limit, $month){
+    public function reportMonth($payment_method, $limit, $month)
+    {
         return $this->reportRI->reportMonth($payment_method, $limit, $this->year, $month);
     }
 
     //Year
-    public function reportYear($payment_method, $limit, $year){
+    public function reportYear($payment_method, $limit, $year)
+    {
         return $this->reportRI->reportYear($payment_method, $limit, $year);
     }
 
-    public function getByDuration($duration, $payment_method, $limit){  
+    public function getByDuration($duration, $payment_method, $limit)
+    {  
         switch ($duration) {
             case 'today':
                 $sales = $this->reportDay($payment_method, $limit, $this->today);
