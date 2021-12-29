@@ -59,6 +59,7 @@ class ConfigServices extends BaseServices{
 
     public function configUpdate($request)
     {
+        $this->logCreate($request);
         $id = 1;
         $configuration = $this->config();
         if($configuration){
