@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Item\BrandValidation;
 
 //Models
 use App\Models\Brand;
@@ -35,10 +36,7 @@ class BrandServices extends BaseServices{
     }
 
     public function brandCreate($request){
-        $fields = $request->validate([
-            'name'=>'required|string|unique:brands,name',
-        ]);
-
+        $fields = BrandValidation::validate1($request);
         $brand = $this->baseRI->storeInDB(
             $this->brandModel,
             [
@@ -55,14 +53,10 @@ class BrandServices extends BaseServices{
         if($brand){
             $data = $request->all();
             if($brand->name==$data['name']){
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255',
-                ]);
+                $fields = BrandValidation::validate2($request);
             }
             else{
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255|unique:brands,name',
-                ]);
+                $fields = BrandValidation::validate1($request);
             }
             $data['slug'] = Str::slug($fields['name']);
             $brand->update($data);

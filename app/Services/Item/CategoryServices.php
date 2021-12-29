@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Item\CategoryValidation;
 
 //Models
 use App\Models\Category;
@@ -35,10 +36,7 @@ class CategoryServices extends BaseServices{
     }
 
     public function categoryCreate($request){
-        $fields = $request->validate([
-            'name'=>'required|string|unique:categories,name',
-        ]);
-
+        $fields = CategoryValidation::validate1($request);
         $category = $this->baseRI->storeInDB(
             $this->categoryModel,
             [
@@ -59,14 +57,10 @@ class CategoryServices extends BaseServices{
         if($category){
             $data = $request->all();
             if($category->name==$data['name']){
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255',
-                ]);
+                $fields = CategoryValidation::validate2($request);
             }
             else{
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255|unique:categories,name',
-                ]);
+                $fields = CategoryValidation::validate1($request);
             }
             $data['slug'] = Str::slug($fields['name']);
             $category->update($data);
