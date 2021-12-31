@@ -4,6 +4,7 @@ namespace App\Services\Item;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Item\SupplierValidation;
 
 //Models
 use App\Models\Supplier;
@@ -33,18 +34,12 @@ class SupplierServices extends BaseServices{
         if($supplier){
             return $supplier;
         }else{
-            return response(["failed"=>'supplier not found'],404);
+            return response(["message"=>'supplier not found'],404);
         }
     }
 
     public function supplierCreate($request){
-        $fields = $request->validate([
-            'name'=>'required|string',
-            'email'=>'email',
-            'phone'=>'numeric',
-            'company'=>'string',
-        ]);
-
+        $fields = SupplierValidation::validate1($request);
         $supplier = $this->baseRI->storeInDB(
             $this->supplierModel,
             [
@@ -58,20 +53,14 @@ class SupplierServices extends BaseServices{
         if($supplier){
             return response($supplier,201);
         }else{
-            return response(["failed"=>'Server Error'],500);
+            return response(["message"=>'Server Error'],500);
         }
     }
 
     public function supplierUpdate($request, $id){
         $supplier = $this->baseRI->findById($this->supplierModel, $id);
         if($supplier){
-            $data = $request->all();
-            $fields = $request->validate([
-                'name'=>'required|string',
-                'email'=>'email',
-                'phone'=>'numeric',
-                'company'=>'string',
-            ]);
+            $fields = SupplierValidation::validate1($request);
             $supplier->update([
                 'name' => $fields['name'],
                 'email' => $fields['email'],
@@ -80,7 +69,7 @@ class SupplierServices extends BaseServices{
             ]);
             return response($supplier,201);
         }else{
-            return response(["failed"=>'supplier not found'],404);
+            return response(["message"=>'supplier not found'],404);
         }
     }
 
@@ -88,9 +77,9 @@ class SupplierServices extends BaseServices{
         $supplier = $this->baseRI->findById($this->supplierModel, $id);
         if($supplier){
             $supplier->delete();
-            return response(["done"=>'supplier Deleted Successfully'],200);
+            return response(["message"=>'supplier Deleted Successfully'],200);
         }else{
-            return response(["failed"=>'supplier not found'],404);
+            return response(["message"=>'supplier not found'],404);
         }
     }
 }
