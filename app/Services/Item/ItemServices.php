@@ -9,6 +9,7 @@ use App\Repositories\ItemRepository;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Item\ItemValidation;
 
 //Utilities
 use App\Utilities\FileUtilities;
@@ -86,16 +87,7 @@ class ItemServices extends BaseServices{
     }
 
     public function itemCreate($request){
-        $fields = $request->validate([
-            'category_id'=>'required|numeric',
-            'brand_id'=>'required|numeric',
-            'unit_id'=>'required|numeric',
-            'supplier_id'=>'required|numeric',
-            'name'=>'required|string|unique:categories,name',
-            'price'=>'required|numeric',
-            'inventory'=>'required|numeric',
-        ]);
-
+        $fields = ItemValidation::validate1($request);
         //image upload
         $image = FileUtilities::fileUpload($request, url(''), self::$imagePath, false, false, false);
         $data = $request->all();
@@ -132,16 +124,7 @@ class ItemServices extends BaseServices{
         $item = $this->baseRI->findById($this->itemModel, $id);
 
         if($item){
-            $fields = $request->validate([
-                'category_id'=>'required|numeric',
-                'brand_id'=>'required|numeric',
-                'unit_id'=>'required|numeric',
-                'supplier_id'=>'required|numeric',
-                'name'=>'required|string|unique:categories,name',
-                'price'=>'required|numeric',
-                'inventory'=>'required|numeric',
-            ]);
-
+            $fields = ItemValidation::validate1($request);
             $data = $request->all();
             //image upload
             $exImagePath = $item->image;
