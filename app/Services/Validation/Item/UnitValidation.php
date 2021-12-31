@@ -2,10 +2,10 @@
 
 namespace App\Services\Validation\Item;
 
-class CategoryValidation{
+class UnitValidation{
     public static function validate1($request){
         return $request->validate([
-            'name'=>'required|string|unique:categories,name',
+            'name'=>'required|string|max:255|unique:units,name',
         ]);
     }
 

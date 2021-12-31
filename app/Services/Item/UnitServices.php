@@ -4,6 +4,7 @@ namespace App\Services\Item;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Item\UnitValidation;
 
 //Models
 use App\Models\Unit;
@@ -28,15 +29,12 @@ class UnitServices extends BaseServices{
         if($unit){
             return $unit;
         }else{
-            return response(["failed"=>'unit not found'],404);
+            return response(["message"=>'unit not found'],404);
         }
     }
 
     public function unitCreate($request){
-        $fields = $request->validate([
-            'name'=>'required|string|unique:units,name',
-        ]);
-
+        $fields = UnitValidation::validate1($request);
         $unit = $this->baseRI->storeInDB(
             $this->unitModel,
             [
@@ -47,7 +45,7 @@ class UnitServices extends BaseServices{
         if($unit){
             return response($unit,201);
         }else{
-            return response(["failed"=>'Server Error'],500);
+            return response(["message"=>'server error'],500);
         }
     }
 
@@ -56,19 +54,15 @@ class UnitServices extends BaseServices{
         if($unit){
             $data = $request->all();
             if($unit->name==$data['name']){
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255',
-                ]);
+                $fields = UnitValidation::validate2($request);
             }
             else{
-                $fields = $request->validate([
-                    'name'=>'required|string|max:255|unique:units,name',
-                ]);
+                $fields = UnitValidation::validate1($request);
             }
             $unit->update($data);
             return response($unit,201);
         }else{
-            return response(["failed"=>'unit not found'],404);
+            return response(["message"=>'unit not found'],404);
         }
     }
 
@@ -76,9 +70,9 @@ class UnitServices extends BaseServices{
         $unit = $this->baseRI->findById($this->unitModel, $id);
         if($unit){
             $unit->delete();
-            return response(["done"=>'unit Deleted Successfully'],200);
+            return response(["message"=>'unit deleted successfully'],200);
         }else{
-            return response(["failed"=>'unit not found'],404);
+            return response(["message"=>'unit not found'],404);
         }
     }
 }
