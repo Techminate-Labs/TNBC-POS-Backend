@@ -4,6 +4,7 @@ namespace App\Services\Pos;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Pos\CouponValidation;
 
 //Models
 use App\Models\Coupon;
@@ -26,18 +27,12 @@ class CouponServices extends BaseServices{
         if($coupon){
             return $coupon;
         }else{
-            return response(["failed"=>'coupon not found'],404);
+            return response(["message"=>'coupon not found'],404);
         }
     }
 
     public function couponCreate($request){
-        $fields = $request->validate([
-            'discount'=>'required|numeric',
-            'start_date'=>'required|string',
-            'end_date'=>'required|string',
-            'active'=>'required',
-        ]);
-
+        $fields = CouponValidation::validate1($request);
         $coupon = $this->baseRI->storeInDB(
             $this->couponModel,
             [
@@ -52,28 +47,23 @@ class CouponServices extends BaseServices{
         if($coupon){
             return response($coupon,201);
         }else{
-            return response(["failed"=>'server error'],500);
+            return response(["message"=>'server error'],500);
         }
     }
 
     public function couponUpdate($request, $id){
         $coupon = $this->baseRI->findById($this->couponModel, $id);
         if($coupon){
-            $data = $request->all();
-            $fields = $request->validate([
-                'discount'=>'required|numeric',
-                'start_date'=>'required|string',
-                'end_date'=>'required|string',
-                'active'=>'required',
+            $fields = CouponValidation::validate1($request);
+            $coupon->update([
+                'discount' => $fields['discount'],
+                'start_date' => $fields['start_date'],
+                'end_date' => $fields['end_date'],
+                'active' => $fields['active']
             ]);
-            $data['discount'] = $fields['discount'];
-            $data['start_date'] = $fields['start_date'];
-            $data['end_date'] = $fields['end_date'];
-            $data['active'] = $fields['active'];
-            $coupon->update($data);
             return response($coupon,201);
         }else{
-            return response(["failed"=>'coupon not found'],404);
+            return response(["message"=>'coupon not found'],404);
         }
     }
 
@@ -81,9 +71,9 @@ class CouponServices extends BaseServices{
         $coupon = $this->baseRI->findById($this->couponModel, $id);
         if($coupon){
             $coupon->delete();
-            return response(["done"=>'coupon Deleted Successfully'],200);
+            return response(["message"=>'coupon deleted successfully'],200);
         }else{
-            return response(["failed"=>'coupon not found'],404);
+            return response(["message"=>'coupon not found'],404);
         }
     }
 }
