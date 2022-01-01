@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 
 //Services
 use App\Services\BaseServices;
+use App\Services\Validation\Pos\CustomerValidation;
 
 //Models
 use App\Models\Customer;
@@ -31,15 +32,12 @@ class CustomerServices extends BaseServices{
         if($customer){
             return $customer;
         }else{
-            return response(["failed"=>'customer not found'],404);
+            return response(["message"=>'customer not found'],404);
         }
     }
 
     public function customerCreate($request){
-        $fields = $request->validate([
-            'name'=>'required|string|unique:categories,name',
-            'phone'=>'required|numeric'
-        ]);
+        $fields = CustomerValidation::validate1($request);
         $customer = $this->baseRI->storeInDB(
             $this->customerModel,
             [
@@ -54,18 +52,14 @@ class CustomerServices extends BaseServices{
         if($customer){
             return response($customer,201);
         }else{
-            return response(["failed"=>'Server Error'],404);
+            return response(["message"=>'Server Error'],404);
         }
     }
 
     public function customerUpdate($request, $id){
         $customer = $this->baseRI->findById($this->customerModel, $id);
         if($customer){
-            $data = $request->all();
-            $fields = $request->validate([
-                'name'=>'required|string',
-                'phone'=>'numeric',
-            ]);
+            $fields = CustomerValidation::validate1($request);
             $customer->update([
                 'name' => $fields['name'],
                 'phone' => $fields['phone'],
@@ -75,7 +69,7 @@ class CustomerServices extends BaseServices{
             ]);
             return response($customer,201);
         }else{
-            return response(["failed"=>'customer not found'],404);
+            return response(["message"=>'customer not found'],404);
         }
     }
 
@@ -83,9 +77,9 @@ class CustomerServices extends BaseServices{
         $customer = $this->baseRI->findById($this->customerModel, $id);
         if($customer){
             $customer->delete();
-            return response(["done"=>'customer Deleted Successfully'],200);
+            return response(["message"=>'customer deleted successfully'],200);
         }else{
-            return response(["failed"=>'customer not found'],404);
+            return response(["message"=>'customer not found'],404);
         }
     }
 }
