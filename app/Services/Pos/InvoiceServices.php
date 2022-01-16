@@ -18,11 +18,9 @@ class InvoiceServices extends CartItemServices{
        
     public function invoiceCreate($request)
     {
-        if($request->has('invoice_number')){
-            $invoice_number = $request->invoice_number;
-        }else{
-            $invoice_number = 'INV'.date('mdis').mt_rand(10,100);
-        }
+        $invoice_number = $request->invoice_number;
+        $discount = $request->discount;
+        $payment_method = $request->payment_method;
         $list = $this->cartItemList($request);
         $invoice = $this->baseRI->storeInDB(
             $this->invoiceModel,
@@ -30,9 +28,9 @@ class InvoiceServices extends CartItemServices{
                 'user_id' => $list['user_id'],
                 'customer_id' => $list['customer_id'],
                 'invoice_number' => $invoice_number,
-                'payment_method' => $list['payment_method'],
+                'payment_method' => $payment_method,
                 'subTotal' => $list['subTotal'],
-                'discount' => $list['discount'],
+                'discount' => $discount,
                 'tax' => $list['tax'],
                 'total' => $list['total'],
                 'date' => $list['date'],
