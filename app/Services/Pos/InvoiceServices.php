@@ -19,7 +19,6 @@ class InvoiceServices extends CartItemServices{
     public function invoiceCreate($request)
     {
         $invoice_number = $request->invoice_number;
-        $discount = $request->discount;
         $payment_method = $request->payment_method;
         $list = $this->cartItemList($request);
         $invoice = $this->baseRI->storeInDB(
@@ -30,7 +29,7 @@ class InvoiceServices extends CartItemServices{
                 'invoice_number' => $invoice_number,
                 'payment_method' => $payment_method,
                 'subTotal' => $list['subTotal'],
-                'discount' => $discount,
+                'discount' => $list['discount'],
                 'tax' => $list['tax'],
                 'total' => $list['total'],
                 'date' => $list['date'],
