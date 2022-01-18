@@ -35,6 +35,9 @@ class DashboardRepository implements DashboardRepositoryInterface{
     }
 
     public function currentWeekSalesChart($payment_method){
+        $startOfTheWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $endOfTheWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+
         return DB::table('invoices')
         ->select(
             DB::raw("DAYNAME(date) as day_name"),
@@ -43,6 +46,7 @@ class DashboardRepository implements DashboardRepositoryInterface{
         )
         ->where('payment_method', $payment_method)
         ->whereYear('date', Carbon::now()->year)
+        ->whereBetween('date', [$startOfTheWeek, $endOfTheWeek])
         ->where('date', '>', Carbon::today()->subDay(6))
         ->groupBy('day_name','day')
         ->orderBy('day', 'asc')

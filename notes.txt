@@ -21,5 +21,6 @@ php artisan make:factory PostFactory --model=Post
 php artisan make:model Post -fm
 
 \App\Models\Invoice::factory()->count(10)->create();
+\App\Models\Invoice::factory()->create();
 
 
