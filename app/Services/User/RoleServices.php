@@ -72,10 +72,14 @@ class RoleServices extends BaseServices{
         $this->logCreate($request);
         $role = $this->baseRI->findById($this->roleModel, $id);
         if($role){
-            $role->delete();
-            return response(["message"=>'Delete Successfull'],200);
+            if($role->id === 1){
+                return response(["message"=>'can not delete admin role.'],200);
+            }else{
+                $role->delete();
+                return response(["message"=>'delete Successfull'],200);
+            }
         }else{
-            return response(["message"=>'Role not found'],404);
+            return response(["message"=>'role not found'],404);
         }
     }
 
