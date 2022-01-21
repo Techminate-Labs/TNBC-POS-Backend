@@ -6,8 +6,7 @@ Framework : Laravel
 
 Packages : Sanctum
 
-Setup Instructions : 
-
+Setup Instructions :
 1. Install xampp
 2. then go to xampp/htdocs
 3. clone this github repo
