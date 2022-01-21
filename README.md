@@ -2,7 +2,7 @@
 
 TNB-POS is a Point of Sales specially designed to accept "TNBC" as the payment. "TNBC" the Crypto Currency of "The New Boston".
 
-Framework : Laravel
+Framework : Laravel 8
 
 Packages : Sanctum
 
