@@ -4,7 +4,7 @@ TNB-POS is a Point of Sales specially designed to accept "TNBC" as the payment. 
 
 Framework : Laravel 8
 
-Packages : Sanctum 
+Packages : Sanctum
 
 Setup Instructions :
 1. Install xampp
