@@ -23,13 +23,14 @@ class DashboardRepository implements DashboardRepositoryInterface{
     public function currentMonthSalesChart($payment_method){
         return DB::table('invoices')
         ->select(
-            DB::raw("DATE_FORMAT(date,'%D-%b') as months"),
+            DB::raw("DATE_FORMAT(date,'%D-%b') as day_date"),
+            DB::raw("DAY(date) as day"),
             DB::raw('sum(total) as total'),
         )
         ->where('payment_method', $payment_method)
         ->whereYear('date', Carbon::now()->year)
         ->whereMonth('date', Carbon::now()->month)
-        ->groupBy('months')
+        ->groupBy('day_date', 'day')
         ->orderBy('date', 'asc')
         ->get();
     }
