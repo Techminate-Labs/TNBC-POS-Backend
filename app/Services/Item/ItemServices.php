@@ -154,6 +154,8 @@ class ItemServices extends BaseServices{
     public function itemDelete($id){
         $item = $this->baseRI->findById($this->itemModel, $id);
         if($item){
+            $exImagePath = $item->image;
+            FileUtilities::removeExistingFile(self::$imagePath, $exImagePath, self::$explode_at);
             $item->delete();
             return response(["done"=>'item Deleted Successfully'],200);
         }else{

@@ -70,16 +70,16 @@ class RoleServices extends BaseServices{
 
     public function roleDelete($request, $id){
         $this->logCreate($request);
-        $role = $this->baseRI->findById($this->roleModel, $id);
-        if($role){
-            if($role->id === 1){
-                return response(["message"=>'can not delete admin role.'],200);
-            }else{
-                $role->delete();
-                return response(["message"=>'delete Successfull'],200);
-            }
+        if($id === '1' || $id === '2'){
+            return response(["message"=>'can not delete system role'],202);
         }else{
-            return response(["message"=>'role not found'],404);
+            $role = $this->baseRI->findById($this->roleModel, $id);
+            if($role){
+                $role->delete();
+                return response(["message"=>'role deleted successfully'],200);
+            }else{
+                return response(["message"=>'role not found'],404);
+            }
         }
     }
 
