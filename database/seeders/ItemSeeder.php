@@ -27,7 +27,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/cheesepizza.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/cheesepizza.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -45,7 +45,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/penpizza.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/penpizza.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -63,7 +63,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/specialpizza.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/specialpizza.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -81,7 +81,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/burger.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/burger.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -99,7 +99,7 @@ class ItemSeeder extends Seeder
             'inventory' => '10',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/coffee.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/coffee.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -117,7 +117,7 @@ class ItemSeeder extends Seeder
             'inventory' => '7',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/friedchicken.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/friedchicken.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -135,7 +135,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/noodles.png',
+            'image' => 'http://127.0.0.1:8000/images/item/noodles.png',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -153,7 +153,7 @@ class ItemSeeder extends Seeder
             'inventory' => '3',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/pasta.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/pasta.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -171,7 +171,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/rice.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/rice.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -189,7 +189,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/shrimprice.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/shrimprice.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -207,7 +207,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/soup.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/soup.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -225,7 +225,7 @@ class ItemSeeder extends Seeder
             'inventory' => '50',
             'expire_date' => '2021-09-22 15:06:48',
             'available' => '1',
-            'image' => 'https://tnb-pos.herokuapp.com/images/item/thaisoup.jpg',
+            'image' => 'http://127.0.0.1:8000/images/item/thaisoup.jpg',
             'created_at' => now(),
             'updated_at' => now()
         ]);
